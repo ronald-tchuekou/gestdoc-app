@@ -1,0 +1,156 @@
+.ron-modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+    background-color: #000;
+    opacity: 0.5;
+}
+.ron-modal {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: scale(0);
+    opacity: 0;
+    z-index: 10500;
+    transition: 0.4s cubic-bezier(1,.14,.37,1.03);
+}
+.ron-modal.show {
+    transform: scale(1);
+    opacity: 1;
+}
+.ron-modal .ron-modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.ron-modal.ron-modal-lg .ron-modal-container
+{
+    width: calc(90% - 30px);
+    height: calc(100% - 60px);
+}
+.ron-modal .ron-modal-container {
+    display: block;
+    overflow: initial;
+    box-sizing: border-box;
+    width: 40em;
+    position: relative;
+    margin: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 4px;
+    max-width: calc(90% - 30px) !important;
+    max-height: calc(100% - 60px) !important;
+}
+.ron-modal .ron-modal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.ron-modal-header .ron-modal-title {
+    margin: 4px 8px;
+    font-size: 19px;
+}
+.ron-modal .ron-modal-close {
+    width: 30px;
+    height: 30px;
+    font-size: 17px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+.ron-modal .ron-modal-close:hover {
+    background: #bebebe;
+    box-shadow: 0 1px 5px #00000085;
+    cursor: pointer;
+}
+.ron-modal .ron-modal-content {
+    padding: 0 10px 20px;
+    display: block;
+    overflow: hidden;
+    height: calc(100% - 50px);
+}
+.task-container .item-icon {
+    display: inline-block;
+    height: 50px;
+    width: 50px;
+    padding: 5px;
+    border-radius: 50%;
+    line-height: 31px;
+    text-align: center;
+    line-height: 41px;
+    color: white;
+}
+.hover {
+    transition: 0.4s;
+}
+.hover:hover {
+    background: #0000000e;
+    cursor: default;
+}
+
+ /*--------------------------*/
+ /*      Time table          */
+ /*--------------------------*/
+.drag-subject {
+    cursor: pointer;
+}
+.drag-subject-empty {
+}
+.drag-subject-content {
+    background: #008ccf;
+}
+.hold {
+    outline: 0.1rem solid #008ccf;
+    cursor: pointer;
+}
+.hovered {
+    outline: dashed 2px #77777a !important;
+}
+.drag-added {
+    background: #00a2bb21;
+    color: #575757;
+}
+table th, table td {
+    position: relative;
+}
+.drag-added:hover .tt-options {
+    transform: scale(1);
+}
+.tt-options {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: 9px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: scale(0);
+    transition: .2s linear;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.38);
+}
+.tt-options i {
+    font-size: 15px !important;
+    padding: 0.3rem;
+}
+ .tt-options i:hover {
+    background: rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+.form-options {
+    float: right;
+}
+.form-options button{
+    border: none;
+    outline: none;
+    background: #509bff;
+    cursor: pointer;
+}
