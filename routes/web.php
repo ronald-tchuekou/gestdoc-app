@@ -1,35 +1,33 @@
 <?php
 
-use App\models\Stock_Enter;
+use App\Http\Controllers\AgenceController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\EmployeController;
+use App\Http\Controllers\EntreeStockController;
+use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SortieStockController;
+use App\Http\Controllers\StockageController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-
-Route::post('home', 'StockEnterController@store')->name('home');
-
-Route::get('home', function () {
-	return view('home');
-});
 Route::get('/', function () {
-	$stock = new Stock_Enter();
-    return view('home', compact('stock'));
+    return view('pages.home');
 });
 
+Route::view('/errors', 'errors');
+Route::resource('/clients', ClientController::class);
+Route::resource('/users', UserController::class);
+Route::resource('/agences', AgenceController::class);
+Route::resource('/produits', ProductController::class);
+Route::resource('/emploies', EmployeController::class);
+Route::resource('/entree-stock', EntreeStockController::class);
+Route::resource('/sortie-stock', SortieStockController::class);
+Route::resource('/stock', StockageController::class);
+Route::resource('/fournisseurs', FournisseurController::class);
 
-Route::prefix('admin')->group(function () {
-  	Route::name('gestion.')->group(function () {
-		Route::post('posts', 'RoleController@store')->name('posts');
-	
- 	});
-
- 	Route::name('planification.')->group(function () {
-	   	Route::get('department_chief/delete', 'PlanificationController@deleteDepartment_chief')->name('department_chief/delete');
-	   	Route::get('department_chief', 'PlanificationController@department_chief')->name('department_chief');
-
- 	});
-
-	Route::resource('administrators', 'AdminController');
-	Route::resource('teachers', 'TeachersController');
-	Route::resource('parents', 'ParentsController');
-	Route::resource('books', 'BooksController');
-	Route::resource('periods', 'PeriodController');
-});
+Route::view('/login', 'auth.login');
+Route::view('/register', 'auth.register');
+Route::view('/forgot-password', 'auth.forgot-password');
+Route::view('/reset-password', 'auth.reset-password');
+Route::view('/lock-screen', 'auth.lock-screen');

@@ -2,26 +2,22 @@
 
 @section('body')
 
-<!-- Preloader Start Here -->
-<div id="preloader"></div>
-<!-- Preloader End Here -->
-<div id="wrapper" class="wrapper bg-ash">
-    <!-- Header Menu Area Start Here -->
-@include('admin.layouts.header')
-    <!-- Header Menu Area End Here -->
-    <!-- Page Area Start Here -->
-    <div class="dashboard-page-one">
-        <!-- Sidebar Area Start Here -->
 
-        @include('admin.layouts.sidebar')
+    <!-- BEGIN: navBar-->
+    @include('partials.navbar')
+    <!-- END: navBar-->
 
-        @yield('content')
 
-	</div>
+    <!-- BEGIN: sideBar-->
+    @include('partials.sideBar')
+    <!-- END: sidBar-->
 
-@endsection
+    <!-- BEGIN: Content-->
+    @yield('content')
+    <!-- END: Content-->
 
-@section('js')
- <!-- Data Table Js -->
-<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-@endsection
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+
+@endSection
