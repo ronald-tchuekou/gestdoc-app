@@ -1,64 +1,64 @@
 @include('errors.errors')
 @include('success.success')
-<form class="form">
+<form class="form" action="fournisseurs" method="post">
     @csrf
     @method('POST')
     <div class="form-body">
         <div class="row">
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="number" id="first-name-column"
-                        class="form-control" placeholder="Numero Sortie"
-                        name="fname-column">
+                    <input disabled type="number" id="first-name-column" value="{{ old('id') }}"
+                        class="form-control" placeholder="Numero"
+                        name="id">
                     <label for="first-name-column">Numero</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="nomFournisseur" value="{{ old('nomFournisseur') }}"
                         class="form-control" placeholder="Nom et Prenom"
-                        name="lname-column">
-                    <label for="last-name-column">Nom et Prenom</label>
+                        name="nomFournisseur">
+                    <label for="nomFournisseur">Nom et Prenom</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="adresse" value="{{ old('adresse') }}"
                         class="form-control" placeholder="Adresse"
-                        name="lname-column">
-                    <label for="last-name-column">Addresse</label>
+                        name="adresse">
+                    <label for="adresse">Addresse</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
-                        class="form-control" placeholder="Numero Contribuable"
-                        name="lname-column">
-                    <label for="last-name-column">Numero Contribuable</label>
+                    <input type="text" id="nomContrF" value="{{ old('nomContrF') }}"
+                        class="form-control" placeholder="N° Contribuable"
+                        name="nomContrF">
+                    <label for="nomContrF">N° Contribuable</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="regComF" value="{{ old('regComF') }}"
                         class="form-control" placeholder="Registre de Commerce"
-                        name="lname-column">
-                    <label for="last-name-column">Nom et Prenom</label>
+                        name="regComF">
+                    <label for="regComF">Registre de Commerce</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="telephoneFour" value="{{ old('telephoneFour') }}"
                         class="form-control" placeholder="Telephone"
-                        name="lname-column">
-                    <label for="last-name-column">Telephone</label>
+                        name="telephoneFour">
+                    <label for="telephoneFour">Telephone</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="email" id="last-name-column"
+                    <input type="email" id="emailFour" value="{{ old('emailFour') }}"
                         class="form-control" placeholder="Email"
-                        name="lname-column">
-                    <label for="last-name-column">Email</label>
+                        name="emailFour">
+                    <label for="emailFour">Email</label>
                 </div>
             </div>
             <div class="col-12">
