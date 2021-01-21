@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fournisseur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FournisseurController extends Controller
 {
@@ -36,7 +37,42 @@ class FournisseurController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $redirection = redirect('fournisseurs');
+        // Validation.
+        $validation = Validator::make($request->all(), Fournisseur::$rules);
+        if($validation->fails()){
+            return $redirection
+                ->withErrors($validation)
+                ->withInput($request->input());
+        }
+        // Save the data.
+        $state = $this->saveFournisseur($request);
+            if($state){
+                return $redirection
+                    ->with('success', 'Data is added successful')
+                    ->withInput($request->input());
+            }else{
+                $errors = Array(
+                    'msg' => ['Error has proivded.']
+                );
+                return $redirection
+                    ->withErrors($errors)
+                    ->withInput($request->input());
+            }
+    }
+    /**
+     * Function to save the fournisseur.
+     */
+    private function saveFournisseur (Request $request): bool 
+    {
+        $fournisseur = new Fournisseur;
+        $fournisseur->nomFournisseur = $request->nomFournisseur;
+        $fournisseur->adresse = $request->adresse;
+        $fournisseur->telephoneFour = $request->telephoneFour;
+        $fournisseur->emailFour = $request->emailFour;
+        $fournisseur->nomContrF = $request->nomContrF;
+        $fournisseur->regComF = $request->regComF;
+        return $fournisseur->save();
     }
 
     /**
