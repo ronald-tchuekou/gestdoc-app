@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fournisseur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class FournisseurController extends Controller
@@ -38,41 +39,47 @@ class FournisseurController extends Controller
     public function store(Request $request)
     {
         $redirection = redirect('fournisseurs');
-        // Validation.
-        $validation = Validator::make($request->all(), Fournisseur::$rules);
-        if($validation->fails()){
+        // Validation
+        $validate = Validator::make($request->all(), Fournisseur::$rules);
+        if($validate->fails()){
             return $redirection
-                ->withErrors($validation)
-                ->withInput($request->input());
+                ->withInput($request->input())
+                ->withErrors($validate);
         }
-        // Save the data.
-        $state = $this->saveFournisseur($request);
-            if($state){
-                return $redirection
-                    ->with('success', 'Data is added successful')
-                    ->withInput($request->input());
-            }else{
-                $errors = Array(
-                    'msg' => ['Error has proivded.']
-                );
-                return $redirection
-                    ->withErrors($errors)
-                    ->withInput($request->input());
-            }
-    }
-    /**
-     * Function to save the fournisseur.
-     */
-    private function saveFournisseur (Request $request): bool 
-    {
+        
+        if(Fournisseur::checkIfExist($request)){ // Check if this personne exist or not.
+            $errors = Array(
+                'msg' => ['Une fournisseur possède déjà ces informations.']
+            );
+            return $redirection
+            ->withInput($request->input())
+            ->withErrors($errors);
+        }
+
         $fournisseur = new Fournisseur;
-        $fournisseur->nomFournisseur = $request->nomFournisseur;
-        $fournisseur->adresse = $request->adresse;
-        $fournisseur->telephoneFour = $request->telephoneFour;
-        $fournisseur->emailFour = $request->emailFour;
-        $fournisseur->nomContrF = $request->nomContrF;
-        $fournisseur->regComF = $request->regComF;
-        return $fournisseur->save();
+        $this->setData($fournisseur, $request);
+        if($fournisseur->save()){
+            return $redirection
+                ->withInput($request->all())
+                ->with('success', 'Nouveau fournisseur ajouter avec succès.');
+        }else{
+            $errors = Array(
+                'msg' => ['Une erreur est survenue.']
+            );
+            return $redirection
+                ->withInput($request->all())
+                ->withErrors($errors);
+        }
+
+    }
+
+    private function setData (Fournisseur $f, Request $request){
+        $f->nomFournisseur = $request->nomFournisseur;
+        $f->adresse = $request->adresse;
+        $f->telephoneFour = $request->telephoneFour;
+        $f->emailFour = $request->emailFour;
+        $f->nomContrF = $request->nomContrF;
+        $f->regComF = $request->regComF;
     }
 
     /**

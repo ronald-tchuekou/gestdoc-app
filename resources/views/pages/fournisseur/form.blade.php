@@ -7,10 +7,10 @@
         <div class="row">
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input disabled type="number" id="first-name-column" value="{{ old('id') }}"
-                        class="form-control" placeholder="Numero"
-                        name="id">
-                    <label for="first-name-column">Numero</label>
+                    <input type="number" id="idFournisseur" value="{{ old('idFournisseur') }}"
+                        class="form-control" placeholder="Numero Sortie" disabled
+                        name="idFournisseur">
+                    <label for="idFournisseur">Numero</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
@@ -32,9 +32,9 @@
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
                     <input type="text" id="nomContrF" value="{{ old('nomContrF') }}"
-                        class="form-control" placeholder="N° Contribuable"
+                        class="form-control" placeholder="Numero Contribuable"
                         name="nomContrF">
-                    <label for="nomContrF">N° Contribuable</label>
+                    <label for="nomContrF">Numero Contribuable</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
@@ -42,13 +42,13 @@
                     <input type="text" id="regComF" value="{{ old('regComF') }}"
                         class="form-control" placeholder="Registre de Commerce"
                         name="regComF">
-                    <label for="regComF">Registre de Commerce</label>
+                    <label for="regComF">Registre de commerce</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
                     <input type="text" id="telephoneFour" value="{{ old('telephoneFour') }}"
-                        class="form-control" placeholder="Telephone"
+                        class="form-control" placeholder="telephoneFour"
                         name="telephoneFour">
                     <label for="telephoneFour">Telephone</label>
                 </div>

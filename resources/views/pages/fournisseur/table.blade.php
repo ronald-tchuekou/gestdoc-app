@@ -6,7 +6,7 @@
             <th>Adresse</th>
             <th>Telephone</th>
             <th>Email</th>
-                <th>Numero Contribuable</th>
+            <th>Numero Contribuable</th>
             <th>Registre de Commerce</th>
         </tr>
     </thead>
@@ -15,17 +15,17 @@
     @foreach($fournisseurs as $fournisseur)
 
         <tr>
-            <td>{{$fournisseur->idFournisseur}}</td>
-            <td>{{$fournisseur->nomFournisseur}}</td>
-            <td>{{$fournisseur->adresse}}</td>
-            <td>{{$fournisseur->telephoneFour}}</td>
-            <td>{{$fournisseur->emailFour}}</td>
-            <td>{{$fournisseur->nomContrF}}</td>
-            <td>{{$fournisseur->regComF}}</td>
+            <td>{{ $fournisseur->idFournisseur }}</td>
+            <td>{{ $fournisseur->nomFournisseur }}</td>
+            <td>{{ $fournisseur->adresse }}</td>
+            <td>{{ $fournisseur->telephoneFour }}</td>
+            <td>{{ $fournisseur->emailFour }}</td>
+            <td>{{ $fournisseur->nomContrF }}</td>
+            <td>{{ $fournisseur->regComF }}</td>
         </tr>
-
-    @endforeach
         
+    @endforeach
+
     </tbody>
 
 </table>
