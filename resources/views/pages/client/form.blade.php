@@ -1,83 +1,90 @@
 @include('errors.errors')
 @include('success.success')
-<form class="form">
+<form class="form" action="clients" method="post">
     @csrf
     @method('POST')
     <div class="form-body">
         <div class="row">
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="number" id="first-name-column"
+                    <input type="number" id="idClient" value="{{ old('idClient') }}"
                         class="form-control" placeholder="Numero"
-                        name="fname-column">
-                    <label for="first-name-column">Numero</label>
+                        disabled name="idClient">
+                    <label for="idClient">Numero</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="nomClient" value="{{ old('nomClient') }}"
                         class="form-control" placeholder="Nom et Prenom"
-                        name="lname-column">
-                    <label for="last-name-column">Nom et Prenom</label>
+                        name="nomClient">
+                    <label for="nomClient">Nom et Prenom</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="adresse" value="{{ old('adresse') }}"
                         class="form-control" placeholder="Adresse"
-                        name="lname-column">
-                    <label for="last-name-column">Addresse</label>
+                        name="adresse">
+                    <label for="adresse">Addresse</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
-                        class="form-control"
+                    <input type="text" id="telephoneClient"
+                        class="form-control" value="{{ old('telephoneClient') }}"
                         placeholder="Telephone"
-                        name="lname-column">
-                    <label for="last-name-column">Telephone</label>
+                        name="telephoneClient">
+                    <label for="telephoneClient">Telephone</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="avoirs" value="{{ old('avoirs') }}"
                         class="form-control" placeholder="Avoir"
-                        name="lname-column">
-                    <label for="last-name-column">Avoir</label>
+                        name="avoirs">
+                    <label for="avoirs">Avoir</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="email" id="last-name-column"
+                    <input type="email" id="emailClient" value="{{ old('emailClient') }}"
                         class="form-control" placeholder="Email"
-                        name="lname-column">
-                    <label for="last-name-column">Email</label>
+                        name="emailClient">
+                    <label for="emailClient">Email</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="numContr" value="{{ old('numContr') }}"
                         class="form-control" placeholder="Numero Contribuable"
-                        name="lname-column">
-                    <label for="last-name-column">Numero Contribuable</label>
+                        name="numContr">
+                    <label for="numContr">Numero Contribuable</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
-                    <input type="text" id="last-name-column"
+                    <input type="text" id="registCom" value="{{ old('registCom') }}"
                         class="form-control" placeholder="Registre de Commerce"
-                        name="lname-column">
-                    <label for="last-name-column">Numero Contribuable</label>
+                        name="registCom">
+                    <label for="registCom">Registre commerce</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-label-group">
                     <div class="form-group">
                         <label for="">Categorie</label>
-                        <select class="select2 form-control">
-                            <option value="square">Square</option>
-                            <option value="rectangle">Rectangle</option>
-
+                        <select class="select2 form-control" name="categorieClient">
+                            <option 
+                                value="square" 
+                                @if(old('categorieClient') == 'square') selected @endif>
+                                    Square
+                            </option>
+                            <option
+                                value="rectangle" 
+                                @if(old('categorieClient') == 'rectangle') selected @endif>
+                                    Rectangle
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -86,10 +93,17 @@
                 <div class="form-label-group">
                     <div class="form-group">
                         <label for="">Agence</label>
-                        <select class="select2 form-control">
-                            <option value="square">Square</option>
-                            <option value="rectangle">Rectangle</option>
-
+                        <select class="select2 form-control" name="agences">
+                            <option 
+                                value="square" 
+                                @if(old('agences') == 'square') selected @endif>
+                                    Square
+                            </option>
+                            <option
+                                value="rectangle" 
+                                @if(old('agences') == 'rectangle') selected @endif>
+                                    Rectangle
+                            </option>
                         </select>
                     </div>
                 </div>

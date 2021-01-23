@@ -33,7 +33,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Liste de Sortie Stock
+                                <h4 class="card-title">Liste des employés
                                 </h4>
                             </div>
                             <div class="card-content">

@@ -28,9 +28,6 @@
                     <li><a href="/clients"><i class="feather icon-circle"></i><span class="menu-item"
                                 data-i18n="Shop">Gestion Client</span></a>
                     </li>
-                    <li><a href="/clients"><i class="feather icon-circle"></i><span
-                                class="menu-item" data-i18n="Details">Tous Clients</span></a>
-                    </li>
                 </ul>
             </li>
             <li class=" nav-item"><a href="#"><i class="feather icon-layers"></i><span class="menu-title"

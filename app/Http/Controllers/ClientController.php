@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Utils\ControllersHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ClientController extends Controller
 {
@@ -40,12 +41,44 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        // Validation.
-        $response = ControllersHelper::validated($request, Client::$rules);
-        if($response->getStatusCode() == 202)
-            return $response;
+        $redirection = redirect('clients');
+        // Validation
+        $validate = Validator::make($request->all(), Client::$rules);
+        if($validate->fails()){
+            return $redirection
+                ->withInput($request->input())
+                ->withErrors($validate);
+        }
+
+        // Check the existance of this client.
+        if(Client::checkClientExist($request)){
+            $errors = Array(
+                'msg' => 'Ce client exist deja.'
+            );
+            return $redirection
+                ->withInput($request->input())
+                ->withErrors($errors);
+        }
+
         // Save.
         $client = new Client;
+        $this->setData($client, $request);
+
+        if($client->save()){
+            return $redirection
+                ->withInput($request->all())
+                ->with('success', 'Nouveau client ajouter avec succès.');
+        }else{
+            $errors = Array(
+                'msg' => ['Une erreur est survenue.']
+            );
+            return $redirection
+                ->withInput($request->all())
+                ->withErrors($errors);
+        }
+    }
+
+    private function setData(Client $client, Request $request){
         $client->nomClient = $request->nomClient;
         $client->adresse = $request->adresse;
         $client->telephoneClient = $request->telephoneClient;
@@ -55,8 +88,6 @@ class ClientController extends Controller
         $client->agences = $request->agences;
         $client->categorieClient = $request->categorieClient;
         $client->avoirs = $request->avoirs;
-        $result = ControllersHelper::callBackSave($client->save(), $client);
-        return response($result, 200);
     }
 
     /**
