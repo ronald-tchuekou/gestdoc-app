@@ -12,12 +12,24 @@
     @include('partials.sideBar')
     <!-- END: sidBar-->
 
-    <!-- BEGIN: Content-->
-    @yield('content')
-    <!-- END: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+                @include('pages.admin.contentHeader')
+            </div>
+            <div class="content-body">
+                <!-- BEGIN: Content-->
+                @yield('content')
+                <!-- END: Content-->
+            </div>
+        </div>
+    </div>
 
+<!-- 
     <div class="sidenav-overlay"></div>
-    <div class="drag-target"></div>
+    <div class="drag-target"></div> -->
 
 
 @endSection

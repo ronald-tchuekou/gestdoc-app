@@ -1,5 +1,9 @@
 @extends('auth.layouts.template')
 
+@section('title')
+Mot de passe oublié
+@endSection
+
 @section('content')
 
 <div class="app-content content">
@@ -20,10 +24,10 @@
                                 <div class="card rounded-0 mb-0 px-2 py-1">
                                     <div class="card-header pb-1">
                                         <div class="card-title">
-                                            <h4 class="mb-0">Recover your password</h4>
+                                            <h4 class="mb-0">Réinitialiser de mot de passe</h4>
                                         </div>
                                     </div>
-                                    <p class="px-2 mb-0">Please enter your email address and we'll send you instructions on how to reset your password.</p>
+                                    <p class="px-2 mb-0">Veuillez saisir votre adresse e-mail et nous vous enverrons des instructions pour réinitialiser votre mot de passe.</p>
                                     <div class="card-content">
                                         <div class="card-body">
                                             <form action="index.html">
@@ -33,10 +37,10 @@
                                                 </div>
                                             </form>
                                             <div class="float-md-left d-block mb-1">
-                                                <a href="login" class="btn btn-outline-primary btn-block px-75">Back to Login</a>
+                                                <a href="login" class="btn btn-outline-primary btn-block px-75">Connexion</a>
                                             </div>
                                             <div class="float-md-right d-block mb-1">
-                                                <a href="#" class="btn btn-primary btn-block px-75">Recover Password</a>
+                                                <a href="#" class="btn btn-primary btn-block px-75">Valider</a>
                                             </div>
                                         </div>
                                     </div>

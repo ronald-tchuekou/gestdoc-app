@@ -1,5 +1,10 @@
 @extends('auth.layouts.template')
 
+
+@section('title')
+Réinitialisation de mot de passe - GestDoc
+@endSection
+
 @section('content')
 
 <div class="app-content content">

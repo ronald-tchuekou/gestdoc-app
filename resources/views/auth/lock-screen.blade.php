@@ -1,5 +1,9 @@
 @extends('auth.layouts.template')
 
+@section('title')
+Session perdu
+@endSection
+
 @section('content')
 
 <div class="app-content content">
