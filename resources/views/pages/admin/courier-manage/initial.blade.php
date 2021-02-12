@@ -1,3 +1,4 @@
+<?php use App\Models\Utils; ?>
 <div role="tabpanel" class="tab-pane active" id="courier-tab-initial" aria-labelledby="courier-pill-initial" aria-expanded="true">
     <div class="card">
         <div class="card-header d-flex justify-content-between p-0 pt-2 px-1">
@@ -37,7 +38,7 @@
                             <td><span class="text-truncate align-middle text-nowrap">{{$courier->nbPiece}}</span></td>
                             <td>{{$courier->prestataire}}</td>
                             <td><span class="badge badge-pill badge-light-info" text-capitalized="">{{$courier->etat}}</span></td>
-                            <td>{{App\Models\Utils\Utils::full_date_format($courier->dateEnregistrement)}}</td>
+                            <td>{{App\Models\Utils::full_date_format($courier->dateEnregistrement)}}</td>
                             <td>
                                 <div class="btn-group">
                                     <button class="btn btn-sm hide-arrow" data-toggle="dropdown">
