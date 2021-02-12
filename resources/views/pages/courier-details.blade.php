@@ -2,6 +2,8 @@
 
 @section('content')
 
+<?php use App\Models\Utils; ?>
+
 <div class="card">
 <div class="card-header">
     <div class="d-flex mb-3">
@@ -100,8 +102,8 @@
                     <div class="state-desc">
                         <div>
                             <span class="text-secondary">
-                                {{App\Models\Utils\Utils::date_format($courier->dateEnregistrement)}} à 
-                                {{App\Models\Utils\Utils::hour_format($courier->dateEnregistrement)}}
+                                {{App\Models\Utils::date_format($courier->dateEnregistrement)}} à 
+                                {{App\Models\Utils::hour_format($courier->dateEnregistrement)}}
                             </span>
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
