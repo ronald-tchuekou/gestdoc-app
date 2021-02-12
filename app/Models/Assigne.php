@@ -14,7 +14,7 @@ class Assigne extends Model
     ];
 
     public function assigner () {
-        return $this->belongsTo(User::class, 'id', 'assignePar');
+        return $this->hasOne(User::class, 'id', 'assignePar');
     }
 
     public function courier () {
@@ -22,7 +22,7 @@ class Assigne extends Model
     }
 
     public function agent() {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
     
 }
