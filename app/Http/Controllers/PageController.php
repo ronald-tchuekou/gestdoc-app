@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use App\Models\Courier;
-use App\Utils\Utils;
+use App\Models\Utils;
 use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
