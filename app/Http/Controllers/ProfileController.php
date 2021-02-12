@@ -16,6 +16,7 @@ class ProfileController extends Controller
      * fonction qui permet de faire la mis à jour d'un mot de pass.
      */
     public function update_pass(Request $request) {
+
         try {
             $user = User::find($request->user_id);
             if($user->password != $request->old_pass) {
@@ -27,6 +28,7 @@ class ProfileController extends Controller
         } catch (Exception $th) {
             return response($th);
         }
+        
     }
 
     /**
