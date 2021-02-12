@@ -137,8 +137,8 @@
                     <div class="state-desc">
                         <div>
                             <span class="text-secondary">
-                                {{App\Utils\Utils::date_format($assignments[0]->date)}} à 
-                                {{App\Utils\Utils::hour_format($assignments[0]->date)}}
+                                {{App\Models\Utils::date_format($assignments[0]->date)}} à 
+                                {{App\Models\Utils::hour_format($assignments[0]->date)}}
                             </span>
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
@@ -175,8 +175,8 @@
                     <div class="state-desc">
                         <div>
                             <span class="text-secondary">
-                                {{App\Utils\Utils::date_format($assign->date)}} à 
-                                {{App\Utils\Utils::hour_format($assign->date)}}
+                                {{App\Models\Utils::date_format($assign->date)}} à 
+                                {{App\Models\Utils::hour_format($assign->date)}}
                             </span>
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
@@ -210,8 +210,8 @@
                     <div class="state-desc">
                         <div>
                             <span class="text-secondary">
-                                {{App\Utils\Utils::date_format($courier->updated_at)}} à 
-                                {{App\Utils\Utils::hour_format($courier->updated_at)}}
+                                {{App\Models\Utils::date_format($courier->updated_at)}} à 
+                                {{App\Models\Utils::hour_format($courier->updated_at)}}
                             </span>
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
@@ -234,8 +234,8 @@
                     <div class="state-desc">
                         <div>
                             <span class="text-secondary">
-                                {{App\Utils\Utils::date_format($courier->updated_at)}} à 
-                                {{App\Utils\Utils::hour_format($courier->updated_at)}}
+                                {{App\Models\Utils::date_format($courier->updated_at)}} à 
+                                {{App\Models\Utils::hour_format($courier->updated_at)}}
                             </span>
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
