@@ -25,8 +25,9 @@ class AdminController extends Controller
     public function index () {
         $title = 'MARIE GEST';
         $current_account =  'admin';
+        $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.index', compact('title', 'current_account', 'current_action'));
+        return view('pages.admin.index', compact('user', 'title', 'current_account', 'current_action'));
     }
 
     public function showProfileView() {
@@ -40,8 +41,9 @@ class AdminController extends Controller
     public function showParametresView() {
         $title = 'MARIE GEST';
         $current_account =  'admin';
+        $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.parametres', compact('title', 'current_account', 'current_action'));
+        return view('pages.admin.parametres', compact('user', 'title', 'current_account', 'current_action'));
     }
 
     public function showAgentsView() {
@@ -49,8 +51,9 @@ class AdminController extends Controller
         $current_account =  'admin';
         $agents = User::where('role', 1)->get();
         $services = Service::all();
+        $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.agents', compact('services', 'agents', 'title', 'current_account', 'current_action'));
+        return view('pages.admin.agents', compact('user', 'services', 'agents', 'title', 'current_account', 'current_action'));
     }
 
     public function showCouriersView() {
@@ -70,24 +73,26 @@ class AdminController extends Controller
 
         $couriers = Courier::where('etat', 1)->get();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.couriers', compact('agents', 'couriers_initial', 'couriers_modifie', 'couriers_traite', 'title', 'current_account', 'current_action'));
+        return view('pages.admin.couriers', compact('user', 'agents', 'couriers_initial', 'couriers_modifie', 'couriers_traite', 'title', 'current_account', 'current_action'));
     }
 
     public function showAddAgentView() {
         $title = 'MARIE GEST';
         $current_account =  'admin';
         $agent_mode = 'add';
+        $user = Auth::user();
         $services = Service::all();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.agents', compact('services', 'agent_mode', 'title', 'current_account', 'current_action'));
+        return view('pages.admin.agents', compact('user', 'services', 'agent_mode', 'title', 'current_account', 'current_action'));
     }
 
     public function showEditAgentView() {
         $title = 'MARIE GEST';
         $current_account =  'admin';
         $agent_mode = 'edit';
+        $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.agents', compact('agent_mode', 'title', 'current_account', 'current_action'));
+        return view('pages.admin.agents', compact('user', 'agent_mode', 'title', 'current_account', 'current_action'));
     }
 
     /**
