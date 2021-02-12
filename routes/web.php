@@ -16,17 +16,8 @@ Route::get('/loginOut', [LoginController::class, 'loginOut']);
 Route::get('/register/{id}/{token}', [RegisterController::class, 'index']);
 Route::post('/register/{user_id}', [RegisterController::class, 'store']);
 
-Route::view('/forgot-password', 'auth.forgot-password');
+Route::view('/forgot-password', function () { return 'This is my new route.';}/*'auth.forgot-password'*/);
 Route::view('/reset-password', 'auth.reset-password');
-Route::view('/lock-screen', 'auth.lock-screen');
-
-// Route to show the detail of a courier.
-Route::get('/courier-details', function(){
-    $current_account = 'agnet';
-    $current_action = 'none';
-    $title = 'Detail de courier';
-    return view('pages.courier-details', compact('title', 'current_account', 'current_action'));
-});
 
 // Admin routes managers
 Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){
@@ -48,6 +39,7 @@ Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){
     Route::get('/couriers/validate/{id}', [AdminController::class, 'validate_courier']);
 
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
+
 });
 
 // Root routes managers
@@ -78,3 +70,4 @@ Route::middleware(['auth', 'authAgent'])->prefix('agent')->group(function(){
 
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
 });
+

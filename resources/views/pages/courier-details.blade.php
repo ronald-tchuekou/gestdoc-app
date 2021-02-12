@@ -89,7 +89,7 @@
 
 <div class="card">
     <div class="card-header"><h4 class="font-weight-bolder">Présentation de la situation du courier</h4></div>
-    <div class="card-body">
+    <div class="card-body" style="overflow-x: auto;">
         <div class="state">
             <ul class="d-flex state-courier justify-content-between">
                 <li class="state-item">
