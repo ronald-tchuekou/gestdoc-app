@@ -7,7 +7,7 @@ use App\Models\Categorie;
 use App\Models\Courier;
 use App\Models\Personne;
 use App\Models\Service;
-use App\Utils\Utils;
+use App\Models\Utils\Utils;
 use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;

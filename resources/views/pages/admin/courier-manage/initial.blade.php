@@ -37,7 +37,7 @@
                             <td><span class="text-truncate align-middle text-nowrap">{{$courier->nbPiece}}</span></td>
                             <td>{{$courier->prestataire}}</td>
                             <td><span class="badge badge-pill badge-light-info" text-capitalized="">{{$courier->etat}}</span></td>
-                            <td>{{App\Utils\Utils::full_date_format($courier->dateEnregistrement)}}</td>
+                            <td>{{App\Models\Utils\Utils::full_date_format($courier->dateEnregistrement)}}</td>
                             <td>
                                 <div class="btn-group">
                                     <button class="btn btn-sm hide-arrow" data-toggle="dropdown">

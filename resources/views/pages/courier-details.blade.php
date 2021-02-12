@@ -100,8 +100,8 @@
                     <div class="state-desc">
                         <div>
                             <span class="text-secondary">
-                                {{App\Utils\Utils::date_format($courier->dateEnregistrement)}} à 
-                                {{App\Utils\Utils::hour_format($courier->dateEnregistrement)}}
+                                {{App\Models\Utils\Utils::date_format($courier->dateEnregistrement)}} à 
+                                {{App\Models\Utils\Utils::hour_format($courier->dateEnregistrement)}}
                             </span>
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
