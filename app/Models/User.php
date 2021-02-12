@@ -54,8 +54,7 @@ class User extends Authenticatable
      * Function that return the service of this user.
      */
     public function service () {
-        return $this->belongsTo(Service::class);
-
+        return $this->hasOne(Service::class, 'id', 'service_id');
     }
 
     public function couriers_initialises () {

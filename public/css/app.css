@@ -284,6 +284,10 @@ legend.scheduler-border {
   height: 100%;
 }
 
+#profile-upload-img {
+  border: 0.1rem solid;
+}
+
 /*****************
 * State style manager.
 ******************************/
@@ -298,6 +302,7 @@ legend.scheduler-border {
   position: relative;
 }
 .state .state-courier .state-item .state-icon {
+  width: 55px;
   position: absolute;
   top: -40px;
   left: -27px;

@@ -32,8 +32,9 @@ class AdminController extends Controller
     public function showProfileView() {
         $title = 'MARIE GEST';
         $current_account =  'admin';
+        $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.profile', compact('title', 'current_account', 'current_action'));
+        return view('pages.admin.profile', compact('user', 'title', 'current_account', 'current_action'));
     }
 
     public function showParametresView() {
