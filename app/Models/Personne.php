@@ -24,8 +24,8 @@ class Personne extends Model
         'nom' => 'required',
         'prenom' => 'required',
         'sexe' => 'required',
-        'telephone' => 'required',
-        'cni' => 'required',
+        'telephone' => 'required|max:20|min:8',
+        'cni' => 'required|max:20|min:4',
         'status' => 'required',
     ];
 }
