@@ -39,7 +39,7 @@ class RegisterController extends Controller
 
         $user = User::find($id);
         $user->login = $request->login;
-        $user->password = bcrypt($request->password);
+        $user->password = hash('md5', $request->password);
         $user->register_token = null;
 
         if($user->update()){

@@ -15,7 +15,7 @@
             <a class="d-flex" href="">
                 <div class="media d-flex align-items-start">
                     <div class="media-left">
-                    <div class="avatar"><img src="/images/default_profile.png?w=100&h=100&fit=crop" alt="avatar" width="32" height="32"></div>
+                    <div class="avatar"><img src="/images/profiles/default_profile.png?w=100&h=100&fit=crop" alt="avatar" width="32" height="32"></div>
                     </div>
                     <div class="media-body">
                     <p class="media-heading"><span class="font-weight-bolder">Congratulation Sam 🎉</span>winner!</p><small class="notification-text"> Won the monthly best seller badge.</small>

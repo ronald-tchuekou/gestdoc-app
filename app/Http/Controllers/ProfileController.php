@@ -17,16 +17,49 @@ class ProfileController extends Controller
      */
     public function update_pass(Request $request) {
 
+        dd('827ccb0eea8a706c4c34a16891f84e7b' == hash('md5', $request->password));
+
+        $old_path = '/' . strtolower(Auth::user()->role) . '/profile';
+        $input = ['type' => 'password'];
+
+        // Valiation.
+        $validate = Validator::make($request->all(), [
+            'old_password' => 'required',
+            'new_password' => 'required',
+            'confirm_new_password' => 'required',
+        ]);
+
+        if($validate->fails()){
+            return redirect($old_path)->withInput($input)->withErrors(['Vous devez renseigner tous les champs du formulaire.']);
+        }
+
+        $old_pass = hash('md5', $request->old_password);
+        $new_pass = hash('md5', $request->new_password);
+        $confirm_new_pass = hash('md5', $request->confirm_new_password);
+
         try {
-            $user = User::find($request->user_id);
-            if($user->password != $request->old_pass) {
-                return response("L'acien mot de passe n'est pas correct.", 201);
+            $user = User::find(Auth::user()->id);
+            if($user->password != $old_pass) {
+                return redirect($old_path)
+                    ->withInput($input)
+                    ->withErrors(["L'acien mot de passe n'est pas correct."]);
             }
-            $user->passowrd = $request->new_pass;
+
+            if($new_pass != $confirm_new_pass){
+                return redirect($old_path)
+                    ->withInput($input)
+                    ->withErrors(['Le mot de passe de confirmation est différent du nouveau mot de passe.']);
+            }
+
+            $user->password = $new_pass;
             $user->update();
-            return response('', 200);
+
+            return redirect($old_path)
+                ->withInput($input)
+                ->with('success', 'Mot de passe mis à jour avec succès.');
+
         } catch (Exception $th) {
-            return response($th);
+            return redirect($old_path)->withInput($input)->withErrors([$th->getMessage()]);
         }
         
     }

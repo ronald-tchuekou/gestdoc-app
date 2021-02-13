@@ -1,6 +1,8 @@
-<div role="tabpanel" class="tab-pane active" id="profile-vertical-general" aria-labelledby="profile-pill-general" aria-expanded="true">
+<div role="tabpanel" class="tab-pane @if(old('type') != 'password') active @else fade @endif" id="profile-vertical-general" aria-labelledby="profile-pill-general" aria-expanded="@if(old('type') != 'password') true @else false @endif ">
+@if(old('type') != 'password')
     @include('errors.errors')
     @include('success.success')
+@endif
     <div class="media">
         <a href="javascript:void(0);" class="mr-25">
             <img src="{{Auth::user()->profile}}" id="profile-upload-img" class="rounded mr-50" alt="profile image" height="80" width="80"/>
@@ -18,9 +20,9 @@
 
     <div class="row">
     @if(Auth::user()->role == 'Agent')
-        <div class="col-12 d-flex flex-row justify-content-center">
-            <label>Service de gestion :</label>
-            <input disabled class="form-control" value="{{Auth::user()->service->intitule}}"/>
+        <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+            <label class="mx-1">Service de gestion :</label>
+            <input disabled class="form-control w-25" value="{{Auth::user()->service->intitule}}"/>
         </div>
     @endif
         <div class="col-12 col-sm-6">
