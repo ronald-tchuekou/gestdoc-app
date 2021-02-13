@@ -35,8 +35,8 @@ class RegisterMail extends Mailable
     {
         return $this->markdown('vendor.notifications.email')
             ->subject('Confirmation de compte et inscription.')
-            ->replyTo('ronaldtchuekou@gmail.com', 'Dev Ronald Tchuekou')
-            ->from('gesdoc@startupCor.com', 'GestDoc')
+            ->replyTo('message@communedebanka.com', 'GestDoc')
+            ->from('gmessage@communedebanka.com', 'GestDoc')
             ->with([
                 'url' => $this->url,
                 'lastName' => $this->user->personne->nom,
