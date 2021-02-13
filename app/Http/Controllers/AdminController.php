@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\RegisterMail;
 use App\Models\Assigne;
 use App\Models\Courier;
+use App\Models\CourierValide;
 use App\Models\Personne;
 use App\Models\Reject;
 use App\Models\Service;
@@ -153,10 +154,8 @@ class AdminController extends Controller
 
     public function storeAgent(Request $request) {
 
-        
-
-        
         $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
+        
         if($validation->fails()){
             return redirect('/admin/agents/add')
                 ->withInput($request->all())
@@ -185,9 +184,12 @@ class AdminController extends Controller
         $user = new User;
         $user->personne_id = $personne_id;
         $user->service_id = $request->service_id;
+        $user->profile = 'images/profiles/default_profile.png';
         $user->register_token = str_replace('/', '', bcrypt($this->str_random(20)));
         $user->save();
 
+
+        // TODO manage this to send the email.
         Mail::to($personne->email, $personne->nom . ' ' . $personne->prenom)
             ->send(new RegisterMail($user));
 
@@ -196,6 +198,9 @@ class AdminController extends Controller
             ->with('success', 'Agent ajouté avec succèss');
     }
 
+    /**
+     * fonction qui permet de générer une chaine de caractères.
+     */
     public static function str_random($length = 16)
     {
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -229,7 +234,7 @@ class AdminController extends Controller
     public function add_to_reject($id, $reason) {
         $courier = Courier::find($id);
 
-        if($courier->etat != 'Rejeté'){
+        if($courier->etat == 'Rejeté'){
             return response('Le dossier à déjà été rejeté.', 201);
         }
         $reject = new Reject;
@@ -250,6 +255,15 @@ class AdminController extends Controller
         try{
             $courier = Courier::find($id);
             $courier->etat = 5; // Etat de validation du courier.
+
+            $validate = new CourierValide;
+            $validate->courier_id = $id;
+            $validate->user_id = Auth::user()->id;
+            
+            if(!$validate->save()){
+                return response('Erreur de validation, veuillez reprendre.', 201);
+            }
+
             $courier->update();
 
             return response('', 200);

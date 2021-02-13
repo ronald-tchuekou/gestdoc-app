@@ -1,9 +1,9 @@
 <div class="tab-pane fade" id="account-vertical-password" role="tabpanel" aria-labelledby="account-pill-password" aria-expanded="false">
-    <form class="validate-form" novalidate="novalidate">
+    <form class="validate-form" novalidate="novalidate" action="/update-passe/">
         <div class="row">
         <div class="col-12 col-sm-6">
             <div class="form-group">
-            <label for="account-old-password">Old Password</label>
+            <label for="account-old-password">Ancien mot de passe : </label>
             <div class="input-group form-password-toggle input-group-merge">
                 <input type="password" class="form-control" id="account-old-password" name="password" placeholder="Old Password"/>
                 <div class="input-group-append">
@@ -18,7 +18,7 @@
         <div class="row">
         <div class="col-12 col-sm-6">
             <div class="form-group">
-            <label for="account-new-password">New Password</label>
+            <label for="account-new-password">Nouveau mot de passe : </label>
             <div class="input-group form-password-toggle input-group-merge">
                 <input type="password" id="account-new-password" name="new-password" class="form-control" placeholder="New Password"/>
                 <div class="input-group-append">
@@ -31,7 +31,7 @@
         </div>
         <div class="col-12 col-sm-6">
             <div class="form-group">
-            <label for="account-retype-new-password">Retype New Password</label>
+            <label for="account-retype-new-password">Confirmé nouveau mot de passe : </label>
             <div class="input-group form-password-toggle input-group-merge">
                 <input type="password" class="form-control" id="account-retype-new-password" name="confirm-new-password" placeholder="New Password"/>
                 <div class="input-group-append">

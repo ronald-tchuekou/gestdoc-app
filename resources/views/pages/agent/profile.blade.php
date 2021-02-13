@@ -7,7 +7,7 @@
         <div class="col-md-3 mb-2 mb-md-0">
             <ul class="nav nav-pills flex-column nav-left">
                 <li class="nav-item">
-                    <a class="nav-link active py-1" id="account-pill-general" data-toggle="pill" href="#account-vertical-general" aria-expanded="true">
+                    <a class="nav-link active py-1" id="profile-pill-general" data-toggle="pill" href="#profile-vertical-general" aria-expanded="true">
                     <i class="feather icon-user"></i>&nbsp;&nbsp;&nbsp;
                         <span class="font-weight-bold">General</span>
                     </a>

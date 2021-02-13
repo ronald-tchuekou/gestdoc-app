@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h4 class="font-weight-bolder">Modification d'un courier</h4>
+        <h4 class="font-weight-bolder">Modification d'un courrier</h4>
     </div>
     <div class="card-content">
         @include('errors.errors')

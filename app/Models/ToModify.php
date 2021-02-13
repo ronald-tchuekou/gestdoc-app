@@ -13,4 +13,9 @@ class ToModify extends Model
         'courier_id', 
         'reason',
     ];
+
+    public function courier () {
+        return $this->belongsTo(Courier::class);
+    }
+
 }

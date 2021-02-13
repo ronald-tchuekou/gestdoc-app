@@ -11,32 +11,39 @@
                 <table class="user-list-table table dataTable no-footer dtr-column collapsed" id="courier_table_admin" role="grid" aria-describedby="courier_table_admin_info" >
                     <thead class="thead-light">
                         <tr role="row">
-                            <th>Courier</th>
+                            <th>N° Courier</th>
                             <th>Objet</th>
-                            <th>Traité le</th>
-                            <th>Par</th>
+                            <th>Prestataire</th>
+                            <th>Terminé le</th>
                             <th style="width: 50px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($couriers_traite as $courier)
                         <tr role="row" class="odd hover" id="row-{{$loop->index}}">
+                            <td>{{$courier->id}}</td>
+                            <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
+                            <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->prestataire}}</td>
+                            <td><span class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</span></td>
                             <td>
-                                <div class="d-flex justify-content-left align-items-center">
-                                    <div class="d-flex flex-column">
-                                        <a href="javascript:void()" class="user_name text-truncate">
-                                            <span class="font-weight-bold">{{$courier->personne->nom}} {{$courier->personne->prenom}}</span>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm hide-arrow" data-toggle="dropdown">
+                                        <i class="feather icon-more-vertical font-medium-3 text-muted cursor-pointer"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <!-- <a href="/admin/couriers/{{$courier->id}}" id="type-success" class="dropdown-item" style="padding: 7px 9px;"> -->
+                                        <a href="/{{$current_account}}/courier-details/{{$courier->id}}" class="dropdown-item" style="padding: 7px 9px;">
+                                            <i class="feather icon-file-text" style="font-size: 1.5rem;"></i>
+                                            &nbsp;&nbsp;&nbsp;Details
                                         </a>
-                                        <small class="emp_post text-muted">{{$courier->personne->telephone}}</small>
+                                        <a href="javascript:void()" class="dropdown-item assigner_btn validate-courier" style="padding: 7px 9px;"
+                                            type="button" 
+                                            data-courier="{{$courier->id}}">
+                                            <i class="feather icon-check" style="font-size: 1.5rem;"></i>
+                                            &nbsp;&nbsp;&nbsp;Valider
+                                        </a>
                                     </div>
                                 </div>
-                            </td>
-                            <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
-                            <td><span class="text-truncate align-middle text-nowrap">{{$courier->nbPiece}}</span></td>
-                            <td>{{$courier->prestataire}}</td>
-                            <td>
-                                <a href="/{{$current_account}}/courier-details/{{$courier->id}}"  class="btn btn-info btn-sm">Details</a>
-                                <div data-courier="{{$courier->id}}" class="btn btn-success btn-sm validate-courier">Valider</div>
                             </td>
                         </tr>
                         @empty

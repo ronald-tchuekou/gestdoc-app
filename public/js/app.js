@@ -219,7 +219,7 @@ function admin_agent_filter() {
         axios.get(HOST_BACKEND + '/admin/couriers/validate/' + courier_id)
           .then(response => {
             if (response.status == 200) {
-              $(row).parent().parent().remove();
+              $(row).parent().parent().parent().parent().remove();
               toastr.success('Dossier validé avec succès.', 'Message de succès',
                 { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
             } else {

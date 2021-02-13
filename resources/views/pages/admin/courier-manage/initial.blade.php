@@ -12,6 +12,7 @@
                 <table class="user-list-table table dataTable no-footer dtr-column collapsed" id="courier_table_admin" role="grid" aria-describedby="courier_table_admin_info" >
                     <thead class="thead-light">
                         <tr role="row">
+                            <th>N° Courier</th>
                             <th>Dépositaire</th>
                             <th style="width: 250px;">Objet</th>
                             <th class="text-nowrap">Nb Pièce</th>
@@ -24,6 +25,7 @@
                     <tbody>
                         @forelse($couriers_initial as $courier)
                         <tr role="row" class="odd hover" id="row-{{$loop->index}}">
+                            <td>{{$courier->id}} </td>
                             <td>
                                 <div class="d-flex justify-content-left align-items-center">
                                     <div class="d-flex flex-column">

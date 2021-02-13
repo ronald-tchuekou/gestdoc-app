@@ -11,8 +11,9 @@
                 <table class="user-list-table table dataTable no-footer dtr-column collapsed" id="courier_table_admin" role="grid" aria-describedby="courier_table_admin_info" >
                     <thead class="thead-light">
                         <tr role="row">
-                            <th>Courier</th>
+                            <th>N° Courier</th>
                             <th>Objet</th>
+                            <th>Prestataire</th>
                             <th>Modifié le</th>
                             <th>Par</th>
                             <th style="width: 40px;">Actions</th>
@@ -21,19 +22,20 @@
                     <tbody>
                         @forelse($couriers_modifie as $courier)
                         <tr role="row" class="odd hover" id="row-{{$loop->index}}">
+                            <td>{{$courier->id}}</td>
+                            <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
+                            <td>{{$courier->prestataire}}</td>
+                            <td><span class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</span></td>
                             <td>
                                 <div class="d-flex justify-content-left align-items-center">
                                     <div class="d-flex flex-column">
                                         <a href="javascript:void()" class="user_name text-truncate">
-                                            <span class="font-weight-bold">{{$courier->personne->nom}} {{$courier->personne->prenom}}</span>
+                                            <span class="font-weight-bold">{{$courier->user->personne->nom}} {{$courier->user->personne->prenom}}</span>
                                         </a>
-                                        <small class="emp_post text-muted">{{$courier->personne->telephone}}</small>
+                                        <small class="emp_post text-muted">{{$courier->user->personne->telephone}}</small>
                                     </div>
                                 </div>
                             </td>
-                            <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
-                            <td><span class="text-truncate align-middle text-nowrap">{{$courier->nbPiece}}</span></td>
-                            <td>{{$courier->prestataire}}</td>
                             <td>
                                 <div class="btn-group">
                                     <button class="btn btn-sm hide-arrow" data-toggle="dropdown">

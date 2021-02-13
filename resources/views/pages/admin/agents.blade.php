@@ -79,7 +79,7 @@
                         <td>
                             <div class="d-flex justify-content-left align-items-center">
                                 <div class="avatar-wrapper">
-                                    <div class="avatar mr-1"><img src="{{asset('images/portrait/small/avatar-s-11.jpg')}}" alt="Avatar" height="34" width="34" /></div>
+                                    <div class="avatar mr-1"><img src="{{$agent->profile}}" alt="Avatar" height="34" width="34" /></div>
                                 </div>
                                 <div class="d-flex flex-column">
                                     <a href="" class="user_name text-truncate">

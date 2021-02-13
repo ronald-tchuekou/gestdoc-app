@@ -8,7 +8,7 @@
 <div class="card-header">
     <div class="d-flex mb-3">
         <a class="ml-1 text-secondary backPerss" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Initialisation d'un nouveau courier</h4>
+        &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Initialisation d'un nouveau courrier</h4>
     </div>
 </div>
 <div class="card-content">
@@ -16,7 +16,7 @@
     <div class="row w-100 px-0 m-0">
         <div class="col-md-6 col-12 mx-0 px-0">
             <fieldset class="form-group border mx-1 pb-1">
-                <legend class="scheduler-border text-small" style="font-size: 1rem;">Information de perstataire</legend>
+                <legend class="scheduler-border text-small" style="font-size: 1rem;">Information du dépositaire</legend>
                 <div class="row px-1">
                     <div class="col-md-6 col-12 form-group mb-0">
                         <label for="nom">Nom : </label>
@@ -55,8 +55,16 @@
         </div>
         <div class="col-md-6 col-12 mx-0 px-0">
             <fieldset class="form-group border mx-1 pb-1">
-                <legend class="scheduler-border text-small" style="font-size: 1rem;">Information de perstataire</legend>
+                <legend class="scheduler-border text-small" style="font-size: 1rem;">Information du courrier</legend>
                 <div class="row px-1">
+                    <div class="col-md-6 col-12 form-group mb-0">
+                        <label>N° Courrier : </label>
+                        <input disabled value="{{$courier->id}}" class="form-control">
+                    </div>
+                    <div class="col-md-6 col-12 form-group mb-0">
+                        <label>Nombre de pièce : </label>
+                        <input disabled value="{{$courier->nbPiece}}" class="form-control">
+                    </div>
                     <div class="col-md-6 col-12 form-group mb-0">
                         <label>Categorie : </label>
                         <input disabled value="{{$courier->categorie->intitule}}" class="form-control">
@@ -67,14 +75,8 @@
                     </div>
                 </div>
                 <div class="col-12 form-group mb-0">
-                    <label>Nombre de pièce : </label>
-                    <input disabled value="{{$courier->nbPiece}}" class="form-control">
-                </div>
-                <div class="col-12 form-group mb-0">
                     <label>Objet : </label>
-                    <div class="form-control">
-                    {{$courier->objet}}
-                    </div>
+                    <div class="border rounded-sm p-1">{{$courier->objet}} </div>
                 </div>
                 <div class="col-12 form-group mb-0">
                     <label>Observation : </label>
@@ -88,13 +90,13 @@
 </div>
 
 <div class="card">
-    <div class="card-header"><h4 class="font-weight-bolder">Présentation de la situation du courier</h4></div>
+    <div class="card-header"><h4 class="font-weight-bolder">Présentation de la situation du courrier</h4></div>
     <div class="card-body" style="overflow-x: auto;">
         <div class="state">
             <ul class="d-flex state-courier justify-content-between">
                 <li class="state-item">
                     <div class="state-icon">
-                        <label class="text-secondary font-size-small">Initial</label>
+                        <label class="text-secondary font-size-small text-primary">Initial</label>
                         <span class="boule-wrapper bg-primary">
                             <i class="feather icon-plus font-medium-4 align-middle"></i>
                         </span>
@@ -108,14 +110,14 @@
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
                             <div class="avatar-wrapper">
-                                <div class="avatar mr-1"><img src="{{asset('images/portrait/small/avatar-s-11.jpg')}}" alt="Avatar" height="34" width="34" /></div>
+                                <div class="avatar mr-1"><img src="{{$courier_user->profile}}" alt="Avatar" height="34" width="34" /></div>
                             </div>
                             <div class="d-flex flex-column">
                                 <a href="" class="user_name text-truncate">
                                     <span class="font-weight-bold">{{$courier_user->personne->nom}} {{$courier_user->personne->prenom}}</span>
                                 </a>
                                 <small class="emp_post text-muted">{{$courier_user->personne->telephone}}</small>
-                                <small class="emp_post text-muted">{{$courier_user->personne->telephone}}</small>
+                                <small class="text-dark">{{$courier_user->service->intitule}}</small>
                             </div>
                         </div>
                     </div>
@@ -126,13 +128,15 @@
                 <li class="state-item">
                     <div class="state-icon">
                         <label class="text-secondary font-size-small">Traitement</label>
-                        <span class="boule-wrapper bg-warning">
                             @if($assignments[0]->terminer == 2)
-                            <i class="feather icon-check font-medium-4 align-middle"></i>
+                             <span class="boule-wrapper bg-warning">
+                                <i class="feather icon-check font-medium-4 align-middle"></i>
+                            </span>
                             @else
-                            <i class="feather icon-alert-circle font-medium-4 align-middle"></i>
+                             <span class="boule-wrapper bg-warning" style="opacity: .5;">
+                                <i class="feather icon-alert-circle font-medium-4 align-middle"></i>
+                            </span>
                             @endif
-                        </span>
                     </div>
                     <div class="state-desc">
                         <div>
@@ -143,14 +147,14 @@
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
                             <div class="avatar-wrapper">
-                                <div class="avatar mr-1"><img src="{{asset('images/portrait/small/avatar-s-11.jpg')}}" alt="Avatar" height="34" width="34" /></div>
+                                <div class="avatar mr-1"><img src="{{$assignments[0]->agent->profile}}" alt="Avatar" height="34" width="34" /></div>
                             </div>
                             <div class="d-flex flex-column">
                                 <a href="" class="user_name text-truncate">
                                     <span class="font-weight-bold">{{$assignments[0]->agent->personne->nom}} {{$assignments[0]->agent->personne->prenom}}</span>
                                 </a>
                                 <small class="emp_post text-muted">{{$assignments[0]->agent->personne->telephone}}</small>
-                                <small class="emp_post text-muted">{{$assignments[0]->agent->service->intitule}}</small>
+                                <small class="text-dark">{{$assignments[0]->agent->service->intitule}}</small>
                             </div>
                         </div>
                     </div>
@@ -163,14 +167,15 @@
                 <li class="state-item">
                     <div class="state-icon">
                         <label class="text-secondary font-size-small">Traitement {{$assign->position}}</label>
-                        <span class="boule-wrapper bg-warning">
-
                         @if($assign->terminer == 2)
+                        <span class="boule-wrapper bg-warning">
                             <i class="feather icon-check font-medium-4 align-middle"></i>
-                        @else
-                            <i class="feather icon-alert-circle font-medium-4 align-middle"></i>
-                        @endif
                         </span>
+                        @else
+                        <span class="boule-wrapper bg-warning" style="opacity: .5;">
+                            <i class="feather icon-alert-circle font-medium-4 align-middle"></i>
+                        </span>
+                        @endif
                     </div>
                     <div class="state-desc">
                         <div>
@@ -181,14 +186,14 @@
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
                             <div class="avatar-wrapper">
-                                <div class="avatar mr-1"><img src="{{asset('images/portrait/small/avatar-s-11.jpg')}}" alt="Avatar" height="34" width="34" /></div>
+                                <div class="avatar mr-1"><img src="{{$assign->agent->profile}}" alt="Avatar" height="34" width="34" /></div>
                             </div>
                             <div class="d-flex flex-column">
                                 <a href="" class="user_name text-truncate">
-                                    <span class="font-weight-bold">{{$assign->date->agent->personne->nom}} {{$assign->date->agent->personne->prenom}}</span>
+                                    <span class="font-weight-bold">{{$assign->agent->personne->nom}} {{$assign->agent->personne->prenom}}</span>
                                 </a>
-                                <small class="emp_post text-muted">{{$assign->date->agent->personne->telephone}}</small>
-                                <small class="emp_post text-muted">{{$assign->date->agent->personne->telephone}}</small>
+                                <small class="emp_post text-muted">{{$assign->agent->personne->telephone}}</small>
+                                <small class="text-dark">{{$assign->agent->service->intitule}}</small>
                             </div>
                         </div>
                     </div>
@@ -240,7 +245,7 @@
                         </div>
                         <div class="d-flex justify-content-left align-items-center">
                             <div class="avatar-wrapper">
-                                <div class="avatar mr-1"><img src="{{asset('images/portrait/small/avatar-s-11.jpg')}}" alt="Avatar" height="34" width="34" /></div>
+                                <div class="avatar mr-1"><img src="{{$courier->valide->user->profile}}" alt="Avatar" height="34" width="34" /></div>
                             </div>
                             <div class="d-flex flex-column">
                                 <a href="" class="user_name text-truncate">

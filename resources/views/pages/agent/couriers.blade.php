@@ -16,7 +16,7 @@
 
 <div class="card">
     <div class="card-header d-flex justify-content-between p-0 pt-2 px-1">
-        <h5 class="font-weight-bolder">Couriers initialisés</h5>
+        <h5 class="font-weight-bolder">Courriers initialisés</h5>
         <div class="d-flex justify-content-between">
             <input type="search" class="form-control" placeholder="Rechercher" aria-controls="DataTables_Table_0" />
             <div class="text-md-center">
@@ -31,6 +31,7 @@
             <table class="user-list-table table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" >
                 <thead class="thead-light">
                     <tr role="row">
+                        <th>N° Courrier</th>
                         <th>Dépositaire</th>
                         <th style="width: 250px;">Objet</th>
                         <th class="text-nowrap">Nb Pièce</th>
@@ -42,6 +43,7 @@
                 <tbody>
                     @forelse($couriers as $courier)
                     <tr role="row" class="odd hover">
+                        <td>{{$courier->id}}</td>
                         <td>
                             <div class="d-flex justify-content-left align-items-center">
                                 <div class="d-flex flex-column">
@@ -75,14 +77,14 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" class="text-center"><span class="alert">Pas de couriers à l'état initial.</span></td></tr>
+                    <tr><td colspan="6" class="text-center"><span class="alert">Pas de courriers à l'état initial.</span></td></tr>
                     @endforelse
                 </tbody>
             </table>
             <div class="d-flex justify-content-between mx-2 row mb-1">
                 <div class="col-sm-12 col-md-6">
                     <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
-                        1 à 10 / 50 couriers
+                        1 à 10 / 50 courriers
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6">

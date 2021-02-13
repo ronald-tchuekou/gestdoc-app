@@ -30,17 +30,17 @@ class AgentController extends Controller
         $current_action = explode('/', Route::current()->uri)[1];
 
         // Les couriers validés.
-        $valide_couriers = $user->couriers_initialises()->where('etat', 5);
+        $valide_couriers = $user->couriers_initialises()->where('etat', 5)->orderBy('updated_at', 'DESC')->get();
 
         // Les couriers rejetés.
-        $reject_couriers = $user->couriers_initialises()->where('etat', 6)->get();
+        $reject_couriers = $user->couriers_initialises()->where('etat', 6)->orderBy('updated_at', 'DESC')->get();
 
         // Les couriers à modifier.
-        $modify_couriers = $user->couriers_initialises()->where('etat', 8)->get();
+        $modify_couriers = $user->couriers_initialises()->where('etat', 8)->orderBy('updated_at', 'DESC')->get();
 
         // Les couriers à traiter.
         $f_couriers1 = $user->couriers_assignes()->where('etat', 2)->get();
-        $f_couriers = $f_couriers1->concat($user->couriers_assignes()->where('etat', 3)->get());
+        $f_couriers = $f_couriers1->concat($user->couriers_assignes()->where('etat', 3)->orderBy('updated_at', 'DESC')->get());
 
         $this->finish_couriers = [];
         $f_couriers->each(function($item, $key) {

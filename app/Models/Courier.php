@@ -35,6 +35,14 @@ class Courier extends Model
         return $this->hasMany(Assigne::class);
     }
 
+    public function to_modify () {
+        return $this->hasOne(ToModify::class);
+    }
+
+    public function reject () {
+        return $this->hasOne(Reject::class);
+    }
+
     public function assignes_users () {
         return $this->belongsToMany(User::class, 'assignes');
     }
@@ -56,6 +64,6 @@ class Courier extends Model
     }
 
     public function valide() {
-        return $this->belongsTo(CourierValide::class);
+        return $this->hasOne(CourierValide::class);
     }
 }

@@ -5,13 +5,13 @@
             <span class="user-status">{{Auth::user()->login}}</span>
         </div>
         <span>
-            <img class="round" src="{{$user->profile}}" alt="avatar" height="40" width="40">
+            <img class="round" src="{{Auth::user()->profile}}" alt="avatar" height="40" width="40">
         </span>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item" href="/{{$current_account}}/profile"><i class="feather icon-user"></i> Edit Profile</a>
-        <a class="dropdown-item" href="/"><i class="feather icon-mail"></i> My Inbox</a>
+        <a class="dropdown-item" href="/{{$current_account}}/profile"><i class="feather icon-user"></i> Compte</a>
+        <a class="dropdown-item" href=""><i class="feather icon-mail"></i>Boite de reception</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="/loginOut"><i class="feather icon-power"></i> Logout</a>
+        <a class="dropdown-item" href="/loginOut"><i class="feather icon-power"></i> Deconnexion</a>
     </div>
 </li>

@@ -6,10 +6,12 @@
                     <div class="app-logo"><img src="{{asset('images/logo/logo.png')}}" alt="logo"/></div>
                     <h2 class="brand-text mb-0">GESTDOC</h2>
                 </a></li>
-            <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i
-                        class="feather icon-x d-block d-xl-none font-medium-4 primary toggle-icon"></i><i
-                        class="toggle-icon feather icon-disc font-medium-4 d-none d-xl-block collapse-toggle-icon primary"
-                        data-ticon="icon-disc"></i></a></li>
+            <li class="nav-item nav-toggle">
+                <a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse">
+                    <i class="feather icon-x d-block d-xl-none font-medium-4 primary toggle-icon"></i>
+                    <i class="toggle-icon feather icon-disc font-medium-4 d-none d-xl-block collapse-toggle-icon primary" data-ticon="icon-disc"></i>
+                </a>
+            </li>
         </ul>
     </div>
     <div class="shadow-bottom"></div>
@@ -29,7 +31,7 @@
             @if(Auth::user()->role == 'Admin')
             <li class="nav-item @if($current_action == 'agents') active @endif">
                 <a href="/{{$current_account}}/agents"><i class="feather icon-users"></i><span class="menu-title"
-                        data-i18n="Agents">Agnents</span></a>
+                        data-i18n="Agents">Agents</span></a>
             </li>
             @endif
 
@@ -37,15 +39,15 @@
                 <a href="/{{$current_account}}/couriers">
                     <i class="feather icon-clipboard"></i>
                     <span class="menu-title" data-i18n="Courriers">
-                            Gestion des couriers
+                            Gestion des courriers
                     </span>
                 </a>
             </li>
             
-            <li class="nav-item @if($current_action == 'parametres') active @endif">
+            <!-- <li class="nav-item @if($current_action == 'parametres') active @endif">
                 <a href="/{{$current_account}}/parametres"><i class="feather icon-settings"></i><span class="menu-title"
                         data-i18n="Parametres">Parametres</span></a>
-            </li>
+            </li> -->
 
             <li class="nav-item"><a href="/loginOut"><i class="feather icon-log-out"></i><span class="menu-title"
                         data-i18n="Logout">Déconnexion</span></a>
