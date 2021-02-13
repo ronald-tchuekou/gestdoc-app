@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -39,7 +40,7 @@ class RegisterController extends Controller
 
         $user = User::find($id);
         $user->login = $request->login;
-        $user->password = hash('md5', $request->password);
+        $user->password = Hash::make($request->password);
         $user->register_token = null;
 
         if($user->update()){

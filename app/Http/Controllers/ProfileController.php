@@ -7,6 +7,7 @@ use Exception;
 use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
@@ -16,8 +17,6 @@ class ProfileController extends Controller
      * fonction qui permet de faire la mis à jour d'un mot de pass.
      */
     public function update_pass(Request $request) {
-
-        dd('827ccb0eea8a706c4c34a16891f84e7b' == hash('md5', $request->password));
 
         $old_path = '/' . strtolower(Auth::user()->role) . '/profile';
         $input = ['type' => 'password'];
@@ -33,25 +32,27 @@ class ProfileController extends Controller
             return redirect($old_path)->withInput($input)->withErrors(['Vous devez renseigner tous les champs du formulaire.']);
         }
 
-        $old_pass = hash('md5', $request->old_password);
-        $new_pass = hash('md5', $request->new_password);
-        $confirm_new_pass = hash('md5', $request->confirm_new_password);
+        $old_pass = $request->old_password;
+        $new_pass = $request->new_password;
+        $confirm_new_pass = $request->confirm_new_password;
 
+        
         try {
-            $user = User::find(Auth::user()->id);
-            if($user->password != $old_pass) {
+            $user = User::find(Auth::id());
+            
+            if(!Hash::check($old_pass, $user->password)) {
                 return redirect($old_path)
                     ->withInput($input)
                     ->withErrors(["L'acien mot de passe n'est pas correct."]);
             }
 
-            if($new_pass != $confirm_new_pass){
+            if($new_pass != $confirm_new_pass) {
                 return redirect($old_path)
                     ->withInput($input)
                     ->withErrors(['Le mot de passe de confirmation est différent du nouveau mot de passe.']);
             }
 
-            $user->password = $new_pass;
+            $user->password = bcrypt($new_pass);
             $user->update();
 
             return redirect($old_path)
