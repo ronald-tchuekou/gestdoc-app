@@ -1,12 +1,13 @@
 @component('mail::message')
-Salut à vous mr {{$firstName}} {{$lastName}}
-@endcomponent
+Salut à vous Mr/Mme {{$firstName}} {{$lastName}}<br/>
+Afin de terminer la creation de votre compte de gestionnaire sur la plate forme de gestion des courriers de la Mairie de Banka, Cliquer sur le bouton/lien suivant.
 
-@component('mail::button', ['url' => $url, 'color' => 'success'])
+@component('mail::button', ['url' => $url, 'color' => 'primary'])
 Cliquer ici
 @endcomponent
 
-@component('mail::panel')
-This is the panel content.
+<p>
+    Si le bouton ne marche pas, alors copier ce lien et coller dans un navigateur. <br>
+    <span style="color: blue">{{$url}}</span>
+</p>
 @endcomponent
-

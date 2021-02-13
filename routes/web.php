@@ -10,6 +10,9 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RootController;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/get-image', [ProfileController::class, 'getimage']);
+
 // Auth manager routes.
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::get('/login', [LoginController::class, 'index']);

@@ -184,7 +184,7 @@ class AdminController extends Controller
         $user = new User;
         $user->personne_id = $personne_id;
         $user->service_id = $request->service_id;
-        $user->profile = 'images/profiles/default_profile.png';
+        $user->profile = '/images/profiles/default_profile.png?h=100&w=100&fit=crop';
         $user->register_token = str_replace('/', '', bcrypt($this->str_random(20)));
         $user->save();
 
