@@ -379,6 +379,7 @@
         'passive' => true,
         'ssl' => true,
         'timeout' => 30,
+        'visibility' => 'public',
       ),
     ),
     'links' => 
