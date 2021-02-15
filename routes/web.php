@@ -76,7 +76,7 @@ Route::middleware(['auth', 'authAgent'])->prefix('agent')->group(function(){
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
 });
 
-Route::get('/images/{path}', [ImageController::class, 'show']);
+Route::get('http://pictureapis.communedebanka.com/profiles/', [ImageController::class, 'show']);
 
 Route::middleware(['auth'])->group(function(){
     Route::post('/profile/update-password', [ProfileController::class, 'update_pass']);

@@ -39,6 +39,7 @@ class RegisterMail extends Mailable
             ->from('message@communedebanka.com', 'GestDoc')
             ->with([
                 'url' => $this->url,
+                'sexe' => $this->user->personne->sexe,
                 'lastName' => $this->user->personne->nom,
                 'firstName' => $this->user->personne->prenom,
             ]);

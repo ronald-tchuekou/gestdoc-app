@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Ftp as Adapter;
+use League\Glide\Responses\LaravelResponseFactory;
+use League\Glide\ServerFactory;
 
 class ProfileController extends Controller
 {
@@ -75,51 +77,62 @@ class ProfileController extends Controller
 
         $redirectTo = '/' . strtolower(Auth::user()->role) . '/profile';
 
+        //Check if the file are set or not.
+        if (!$request->hasFile('profile')){
+            return redirect($redirectTo)->withErrors(['Vous n\'avez pas selectionné d\'image.']);
+        }
+        
+        // Validation.
         $validatedData = Validator::make($request->all(), [
             'profile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:800',
         ]);
-
+        
+        // Check the validation.
         if($validatedData->fails()) {
             $errors = ["Le format de l'image n'est pas autorisé ou bien sa taille est supperieur à 800Ko. format autorisé : jpg,png,jpeg,gif,svg."];
             return redirect($redirectTo)->withErrors($errors);
         }
-
-        $ext = $request->profile->clientExtension();
-        $milliseconds = round(microtime(true) * 1000);
-        $name = $milliseconds . '.' . $ext;
         
-        $path = Storage::putFileAs('', $request->file('profile'), $name, 'ftp');
-        $image_path = '/images/' . $path . '?w=100&h=100&fit=crop';
+        $host_image = 'http://pictureapis.communedebanka.com/profiles/';
         
-        $user = User::find($request->user_id);
-        $user->profile = $image_path;
-
-        if(Storage::disk('ftp')->exists($user->profile) and $user->update()) {
-            Storage::disk('ftp')->delete($user->profile);
+        $path = Storage::disk('ftp')->put('', $request->file('profile'));
+        $image_path = $host_image . $path;
+        
+        $user = User::find(Auth::id());
+        
+        try {
+            $old_image_path = explode('/', $user->profile)[4];
+            $user->profile = $image_path;
+    
+            if($user->update() && Storage::disk('ftp')->exists($old_image_path)) {
+                Storage::disk('ftp')->delete($old_image_path);
+            }
+        } catch (Exception $th) {
+            $user->profile = $image_path;
+            $user->update();
+        } finally {
+            return redirect($redirectTo)
+                ->with('success', 'Votre profile à été mis à jour.');
         }
         
-        return redirect($redirectTo)->with('success', 'Votre profile à été mis à jour.');
-    }
-
-
-    public function getimage (Request $request) {
-        $filesystem = new Filesystem(new Adapter([
-            'host' => '185.98.131.159',
-            'username' => '1452369OnbrQx ',
-            'password' => 'hE5!mVcuGm',
         
-            /** optional config settings */
-            'port' => 21,
-            'root' => '/path/to/root',
-            'passive' => true,
-            'ssl' => true,
-            'timeout' => 30,
-            'ignorePassiveAddress' => false,
-        ]));
-
-         return $filesystem->readStream('/profiles/');
     }
 
-
+    public function getimage() {
+        $file = Storage::get('default_profile.png');
+       
+        return view('teste', compact('file'));
+       
+        // dd($container_resource);
+        $server = ServerFactory::create([
+            'response' => new LaravelResponseFactory(),
+            'source' => "profiles",
+            'cache' => "profiles",
+            'cache_path_prefix' =>  '.cache',
+            'base_url' => 'images',
+        ]);
+        
+        return $server->getImageResponse($container_resource, ['w' =>  100, 'h' => 100]);
+    }
     
 }

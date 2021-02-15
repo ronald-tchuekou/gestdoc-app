@@ -55,15 +55,16 @@ return [
         'ftp' => [
             'driver' =>  'ftp',
             'host' => '185.98.131.159',
-            'username' => '1452369OnbrQx ',
+            'username' => '1452369OnbrQx',
             'password' => 'hE5!mVcuGm',
         
             /** optional config settings */
             'port' => 21,
-            'root' => '',
+            'root' => 'profiles',
             'passive' => true,
             'ssl' => true,
             'timeout' => 30,
+            'visibility' => 'public',
         ],
 
     ],

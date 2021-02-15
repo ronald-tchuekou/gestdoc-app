@@ -1,5 +1,5 @@
 @component('mail::message')
-Salut à vous Mr/Mme {{$firstName}} {{$lastName}}<br/>
+Salut à vous @if($sexe == 'Masculin') Mr @else Mme @endif {{$firstName}} {{$lastName}}<br/>
 Afin de terminer la creation de votre compte de gestionnaire sur la plate forme de gestion des courriers de la Mairie de Banka, Cliquer sur le bouton/lien suivant.
 
 @component('mail::button', ['url' => $url, 'color' => 'primary'])
