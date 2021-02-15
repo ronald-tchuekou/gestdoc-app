@@ -117,22 +117,5 @@ class ProfileController extends Controller
         
         
     }
-
-    public function getimage() {
-        $file = Storage::get('default_profile.png');
-       
-        return view('teste', compact('file'));
-       
-        // dd($container_resource);
-        $server = ServerFactory::create([
-            'response' => new LaravelResponseFactory(),
-            'source' => "profiles",
-            'cache' => "profiles",
-            'cache_path_prefix' =>  '.cache',
-            'base_url' => 'images',
-        ]);
-        
-        return $server->getImageResponse($container_resource, ['w' =>  100, 'h' => 100]);
-    }
     
 }
