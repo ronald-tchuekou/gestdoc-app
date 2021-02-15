@@ -28,22 +28,23 @@
                         data-i18n="Profile">Profile</span></a>
             </li>
 
-            @if(Auth::user()->role == 'Admin')
+            @if(Auth::user()->role == 'Admin' || Auth::user()->role == 'Root')
             <li class="nav-item @if($current_action == 'agents') active @endif">
                 <a href="/{{$current_account}}/agents"><i class="feather icon-users"></i><span class="menu-title"
                         data-i18n="Agents">Agents</span></a>
             </li>
             @endif
 
+@if(Auth::user()->role != 'Agent')
             <li class="nav-item @if($current_action == 'couriers') active @endif">
                 <a href="/{{$current_account}}/couriers">
                     <i class="feather icon-clipboard"></i>
                     <span class="menu-title" data-i18n="Courriers">
-                            Gestion des courriers
+                        @if(Auth::user()->role == 'Accueil') Courriers initialisés @else Gestion des courriers @endif
                     </span>
                 </a>
             </li>
-            
+@endif
             <!-- <li class="nav-item @if($current_action == 'parametres') active @endif">
                 <a href="/{{$current_account}}/parametres"><i class="feather icon-settings"></i><span class="menu-title"
                         data-i18n="Parametres">Parametres</span></a>

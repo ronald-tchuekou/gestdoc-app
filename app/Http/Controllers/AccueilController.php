@@ -15,17 +15,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 
-class AgentController extends Controller
+class AccueilController extends Controller
 {
 
-    protected $redirectTo = '/agent/couriers';
+    protected $redirectTo = '/accueil/couriers';
 
     protected $finish_couriers;
 
     public function index () {
         $user = Auth::user();
-        $title = 'AGENT GEST';
-        $current_account =  'agent';
+        $title = 'ACCUEIL GEST';
+        $current_account =  'accueil';
         $current_action = explode('/', Route::current()->uri)[1];
 
         // Les couriers validés.
@@ -37,63 +37,49 @@ class AgentController extends Controller
         // Les couriers à modifier.
         $modify_couriers = $user->couriers_initialises()->where('etat', 8)->orderBy('updated_at', 'DESC')->get();
 
-        // Les couriers à traiter.
-        $f_couriers1 = $user->couriers_assignes()->where('etat', 2)->get();
-        $f_couriers = $f_couriers1->concat($user->couriers_assignes()->where('etat', 3)->orderBy('updated_at', 'DESC')->get());
-
-        $this->finish_couriers = [];
-        $f_couriers->each(function($item, $key) {
-            $terminer = $item->assignes()->where('user_id', Auth::user()->id)->first();
-            if($terminer->terminer == 1 && $item != null){
-                array_push($this->finish_couriers, $item);
-            }
-        });
-
-        $finish_couriers = $this->finish_couriers;
-
-        return view('pages.agent.index', compact('valide_couriers', 'reject_couriers', 'modify_couriers', 'finish_couriers', 'title', 'current_account', 'current_action'));
+        return view('pages.accueil.index', compact('valide_couriers', 'reject_couriers', 'modify_couriers', 'title', 'current_account', 'current_action'));
     }
-
+    
     public function showProfileView () {
-        $title = 'AGENT GEST';
-        $current_account =  'agent';
+        $title = 'ACCUEIL GEST';
+        $current_account = 'accueil';
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.agent.profile', compact('title', 'current_account', 'current_action'));
     }
 
     public function showParametresView() {
-        $title = 'AGENT GEST';
-        $current_account =  'agent';
+        $title = 'ACCUEIL GEST';
+        $current_account = 'accueil';
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.agent.parametres', compact('title', 'current_account', 'current_action'));
     }
     
     public function showCouriersView() {
-        $title = 'AGENT GEST';
+        $title = 'ACCUEIL GEST';
         $user = Auth::user();
-        $current_account =  'agent';
+        $current_account = 'accueil';
         $current_action = explode('/', Route::current()->uri)[1];
         $couriers = $user->couriers_initialises()->where('etat', 1)->get();
-        return view('pages.agent.couriers', compact('couriers', 'title', 'current_account', 'current_action'));
+        return view('pages.accueil.couriers', compact('couriers', 'title', 'current_account', 'current_action'));
     }
     
     public function showAddCouriersView() {
-        $title = 'AGENT GEST';
-        $current_account =  'agent';
+        $title = 'ACCUEIL GEST';
+        $current_account = 'accueil';
         $current_action = explode('/', Route::current()->uri)[1];
         $courier_mode = 'add';
         // DATAS;
         $categories = Categorie::all();
         $prestataires = Utils::$PRESTATAIRES; // TODO
         $services = Service::all();
-        return view('pages.agent.couriers', compact('services', 'prestataires', 'categories', 'courier_mode', 'title', 'current_account', 'current_action'));
+        return view('pages.accueil.couriers', compact('services', 'prestataires', 'categories', 'courier_mode', 'title', 'current_account', 'current_action'));
     }
 
     /**
      * Function that store the new Courier.
      */
     public function storeCourier (Request $request) {
-
+        
         // Validations
         $validation = Validator::make($request->all(), array_merge(Courier::$rules, Personne::$rules));
         if($validation->fails()){
@@ -136,12 +122,8 @@ class AgentController extends Controller
         $personne->status = $request->status;
         $personne->update();
 
-
-
-
         // Update Couriers Element.
         $courier->categorie_id = $request->categorie_id;
-        $courier->service_id = Auth::user()->service_id;
         $courier->objet = $request->objet;
         $courier->prestataire = $request->prestataire;
         $courier->tache = $request->tache;
@@ -155,7 +137,7 @@ class AgentController extends Controller
 
         $courier->update();
 
-        return redirect('/agent/couriers')
+        return redirect('/accueil/couriers')
             ->withInput($request->all())
             ->with('success', 'Courier mis à jour avec succèss');
     }
@@ -188,7 +170,6 @@ class AgentController extends Controller
         $courier = new Courier();
         $courier->user_id = Auth::user()->id;
         $courier->categorie_id = $request->categorie_id;
-        $courier->service_id = Auth::user()->service_id;
         $courier->personne_id = $personne_id;
         $courier->objet = $request->objet;
         $courier->prestataire = $request->prestataire;
@@ -271,8 +252,8 @@ class AgentController extends Controller
     }
 
     public function editCourierShowView ($id) {
-        $title = 'AGENT GEST';
-        $current_account =  'agent';
+        $title = 'ACCUEIL GEST';
+        $current_account = 'accueil';
         $current_action = explode('/', Route::current()->uri)[1];
         $courier_mode = 'edit';
         // DATAS;
@@ -282,7 +263,7 @@ class AgentController extends Controller
         $courier = Courier::find($id);
         if($courier == null)
             return response(null, 400);
-        return view('pages.agent.couriers', compact('courier', 'services', 'prestataires', 'categories', 'courier_mode', 'title', 'current_account', 'current_action'));
+        return view('pages.accueil.couriers', compact('courier', 'services', 'prestataires', 'categories', 'courier_mode', 'title', 'current_account', 'current_action'));
     }
 
     /**

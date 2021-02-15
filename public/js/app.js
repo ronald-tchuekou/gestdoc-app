@@ -183,7 +183,7 @@ function admin_agent_filter() {
             axios.get(HOST_BACKEND + '/admin/couriers/' + courier_id + '/' + reason + '/' + reject_mode)
               .then(response => {
                 if (response.status != 200) {
-                  toastr.error(response.data, 'Erreur',
+                  toastr.warning(response.data, 'Erreur',
                      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
                 } else {
                   $(row).parent().parent().parent().parent().remove();
@@ -197,7 +197,7 @@ function admin_agent_filter() {
                 }
                 dismiss_block(modal);
               }).catch(reason => {
-                toastr.error('Error : ' + reason, 'Error');
+                toastr.error(reason, 'Error');
                 dismiss_block(modal);
               });
           }

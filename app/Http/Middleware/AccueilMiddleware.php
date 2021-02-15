@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AdminMiddleware
+class AccueilMiddleware
 {
     /**
      * Handle an incoming request.
@@ -22,14 +22,14 @@ class AdminMiddleware
         if($user == null)
             return redirect('login');
 
-        if($user->role == 'Admin'){
+        if($user->role == 'Accueil'){
             return $next($request);
-        }elseif($user->role == 'Accueil'){
-            return redirect()->intended('/accueil/dashboard');
+        }elseif($user->role == 'Agent'){
+            return redirect()->intended('/agent/dashboard');
         }elseif($user->role == 'Root'){
             return redirect()->intended('/root/dashboard');
         }else{
-            return redirect()->intended('/agent/dashboard');
+            return redirect()->intended('/admin/dashboard');
         }
     }
 }

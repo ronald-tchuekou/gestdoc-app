@@ -4,20 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Ftp as Adapter;
-use League\Glide\Responses\LaravelResponseFactory;
-use League\Glide\ServerFactory;
 
 class ProfileController extends Controller
 {
-    
+
     /**
      * fonction qui permet de faire la mis à jour d'un mot de pass.
      */
@@ -117,5 +113,5 @@ class ProfileController extends Controller
         
         
     }
-    
+
 }

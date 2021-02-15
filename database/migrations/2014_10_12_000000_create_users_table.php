@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('personne_id')->unique();
             $table->string('login')->nullable();
             $table->string('password')->nullable();
-            $table->enum('role', ['Agent', 'Admin', 'Root'])->default('Agent');
+            $table->enum('role', ['Agent', 'Admin', 'Root', 'Accueil'])->default('Agent');
             $table->rememberToken();
             $table->timestamps();
         });

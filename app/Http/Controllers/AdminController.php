@@ -240,6 +240,7 @@ class AdminController extends Controller
         $reject = new Reject;
         $reject->courier_id = $id;
         $reject->reason = $reason;
+        $reject->user_id = Auth::id();
         $reject->save();
         
         $courier->etat = 6;

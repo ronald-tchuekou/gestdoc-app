@@ -1,4 +1,4 @@
-<div class="tab-pane" id="courier-tab-finish" role="tabpanel" aria-labelledby="courier-pill-finish" aria-expanded="true">
+<div class="tab-pane fade" id="courier-tab-finish" role="tabpanel" aria-labelledby="courier-pill-finish" aria-expanded="false">
     <div class="card">
         <div class="card-header d-flex justify-content-between p-0 pt-2 px-1">
             <h5 class="font-weight-bolder">Courriers à traités</h5>

@@ -1,13 +1,13 @@
 <div class="card">
     <div class="card-header">
         <div class="d-flex mb-3">
-            <a href="/agent/couriers" class="ml-1 text-secondary" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
+            <a href="/accueil/couriers" class="ml-1 text-secondary" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Initialisation d'un nouveau courier</h4>
         </div>
     </div>
     <div class="card-content">
         @include('errors.errors')
-        <form action="/agent/couriers/store" class="form pb-1" method="post">
+        <form action="/accueil/couriers/store" class="form pb-1" method="post">
 
         
 @csrf

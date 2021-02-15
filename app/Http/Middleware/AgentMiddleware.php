@@ -24,6 +24,8 @@ class AgentMiddleware
 
         if($user->role == 'Agent'){
             return $next($request);
+        }elseif($user->role == 'Accueil'){
+            return redirect()->intended('/accueil/dashboard');
         }elseif($user->role == 'Root'){
             return redirect()->intended('/root/dashboard');
         }else{

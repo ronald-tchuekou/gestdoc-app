@@ -16,6 +16,7 @@
                             <th>Mofit (Rejet)</th>
                             <th>Rejeté le</th>
                             <th>Dépositaire</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,12 @@
                                         <small class="emp_post text-muted">{{$courier->personne->telephone}}</small>
                                     </div>
                                 </div>
+                            </td>
+                            <td>
+                                <a href="/{{$current_account}}/courier-details/{{$courier->id}}" class="btn btn-info btn-sm">
+                                    <i class="feather icon-file-text" style="font-size: 1rem;"></i>
+                                    &nbsp;&nbsp;&nbsp;Details
+                                </a>
                             </td>
                         </tr>
                         @empty

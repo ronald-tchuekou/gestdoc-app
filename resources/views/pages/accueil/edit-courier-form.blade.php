@@ -5,7 +5,7 @@
     <div class="card-content">
         @include('errors.errors')
 
-        <form action="/agent/couriers/update/{{$courier->id}}" class="form pb-1" method="post">
+        <form action="/accueil/couriers/update/{{$courier->id}}" class="form pb-1" method="post">
             @method('PUT')
             @csrf
             <input type="hidden" name="modify" value="{{old('modify', 'none')}}">

@@ -117,7 +117,7 @@
                                     <span class="font-weight-bold">{{$courier_user->personne->nom}} {{$courier_user->personne->prenom}}</span>
                                 </a>
                                 <small class="emp_post text-muted">{{$courier_user->personne->telephone}}</small>
-                                <small class="text-dark">{{$courier_user->service->intitule}}</small>
+                                <small class="text-dark">@if($courier_user->service != null) {{$courier_user->service->intitule}} @endif</small>
                             </div>
                         </div>
                     </div>
@@ -252,6 +252,38 @@
                                     <span class="font-weight-bold">{{$courier->valide->user->personne->nom}} {{$courier_user->personne->prenom}}</span>
                                 </a>
                                 <small class="emp_post text-muted">{{$courier->valide->user->personne->telephone}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                @endif
+
+                @if($courier->etat == 'Rejeté')
+
+                <li class="state-item">
+                    <div class="state-icon">
+                        <label class="text-secondary font-size-small">Rejeté</label>
+                        <span class="boule-wrapper bg-danger">
+                            <i class="feather icon-x font-medium-4 align-middle"></i>
+                        </span>
+                    </div>
+                    <div class="state-desc">
+                        <div>
+                            <span class="text-secondary">
+                                {{App\Models\Utils::date_format($courier->updated_at)}} à 
+                                {{App\Models\Utils::hour_format($courier->updated_at)}}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-left align-items-center">
+                            <div class="avatar-wrapper">
+                                <div class="avatar mr-1"><img src="{{$courier->reject->user->profile}}" alt="Avatar" height="34" width="34" /></div>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <a href="" class="user_name text-truncate">
+                                    <span class="font-weight-bold">{{$courier->reject->user->personne->nom}} {{$courier->reject->user->personne->prenom}}</span>
+                                </a>
+                                <small class="emp_post text-muted">{{$courier->reject->user->personne->telephone}}</small>
                             </div>
                         </div>
                     </div>

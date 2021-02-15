@@ -13,5 +13,14 @@ class Reject extends Model
     protected $fillable = [
         'courier_id',
         'reason',
+        'user_id',
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function courier () {
+        return $this->belongsTo(Courier::class);
+    }
 }

@@ -4,17 +4,11 @@
 
 <!-- list section start -->
 
-<!-- 
 <div class="contianer">
     <ul class="nav nav-pills flex-row nav-left">
         <li class="nav-item">
             <a class="nav-link btn-sm py-1 active" id="courier-pill-modify" data-toggle="pill" href="#courier-tab-modify" aria-expanded="true">
                 <span class="font-weight-bold">Courriers à modifier</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link btn-sm py-1" id="courier-pill-finish" data-toggle="pill" href="#courier-tab-finish" aria-expanded="false">
-                <span class="font-weight-bold">Courriers à traités</span>
             </a>
         </li>
         <li class="nav-item">
@@ -28,15 +22,17 @@
             </a>
         </li>
     </ul>
-</div> -->
+</div>
 
-<!-- <div class="tab-content"> -->
+<div class="tab-content">
 
+@include('pages.accueil.couriers.modify')
 
-@include('pages.agent.couriers.finish')
+@include('pages.accueil.couriers.reject')
 
+@include('pages.accueil.couriers.valide')
 
-<!-- </div> -->
+</div>
 
 
 <!-- list section end -->

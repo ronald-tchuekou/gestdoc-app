@@ -6,11 +6,11 @@
 
 @if(isset($courier_mode) && $courier_mode == 'add')
 
-    @include('pages.agent.add-courier-form')
+    @include('pages.accueil.add-courier-form')
 
 @elseif(isset($courier_mode) && $courier_mode == 'edit')
 
-    @include('pages.agent.edit-courier-form')
+    @include('pages.accueil.edit-courier-form')
 
 @else
 
@@ -64,11 +64,11 @@
                                 <i class="feather icon-more-vertical font-medium-3 text-muted cursor-pointer"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="/agent/courier-details/{{$courier->id}}" class="dropdown-item" style="padding: 7px 9px;">
+                                    <a href="/accueil/courier-details/{{$courier->id}}" class="dropdown-item" style="padding: 7px 9px;">
                                         <i class="feather icon-file-text" style="font-size: 1.5rem;"></i>
                                         &nbsp;&nbsp;&nbsp;Details
                                     </a>
-                                    <a href="/agent/couriers/{{$courier->id}}/edit" class="dropdown-item" style="padding: 7px 9px;">
+                                    <a href="/accueil/couriers/{{$courier->id}}/edit" class="dropdown-item" style="padding: 7px 9px;">
                                         <i class="feather icon-edit-2" style="font-size: 1.5rem;"></i>
                                         &nbsp;&nbsp;&nbsp;Edit
                                     </a>

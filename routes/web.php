@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\ImageController;
@@ -55,6 +56,24 @@ Route::middleware(['auth', 'authRoot'])->prefix('root')->group(function(){
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
 });
 
+// Accueil routes managers
+Route::middleware(['auth', 'authAccueil'])->prefix('accueil')->group(function(){
+
+    Route::get('/dashboard', [AccueilController::class, 'index']);
+    Route::get('/profile', [AccueilController::class, 'showProfileView']);
+    Route::get('/parametres', [AccueilController::class, 'showParametresView']);
+    Route::get('/couriers', [AccueilController::class, 'showCouriersView']);
+    Route::get('/couriers/add', [AccueilController::class, 'showAddCouriersView']);
+    Route::post('/couriers/store', [AccueilController::class, 'storeCourier']);
+    Route::put('/couriers/update/{id}', [AccueilController::class, 'updateCourier']);
+    Route::get('/couriers/{id}', [AccueilController::class, 'showCourier']);
+    Route::get('/couriers/{id}/edit', [AccueilController::class, 'editCourierShowView']);
+    Route::get('/couriers/{id}/modify', [AccueilController::class, 'modifyCourier']);
+    Route::get('/couriers/{id}/finish', [AccueilController::class, 'finishCourier']);
+
+    Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
+});
+
 // Agent routes managers
 Route::middleware(['auth', 'authAgent'])->prefix('agent')->group(function(){
 
@@ -72,8 +91,6 @@ Route::middleware(['auth', 'authAgent'])->prefix('agent')->group(function(){
 
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
 });
-
-Route::get('http://pictureapis.communedebanka.com/profiles/', [ImageController::class, 'show']);
 
 Route::middleware(['auth'])->group(function(){
     Route::post('/profile/update-password', [ProfileController::class, 'update_pass']);
