@@ -7,18 +7,123 @@
   Author email: ronaldtchuekou@gmail.com
 ==========================================================================================*/
 
+var $primary = '#7367F0';
+var $danger = '#EA5455';
+var $warning = '#FF9F43';
+var $info = '#0DCCE1';
+var $primary_light = '#8F80F9';
+var $warning_light = '#FFC085';
+var $danger_light = '#f29292';
+var $info_light = '#1edec5';
+var $strok_color = '#b9c3cd';
+var $label_color = '#e7eef7';
+var $white = '#fff';
+
 
 // Initialisation of service workers.
 function initializeService() {
   if('serviceWorker' in navigator) {
       // Supported 😍
-   
+      toastr.info('Les services workers sont supporté par ce navigateur. 😍','Information', 
+      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
   } else {
       // Not supported 😥
-    
+      toastr.warning('Les services workers ne sont pas supporté par ce navigateur. 😥','Information', 
+      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
   }
 }
 
+// Fonction qui afficher les pourcentages des courriers.
+function setChartAnalyst(_data) {
+  return {
+    chart: {
+      height: 325,
+      type: 'radialBar',
+    },
+    colors: [$primary, $warning, $danger],
+    fill: {
+      type: 'gradient',
+      gradient: {
+        // enabled: true,
+        shade: 'dark',
+        type: 'vertical',
+        shadeIntensity: 0.5,
+        gradientToColors: [$primary_light, $warning_light, $danger_light],
+        inverseColors: false,
+        opacityFrom: 1,
+        opacityTo: 1,
+        stops: [0, 100]
+      },
+    },
+    stroke: {
+      lineCap: 'round'
+    },
+    plotOptions: {
+      radialBar: {
+        size: 165,
+        hollow: {
+          size: '20%'
+        },
+        track: {
+          strokeWidth: '100%',
+          margin: 15,
+        },
+        dataLabels: {
+          name: {
+            fontSize: '18px',
+          },
+          value: {
+            fontSize: '16px',
+          },
+          total: {
+            show: true,
+            label: 'Total',
+            formatter: function (w) {
+              return _data.total;
+            },
+          }
+        }
+      }
+    },
+    series: [_data.valide / _data.total, _data.traite / _data.total, _data.reject / _data.total],
+    labels: ['Validé', 'Traité', 'Rejeté'],
+
+  }
+}
+
+// Fonction qui retourne le diagramme qui analyse les courriers.
+function renderTheContrent(_from) {
+  axios.get(HOST_BACKEND + '/statistiquesCourriers/' + _from).then(response => {
+
+    if (response.status == 200) {
+
+      console.log(response.data);
+      let data = response.data.record;
+
+      $('#total_valide_courrier').html(data.valide);
+      $('#total_traite_courrier').html(data.traite);
+      $('#total_reject_courrier').html(data.reject);
+
+      let courrierChartoptions = setChartAnalyst(response.data.record);
+
+      var courrierChart = new ApexCharts(
+        document.querySelector("#courrier-order-chart"),
+        courrierChartoptions
+      );
+    
+      courrierChart.render();
+
+    } else {
+      toastr.error('Une erreur s\'est produite. ' + response.data, 'Message d\'erreur',
+       { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+    }
+
+  }).catch(reason => {
+    toastr.error('😥' + reason,'Message d\'erreur', 
+    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+  });
+
+}
 
 var config = {
   headers: {'X-My-Custom-Header': 'Header-Value'}
@@ -276,6 +381,37 @@ function admin_agent_filter() {
         
       });
     });
+
+
+
+  // courrier Order Chart starts
+  // -----------------------------
+    
+    renderTheContrent("none");
+
+    $('.courrier-date_intervalle').each(function (i, elt) {
+      $(elt).click(function () {
+        let content = $(this).attr('data-content');
+        $('#dropdownItem2').html($(this).html());
+        let date = new Date();
+        if(content == "28d"){ // Il y'a 28 jours.
+          date.setDate(date.getDate() - 28);
+        }else if(content == "1m"){ // Il y'a 1 moi.
+          date.setDate(date.getDate() - 31);
+        }else{ // Il y'a 1 an.
+          date.setDate(date.getDate() - 365);
+        }
+        const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+        const mo = new Intl.DateTimeFormat('en', { month: 'numeric' }).format(date);
+        const dm = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+        let from = `${dm}-${mo}-${ye}`;
+        
+        renderTheContrent(from);
+      });
+    });
+    
+  // courrier Order Chart ends //
+
 
   });
 })(window, document, jQuery)

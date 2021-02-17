@@ -12,6 +12,7 @@ use App\Models\Reject;
 use App\Models\Service;
 use App\Models\ToModify;
 use App\Models\User;
+use App\Models\Utils;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -329,4 +330,84 @@ class AdminController extends Controller
         }
     }
 
+    /**
+     * Fonctoin qui retourne les statistique des courriers en un intervalle de temps.
+     */
+    public function get_statCourrierBetween (String $from="none") {
+
+        try{
+            $to_date = now();
+            $from_date = $from != "none" ? $from : strtotime(Utils::simple_date_format($to_date). ' + 7 days');
+
+            $courriers = Courier::whereBetween('dateEnregistrement', [$from_date, $to_date])->get();
+            $total = $courriers->count();
+            $total_valide =  $courriers->filter(function($item){
+                if($item->etat == 'Validé'){
+                    return $item;
+                }
+            })->count();
+            $total_traite =  $courriers->filter(function($item){
+                if($item->etat == 'Traité'){
+                    return $item;
+                }
+            })->count();
+            $total_reject =  $courriers->filter(function($item){
+                if($item->etat == 'Reject'){
+                    return $item;
+                }
+            })->count();
+
+            $tab = Array(
+                'total' => $total,
+                'valide' => $total_valide,
+                'traite' => $total_traite,
+                'reject' => $total_reject,
+            );
+
+            return response([
+                'status' => 'OK',
+                'record' => $tab,
+            ], 200);
+
+        }catch(Exception $th) {
+            return response($th->getMessage(), 201);
+        }
+    }
+
+    /**
+     * Fonctoin qui retourne les statistique des agent en un intervalle de temps.
+     */
+    public function get_statAgentBetween (String $from="", String $to="") {
+        try{
+            $to_date = $to != "" ? $to : now();
+            $from_date = $from != "" ? $from : strtotime($to. ' + 1 days');
+
+            $agents = User::where('role', 1)->whereBetween('created_at', [$from_date, $to_date])->get();
+            $total = $agents->count();
+            $total_active =  $agents->filter(function($item){
+                if($item->register_token == null){
+                    return $item;
+                }
+            })->count();
+            $total_non_active =  $agents->filter(function($item){
+                if($item->register_token != null){
+                    return $item;
+                }
+            })->count();
+
+            $tab = Array(
+                'total' => $total,
+                'active' => $total_active,
+                'non_active' => $total_non_active,
+            );
+
+            return response([
+                'status' => 'OK',
+                'record' => $tab,
+            ], 200);
+
+        }catch(Exception $th) {
+            return response($th->getMessage(), 201);
+        }
+    }
 }

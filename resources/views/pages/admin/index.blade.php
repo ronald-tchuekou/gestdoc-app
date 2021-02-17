@@ -14,22 +14,22 @@
                         Il ya 7 jours
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownItem2">
-                        <a class="dropdown-item" href="#">Il ya 28 jours</a>
-                        <a class="dropdown-item" href="#">Il ya 1 moi</a>
-                        <a class="dropdown-item" href="#">Il ya 1 an</a>
+                        <a class="dropdown-item courrier-date_intervalle" href="#" data-content = "28d">Il ya 28 jours</a>
+                        <a class="dropdown-item courrier-date_intervalle" href="#" data-content = "1m">Il ya 1 moi</a>
+                        <a class="dropdown-item courrier-date_intervalle" href="#" data-content = "1y">Il ya 1 an</a>
                     </div>
                 </div>
             </div>
             <div class="card-content">
                 <div class="card-body">
-                    <div id="product-order-chart" class="mb-3"></div>
+                    <div id="courrier-order-chart" class="mb-3"></div>
                     <div class="chart-info d-flex justify-content-between mb-1">
                         <div class="series-info d-flex align-items-center">
                             <i class="fa fa-circle-o text-bold-700 text-primary"></i>
                             <span class="text-bold-600 ml-50">Validé</span>
                         </div>
                         <div class="product-result">
-                            <span>23043</span>
+                            <span id="total_valide_courrier">23043</span>
                         </div>
                     </div>
                     <div class="chart-info d-flex justify-content-between mb-1">
@@ -38,7 +38,7 @@
                             <span class="text-bold-600 ml-50">Traité</span>
                         </div>
                         <div class="product-result">
-                            <span>14658</span>
+                            <span id="total_traite_courrier">14658</span>
                         </div>
                     </div>
                     <div class="chart-info d-flex justify-content-between mb-75">
@@ -47,7 +47,7 @@
                             <span class="text-bold-600 ml-50">Rejeté</span>
                         </div>
                         <div class="product-result">
-                            <span>4758</span>
+                            <span id="total_reject_courrier">4758</span>
                         </div>
                     </div>
                 </div>

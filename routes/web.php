@@ -3,7 +3,6 @@
 use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
-use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
@@ -97,3 +96,5 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/profile/upload-profile', [ProfileController::class, 'upload_profile']);
 });
 
+Route::get('/statistiquesCourriers/{from}', [AdminController::class, 'get_statCourrierBetween']);
+Route::get('/statistiquesAgents', [AdminController::class, 'get_statAgentBetween']);

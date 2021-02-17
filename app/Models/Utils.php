@@ -29,6 +29,13 @@ class Utils {
     }
 
     /**
+     * Fonction qui permet de formater la date.
+     */
+    public static function simple_date_format($date){
+        return date_format(new DateTime($date), 'd-m-Y');
+    }
+
+    /**
      * Fonction qui permet de formater une date en heure.
      */
     public static function hour_format($date) {
