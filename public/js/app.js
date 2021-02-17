@@ -35,6 +35,10 @@ function initializeService() {
 
 // Fonction qui afficher les pourcentages des courriers.
 function setChartAnalyst(_data) {
+  let valide = _data.valide / _data.total,
+  traite = _data.traite / _data.total,
+  reject = _data.reject / _data.total;
+
   return {
     chart: {
       height: 325,
@@ -85,7 +89,7 @@ function setChartAnalyst(_data) {
         }
       }
     },
-    series: [_data.valide / _data.total, _data.traite / _data.total, _data.reject / _data.total],
+    series: [+valide.toFixed(2), +traite.toFixed(2), +reject.toFixed(2)],
     labels: ['Validé', 'Traité', 'Rejeté'],
 
   }
