@@ -26,7 +26,7 @@
                             <td><span class="text-truncate align-middle text-nowrap">{{$courier->to_modify->reason}}</span></td>
                             <td>{{App\Models\Utils::full_date_format($courier->to_modify->created_at)}}</td>
                             <td>
-                                <a href="/agent/couriers/{{$courier->id}}/modify" class="btn btn-warning btn-sm">Modifier</a>
+                                <a href="/accueil/couriers/{{$courier->id}}/modify" class="btn btn-warning btn-sm">Modifier</a>
                             </td>
                         </tr>
                         @empty

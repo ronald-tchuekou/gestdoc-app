@@ -53,7 +53,7 @@
                                     <small class="emp_post text-muted">{{$courier->personne->telephone}}</small>
                                 </div>
                             </div>
-                        </td>
+                        </td> 
                         <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
                         <td><span class="text-truncate align-middle text-nowrap">{{$courier->nbPiece}}</span></td>
                         <td>{{$courier->prestataire}}</td>

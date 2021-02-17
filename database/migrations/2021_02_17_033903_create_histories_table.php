@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAssignesTable extends Migration
+class CreateHistoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateAssignesTable extends Migration
      */
     public function up()
     {
-        Schema::create('assignes', function (Blueprint $table) {
+        Schema::create('histories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('assignePar');
-            $table->foreignId('courier_id');
+            $table->string('title');
+            $table->string('content');
             $table->foreignId('user_id');
-            $table->text('tache');
-            $table->timestamp('date');
+            $table->enum('action_type', ['Ajout', 'Suppression', 'Rejet', 'Validation', 'Modification', 'Traitement']);
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateAssignesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assignes');
+        Schema::dropIfExists('histories');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Assigne;
 use App\Models\Categorie;
 use App\Models\Courier;
+use App\Models\History;
 use App\Models\Personne;
 use App\Models\Service;
 use App\Models\Utils;
@@ -89,7 +90,14 @@ class AccueilController extends Controller
         }
         
         $personne_id = $this->savePersonne($request);
-        $this->saveCourier($request, $personne_id);
+        $id = $this->saveCourier($request, $personne_id);
+
+        $history = new History;
+        $history->title = 'Initialisatin d\'un nouveau courrier';
+        $history->content = 'Le courrier N° ' . $id .' à été initialisé.';
+        $history->action_type = 1;
+        $history->user_id = Auth::id();
+        $history->save();
 
         return redirect($this->redirectTo . '/add')
             ->withInput($request->all())
@@ -136,6 +144,14 @@ class AccueilController extends Controller
         }
 
         $courier->update();
+
+        // HISTORY.
+        $history = new History;
+        $history->title = 'Modification d\'un courrier';
+        $history->content = 'Le courrier N° ' . $id .' à été modifier.';
+        $history->action_type = 5;
+        $history->user_id = Auth::id();
+        $history->save();
 
         return redirect('/accueil/couriers')
             ->withInput($request->all())
@@ -241,6 +257,15 @@ class AccueilController extends Controller
             }
             
             $courier->update();
+
+            // HISTORY.
+            $history = new History();
+            $agent = $assigne->agent->personne;
+            $history->title = 'Traitement d\'un courrier';
+            $history->content = 'Le courrier N° ' . $id .' à été Traité par '. $agent->nom . ' ' . $agent->prenom;
+            $history->action_type = 6;
+            $history->user_id = Auth::id();
+            $history->save();
             
             // TODO Notify the administrator if the traitement is finish.
     

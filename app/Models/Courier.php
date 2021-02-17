@@ -22,10 +22,10 @@ class Courier extends Model
         'nbPiece',
         'etat'
     ];
-
+    
     static $rules = [
         'categorie_id' => 'required',
-        'objet' => 'required',
+        'objet' => 'required|min:20|max:150',
         'prestataire' => 'required',
         'observation' => 'required',
         'nbPiece' => 'required',

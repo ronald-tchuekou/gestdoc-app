@@ -21,8 +21,8 @@ class Personne extends Model
     ];
 
     static $rules = [
-        'nom' => 'required',
-        'prenom' => 'required',
+        'nom' => 'required|min:3|max:20',
+        'prenom' => 'required|min:3|max:20',
         'sexe' => 'required',
         'telephone' => 'required|max:20|min:8',
         'cni' => 'required|max:20|min:4',

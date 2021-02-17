@@ -17,7 +17,7 @@ class CreateCouriersTable extends Migration
             $table->id();
             $table->integer('categorie_id')->index();
             $table->integer('personne_id')->index();
-            $table->string('objet');
+            $table->text('objet');
             $table->string('prestataire');
             $table->timestamp('dateEnregistrement')->index();
             $table->string('tache')->nullable();

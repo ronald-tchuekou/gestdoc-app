@@ -7,6 +7,19 @@
   Author email: ronaldtchuekou@gmail.com
 ==========================================================================================*/
 
+
+// Initialisation of service workers.
+function initializeService() {
+  if('serviceWorker' in navigator) {
+      // Supported 😍
+   
+  } else {
+      // Not supported 😥
+    
+  }
+}
+
+
 var config = {
   headers: {'X-My-Custom-Header': 'Header-Value'}
 };
@@ -72,6 +85,9 @@ function admin_agent_filter() {
 
 (function (window, document, $) {
   $(document).ready(() => {
+
+    // init the service.
+    initializeService();
 
     // Set the listener.
     admin_agent_filter();

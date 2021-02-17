@@ -166,7 +166,7 @@
 
                 <li class="state-item">
                     <div class="state-icon">
-                        <label class="text-secondary font-size-small">Traitement {{$assign->position}}</label>
+                        <label class="text-secondary text-nowrap font-size-small">Traitement {{$assign->position}}</label>
                         @if($assign->terminer == 2)
                         <span class="boule-wrapper bg-warning">
                             <i class="feather icon-check font-medium-4 align-middle"></i>

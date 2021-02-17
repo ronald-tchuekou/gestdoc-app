@@ -6,12 +6,12 @@ use App\Mail\RegisterMail;
 use App\Models\Assigne;
 use App\Models\Courier;
 use App\Models\CourierValide;
+use App\Models\History;
 use App\Models\Personne;
 use App\Models\Reject;
 use App\Models\Service;
 use App\Models\ToModify;
 use App\Models\User;
-use App\Utils\Utils;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +28,21 @@ class AdminController extends Controller
         $current_account =  'admin';
         $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.index', compact('user', 'title', 'current_account', 'current_action'));
+
+        $c_t = Courier::where('etat', 3)->orWhere('etat', 2)->get();
+        $a_c_t = [];
+        $a_p = [];
+        foreach($c_t as $courier) {
+            array_push($a_c_t, $courier->assignes()->where('terminer', 1)->first());
+            $tc = $courier->assignes()->where('terminer', 2)->count();
+            $t = $courier->assignes()->count();
+            array_push($a_p, ($tc/$t) * 100);
+        }
+
+        // HISTORIES.
+        $histories = History::orderBy('created_at', 'DESC')->limit(5)->get();
+        
+        return view('pages.admin.index', compact('histories', 'a_p', 'c_t', 'a_c_t','user', 'title', 'current_account', 'current_action'));
     }
 
     public function showProfileView() {
@@ -130,6 +144,16 @@ class AdminController extends Controller
 
             if($assign->save()){
                 $courier->update(['etat' => 2]);
+
+                // HISTORY.
+                $agent = User::find($request->agent_id)->personne;
+                $history = new History;
+                $history->title = 'Courrier assigné';
+                $history->content = 'Le courrier N° '. $request->courier_id .' à été assigné à l\'agent ' . $agent->nom . ' ' . $agent->prenom;
+                $history->action_type = 1;
+                $history->user_id = Auth::id();
+                $history->save(); 
+
                 return response('', 200);
             }
 
@@ -188,6 +212,14 @@ class AdminController extends Controller
         $user->register_token = str_replace('/', '', bcrypt($this->str_random(20)));
         $user->save();
 
+        // HISTORY.
+        $history = new History;
+        $history->title = 'Ajout d\'un nouveau agent';
+        $history->content = 'L\'agent ' . $personne->nom . ' ' . $personne->prenom .' à été ajouté dans la platefrome ';
+        $history->action_type = 1;
+        $history->user_id = Auth::id();
+        $history->save(); 
+
 
         // TODO manage this to send the email.
         Mail::to($personne->email, $personne->nom . ' ' . $personne->prenom)
@@ -221,6 +253,14 @@ class AdminController extends Controller
         $toModify->courier_id = $id;
         $toModify->reason = $reason;
         $toModify->save();
+
+        // HISTORY.
+        $history = new History;
+        $history->title = 'Renvoie d\'un courrier';
+        $history->content = 'Le courrier N° ' . $id .' à été renvoyé pour une modification au service d\'accueil.';
+        $history->action_type = 3;
+        $history->user_id = Auth::id();
+        $history->save(); 
         
         $courier->etat = 8; // set to  modify state.
         $courier->update();
@@ -242,6 +282,14 @@ class AdminController extends Controller
         $reject->reason = $reason;
         $reject->user_id = Auth::id();
         $reject->save();
+
+        // HISTORY.
+        $history = new History;
+        $history->title = 'Rejet d\'un courrier';
+        $history->content = 'Le courrier N° ' . $id .' à été rejeté.';
+        $history->action_type = 3;
+        $history->user_id = Auth::id();
+        $history->save(); 
         
         $courier->etat = 6;
         $courier->update(); // Mettre à l'état de modification.
@@ -266,6 +314,14 @@ class AdminController extends Controller
             }
 
             $courier->update();
+
+            // HISTORY.
+            $history = new History;
+            $history->title = 'Validation d\'un courrier';
+            $history->content = 'Le courrier N° ' . $id .' à été validé.';
+            $history->action_type = 4;
+            $history->user_id = Auth::id();
+            $history->save(); 
 
             return response('', 200);
         }catch(Exception $e){
