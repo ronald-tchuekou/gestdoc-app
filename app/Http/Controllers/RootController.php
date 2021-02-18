@@ -36,7 +36,7 @@ class RootController extends Controller
         $current_action = explode('/', Route::current()->uri)[1];
 
         $user = Auth::user();
-        $agents = User::where(['role' => 1, 'register_token' => null])->get();
+        $agents = User::where(['role' => 1, 'register_token' => null, 'delete' => 0])->get();
 
         $couriers_initial = Courier::where('etat', 1)
             ->orderBy('dateEnregistrement')->get();

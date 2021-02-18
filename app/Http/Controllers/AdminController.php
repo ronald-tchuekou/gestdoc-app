@@ -65,7 +65,7 @@ class AdminController extends Controller
     public function showAgentsView() {
         $title = 'MARIE GEST';
         $current_account =  'admin';
-        $agents = User::where('role', 1)->get();
+        $agents = User::where('role', 1)->where('delete', 0)->get();
         $services = Service::all();
         $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
@@ -102,13 +102,83 @@ class AdminController extends Controller
         return view('pages.admin.agents', compact('user', 'services', 'agent_mode', 'title', 'current_account', 'current_action'));
     }
 
-    public function showEditAgentView() {
+    /**
+     * Fonction qui permet de rediriger vers la page d'édition.
+     */
+    public function redirectToEditView (int $agent_id) {
+        $agent = User::find($agent_id);
+        $personne = $agent->personne;
+        
+        $agent_tab = $agent->toArray();
+        $personne_tab = $personne->toArray();
+        array_shift($personne_tab);
+        
+        $inputResult = array_merge($agent_tab, $personne_tab);
+        
+        return redirect("/admin/agents/$agent_id/edit")->withInput($inputResult);
+    }
+
+    public function showEditAgentView(int $agent_id) {
         $title = 'MARIE GEST';
         $current_account =  'admin';
         $agent_mode = 'edit';
         $user = Auth::user();
+        $agent = User::find($agent_id);
+        $services = Service::all();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.agents', compact('user', 'agent_mode', 'title', 'current_account', 'current_action'));
+        return view('pages.admin.agents', compact('agent', 'services', 'user', 'agent_mode', 'title', 'current_account', 'current_action'));
+    }
+
+    /**
+     * Fonction qui affiche les informations d'un tutilisateur.
+     */
+    public function showAgentView (int $user_id) {
+        $title = 'MARIE GEST';
+        $current_account =  'admin';
+        $agent_mode = 'edit';
+        $user = Auth::user();
+        $agent = User::find($user_id);
+        $current_action = explode('/', Route::current()->uri)[1];
+        return view('pages.admin.agent-manage.detail-agent', compact('agent', 'user', 'agent_mode', 'title', 'current_account', 'current_action'));
+    }
+
+    /**
+     * Fonction qui permet de faire la mis à jour d'un agent.
+     */
+    public function update_agent(Request $request, int $agent_id){
+
+        $user = User::find($agent_id);
+        $personne = $user->personne;
+
+        $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
+        
+        if($validation->fails()){
+            return redirect("/admin/agents/$agent_id/edit")
+                ->withInput($request->all())
+                ->withErrors($validation->errors());
+        }
+        
+        // save Personne Elements.
+        $personne->nom = $request->nom;
+        $personne->prenom = $request->prenom;
+        $personne->sexe = $request->sexe;
+        $personne->email = $request->email;
+        $personne->telephone = $request->telephone;
+        $personne->cni = $request->cni;
+        $personne->localisation = $request->localisation;
+        $personne->status = $request->status;
+        $personne->update();
+
+        // HISTORY.
+        $history = new History;
+        $history->title = 'Modification d\'un  agent';
+        $history->content = 'Les informations de l\'agent ' . $personne->nom . ' ' . $personne->prenom .' ont été modifiés ';
+        $history->action_type = 5;
+        $history->user_id = Auth::id();
+        $history->save(); 
+
+        return redirect('/admin/agents')
+            ->with('success', 'Agent modifié avec succèss');
     }
 
     /**
@@ -416,5 +486,24 @@ class AdminController extends Controller
         }catch(Exception $th) {
             return response($th->getMessage(), 201);
         }
+    }
+
+    /**
+     * Fonction qui permet de supprimer un agent.
+     */
+    public function deleteAgent(int $agent_id) {
+        $agent  = User::find($agent_id);
+        $agent->delete = 1;
+        $agent->update();
+
+        // HISTORY.
+        $history = new History;
+        $history->title = 'Suppression d\'un  agent';
+        $history->content = 'L\'agent ' . $agent->personne->nom . ' ' . $agent->personne->prenom .' à été supprimé ';
+        $history->action_type = 2;
+        $history->user_id = Auth::id();
+        $history->save();
+
+         return redirect('/admin/agents')->with('success', 'L\'agent à été supprimé avec succès.');
     }
 }

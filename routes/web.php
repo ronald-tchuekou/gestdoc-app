@@ -32,7 +32,10 @@ Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){
     Route::get('/agents/add', [AdminController::class, 'showAddAgentView']);
     Route::post('/agents/store', [AdminController::class, 'storeAgent']);
     Route::get('/agents/{id}/edit', [AdminController::class, 'showEditAgentView']);
-    Route::get('/agents/{id}/details', [AdminController::class, 'showEditAgentView']);
+    Route::get('/agents/{id}/delete', [AdminController::class, 'deleteAgent']);
+    Route::get('/agents/{id}/details', [AdminController::class, 'showAgentView']);
+    Route::post('/agents/{id}/update', [AdminController::class, 'update_agent']);
+    Route::get('/agents/edition/{id}', [AdminController::class, 'redirectToEditView']);
 
     Route::get('/couriers', [AdminController::class, 'showCouriersView']);
     Route::post('/couriers/assignment', [AdminController::class, 'assignCourier']);

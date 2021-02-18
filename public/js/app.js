@@ -90,7 +90,7 @@ function setChartAnalyst(_data) {
       }
     },
     series: [+valide.toFixed(2), +traite.toFixed(2), +reject.toFixed(2)],
-    labels: ['Validé', 'Traité', 'Rejeté'],
+    labels: ['Validés', 'Traités', 'Rejetés'],
 
   }
 }
