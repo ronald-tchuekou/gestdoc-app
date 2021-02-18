@@ -461,13 +461,13 @@ class AdminController extends Controller
             })->count();
 
             $total_active =  $agents->filter(function($item){
-                if($item->register_token == null){
+                if($item->register_token == null && $item->delete == 0){
                     return $item;
                 }
             })->count();
 
             $total_non_active =  $agents->filter(function($item){
-                if($item->register_token != null){
+                if($item->register_token != null && $item->delete == 0){
                     return $item;
                 }
             })->count();
