@@ -29,7 +29,7 @@
                             <span class="text-bold-600 ml-50">Validé</span>
                         </div>
                         <div class="product-result">
-                            <span id="total_valide_courrier">23043</span>
+                            <span id="total_valide_courrier">0</span>
                         </div>
                     </div>
                     <div class="chart-info d-flex justify-content-between mb-1">
@@ -38,7 +38,7 @@
                             <span class="text-bold-600 ml-50">Traité</span>
                         </div>
                         <div class="product-result">
-                            <span id="total_traite_courrier">14658</span>
+                            <span id="total_traite_courrier">0</span>
                         </div>
                     </div>
                     <div class="chart-info d-flex justify-content-between mb-75">
@@ -47,7 +47,7 @@
                             <span class="text-bold-600 ml-50">Rejeté</span>
                         </div>
                         <div class="product-result">
-                            <span id="total_reject_courrier">4758</span>
+                            <span id="total_reject_courrier">0</span>
                         </div>
                     </div>
                 </div>
@@ -57,37 +57,37 @@
     <div class="col-lg-4 col-12">
     <div class="card">
             <div class="card-header d-flex justify-content-between pb-0">
-                <h4>Rapport des utilisateurs</h4>
+                <h4>Rapport sur les agents</h4>
             </div>
             <div class="card-content">
                 <div class="card-body">
-                    <div id="users-chart" class="mb-3"></div>
-                    <div class="container mt-auto">
+                    <div id="users-chart" class="mb-3" style="min-height: 350px;"></div>
+                    <div class="container p-0 mx-0" style="margin-top: 100px;">
                         <div class="chart-info d-flex justify-content-between mb-1">
                             <div class="series-info d-flex align-items-center">
                                 <i class="fa fa-circle-o text-bold-700 text-primary"></i>
-                                <span class="text-bold-600 ml-50">Actifs</span>
+                                <span class="text-bold-600 ml-50">Agents Actifs</span>
                             </div>
                             <div class="product-result">
-                                <span id="total_valide_courrier">23043</span>
+                                <span id="total_active_users">0</span>
                             </div>
                         </div>
                         <div class="chart-info d-flex justify-content-between mb-1">
                             <div class="series-info d-flex align-items-center">
                                 <i class="fa fa-circle-o text-bold-700 text-warning"></i>
-                                <span class="text-bold-600 ml-50">Non actifs</span>
+                                <span class="text-bold-600 ml-50">Agents Non actifs</span>
                             </div>
                             <div class="product-result">
-                                <span id="total_traite_courrier">14658</span>
+                                <span id="total_non_active_users">0</span>
                             </div>
                         </div>
                         <div class="chart-info d-flex justify-content-between mb-75">
                             <div class="series-info d-flex align-items-center">
                                 <i class="fa fa-circle-o text-bold-700 text-danger"></i>
-                                <span class="text-bold-600 ml-50">Supprimés</span>
+                                <span class="text-bold-600 ml-50">Agnets Supprimés</span>
                             </div>
                             <div class="product-result">
-                                <span id="total_reject_courrier">4758</span>
+                                <span id="total_delete_users">0</span>
                             </div>
                         </div>
                     </div>

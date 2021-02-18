@@ -22,6 +22,7 @@ class User extends Authenticatable
         'role',
         'service_id',
         'profile',
+        'delete',
     ];
 
     /**

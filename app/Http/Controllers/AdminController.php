@@ -382,13 +382,20 @@ class AdminController extends Controller
             $to_date = $to != "" ? $to : now();
             $from_date = $from != "" ? $from : strtotime($to. ' + 1 days');
 
-            $agents = User::where('role', 1)->whereBetween('created_at', [$from_date, $to_date])->get();
-            $total = $agents->count();
+            $agents = User::where('role', 1)/*->whereBetween('created_at', [$from_date, $to_date])*/->get();
+            
+            $total_delete = $agents->filter(function($item){
+                if($item->delete == 1){
+                    return $item;
+                }
+            })->count();
+
             $total_active =  $agents->filter(function($item){
                 if($item->register_token == null){
                     return $item;
                 }
             })->count();
+
             $total_non_active =  $agents->filter(function($item){
                 if($item->register_token != null){
                     return $item;
@@ -396,9 +403,9 @@ class AdminController extends Controller
             })->count();
 
             $tab = Array(
-                'total' => $total,
-                'active' => $total_active,
-                'non_active' => $total_non_active,
+                'delete_users' => $total_delete,
+                'active_users' => $total_active,
+                'non_active_users' => $total_non_active,
             );
 
             return response([

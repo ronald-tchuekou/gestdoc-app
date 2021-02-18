@@ -96,7 +96,8 @@ function setChartAnalyst(_data) {
 }
 
 // Fonction qui retourne le diagramme qui analyse les courriers.
-function renderTheContrent(_from) {
+function renderAnalystCourrierChart(_from) {
+
   axios.get(HOST_BACKEND + '/statistiquesCourriers/' + _from).then(response => {
 
     if (response.status == 200) {
@@ -129,14 +130,14 @@ function renderTheContrent(_from) {
 
 }
 
-// Customer Chart
+// Customer users Chart
 // -----------------------------
-function setUserAnalystChar(){
+function setUserAnalystChar(_data){
 
-  var customerChartoptions = {
+  return  customerChartoptions = {
     chart: {
       type: 'pie',
-      height: 330,
+      height: 360,
       dropShadow: {
         enabled: false,
         blur: 5,
@@ -148,8 +149,8 @@ function setUserAnalystChar(){
         show: false
       }
     },
-    labels: ['Actifs', 'Non actifs', 'Supprimés'],
-    series: [690, 258, 149],
+    labels: ['Agents Actifs', 'Agents Non actifs', 'Agents Supprimés'],
+    series: [_data.active_users, _data.non_active_users, _data.delete_users],
     dataLabels: {
       enabled: false
     },
@@ -164,14 +165,42 @@ function setUserAnalystChar(){
         gradientToColors: [$primary_light, $warning_light, $danger_light]
       }
     }
-  }
+  };
 
-  var customerChart = new ApexCharts(
-    document.querySelector("#users-chart"),
-    customerChartoptions
-  );
+}
 
-  customerChart.render();
+function renderAnalystUserChart() {
+ 
+  axios.get(HOST_BACKEND + '/statistiquesAgents').then(response => {
+    
+    if (response.status == 200) {
+      
+      let data = response.data.record;
+      console.log('This is the users analyst : ', response.data);
+
+      $('#total_active_users').html(data.active_users);
+      $('#total_non_active_users').html(data.non_active_users);
+      $('#total_delete_users').html(data.delete_users);
+
+      let customerChartoptions = setUserAnalystChar(response.data.record);
+
+      var customerChart = new ApexCharts(
+        document.querySelector("#users-chart"),
+        customerChartoptions
+      );
+    
+      customerChart.render();
+
+    } else {
+      toastr.error('Une erreur s\'est produite. ' + response.data, 'Message d\'erreur',
+       { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+    }
+
+  }).catch(reason => {
+    toastr.error('😥' + reason,'Message d\'erreur', 
+    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+  });
+
 }
 
 var config = {
@@ -436,7 +465,7 @@ function admin_agent_filter() {
   // courrier Order Chart starts
   // -----------------------------
     
-    renderTheContrent("none");
+    renderAnalystCourrierChart("none");
 
     $('.courrier-date_intervalle').each(function (i, elt) {
       $(elt).click(function () {
@@ -455,7 +484,7 @@ function admin_agent_filter() {
         const dm = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
         let from = `${dm}-${mo}-${ye}`;
         
-        renderTheContrent(from);
+        renderAnalystCourrierChart(from);
       });
     });
     
@@ -465,7 +494,7 @@ function admin_agent_filter() {
   // users Order Chart starts
   // -----------------------------
 
-  setUserAnalystChar();
+  renderAnalystUserChart();
 
   // users Order Chart ends //
 
