@@ -559,7 +559,7 @@ $(window).on("load", function () {
     series: [58.6, 34.9, 6.5],
     legend: { show: false },
     comparedResult: [2, -3, 8],
-    labels: ['Desktop', 'Mobile', 'Tablet'],
+    labels: ['Actifs', 'Non actifs', 'Supprimés'],
     stroke: { width: 0 },
     colors: [$primary, $warning, $danger],
     fill: {

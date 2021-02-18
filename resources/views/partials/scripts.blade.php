@@ -19,6 +19,7 @@
 
 <!-- BEGIN: Page JS-->
 <script src="{{asset('js/scripts/pages/dashboard-analytics.js')}}"></script>
+<script src="{{asset('js/scripts/pages/dashboard-ecommerce.js')}}"></script>
 <script src="{{asset('js/scripts/extensions/toastr.min.js')}}"></script>
 <!-- END: Page JS-->
 

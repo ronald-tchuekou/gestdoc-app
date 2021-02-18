@@ -129,6 +129,51 @@ function renderTheContrent(_from) {
 
 }
 
+// Customer Chart
+// -----------------------------
+function setUserAnalystChar(){
+
+  var customerChartoptions = {
+    chart: {
+      type: 'pie',
+      height: 330,
+      dropShadow: {
+        enabled: false,
+        blur: 5,
+        left: 1,
+        top: 1,
+        opacity: 0.2
+      },
+      toolbar: {
+        show: false
+      }
+    },
+    labels: ['Actifs', 'Non actifs', 'Supprimés'],
+    series: [690, 258, 149],
+    dataLabels: {
+      enabled: false
+    },
+    legend: { show: false },
+    stroke: {
+      width: 5
+    },
+    colors: [$primary, $warning, $danger],
+    fill: {
+      type: 'gradient',
+      gradient: {
+        gradientToColors: [$primary_light, $warning_light, $danger_light]
+      }
+    }
+  }
+
+  var customerChart = new ApexCharts(
+    document.querySelector("#users-chart"),
+    customerChartoptions
+  );
+
+  customerChart.render();
+}
+
 var config = {
   headers: {'X-My-Custom-Header': 'Header-Value'}
 };
@@ -415,6 +460,14 @@ function admin_agent_filter() {
     });
     
   // courrier Order Chart ends //
+
+
+  // users Order Chart starts
+  // -----------------------------
+
+  setUserAnalystChar();
+
+  // users Order Chart ends //
 
 
   });
