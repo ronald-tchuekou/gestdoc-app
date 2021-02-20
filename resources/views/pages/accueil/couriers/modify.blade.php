@@ -18,7 +18,7 @@
                             <th style="width: 40px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="accueil-modify">
                         @forelse($modify_couriers as $courier)
                         <tr role="row" class="odd hover" id="row-{{$loop->index}}">
                             <td>{{$courier->id}}</td>
@@ -30,7 +30,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6" class="text-center"><span class="alert">Pas de courriers à modifier.</span></td></tr>
+                        <tr id="row-empty"><td colspan="6" class="text-center"><span class="alert">Pas de courriers à modifier.</span></td></tr>
                         @endforelse
                     </tbody>
                 </table>

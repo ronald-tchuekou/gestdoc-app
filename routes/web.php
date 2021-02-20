@@ -74,6 +74,8 @@ Route::middleware(['auth', 'authAccueil'])->prefix('accueil')->group(function(){
     Route::get('/couriers/{id}/finish', [AccueilController::class, 'finishCourier']);
 
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
+
+    Route::get('/handleChange/{user_id}', [AccueilController::class, 'handleChange']);
 });
 
 // Agent routes managers
@@ -92,6 +94,8 @@ Route::middleware(['auth', 'authAgent'])->prefix('agent')->group(function(){
     Route::get('/couriers/{id}/finish', [AgentController::class, 'finishCourier']);
 
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
+
+    Route::get('/handleChange/{user_id}', [AgentController::class, 'handleChange']);
 });
 
 Route::middleware(['auth'])->group(function(){

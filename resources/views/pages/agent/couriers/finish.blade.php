@@ -18,7 +18,7 @@
                             <th style="width: 50px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="agent-finish">
                         @forelse($finish_couriers as $courier)
                         <tr role="row" class="odd hover" id="row-{{$loop->index}}">
                             <td>
@@ -34,7 +34,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6" class="text-center"><span class="alert">Pas de courriers à traité.</span></td></tr>
+                        <tr id="row-empty"><td colspan="6" class="text-center"><span class="alert">Pas de courriers à traité.</span></td></tr>
                         @endforelse
                     </tbody>
                 </table>

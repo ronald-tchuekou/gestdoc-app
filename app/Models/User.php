@@ -62,6 +62,10 @@ class User extends Authenticatable
         return $this->hasMany(Courier::class);
     }
 
+    public function assignes () {
+        return $this->hasMany(Assigne::class, 'user_id', 'id');
+    }
+
     public function couriers_assignes () {
         return $this->belongsToMany(Courier::class, 'assignes');
     }

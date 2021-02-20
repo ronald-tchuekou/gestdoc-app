@@ -19,7 +19,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="accueil-valide">
                         @forelse($valide_couriers as $courier)
                         <tr role="row" class="odd hover" id="row-{{$loop->index}}">
                             <td>
@@ -40,13 +40,13 @@
                             </td>
                             <td>
                                 <a href="/{{$current_account}}/courier-details/{{$courier->id}}" class="btn btn-info btn-sm">
-                                            <i class="feather icon-file-text" style="font-size: 1rem;"></i>
-                                            &nbsp;&nbsp;&nbsp;Details
-                                        </a>
-                            </td>
+                                    <i class="feather icon-file-text" style="font-size: 1rem;"></i>
+                                    &nbsp;&nbsp;&nbsp;Details
+                                </a>
+                    </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6" class="text-center"><span class="alert">Pas de courriers validés.</span></td></tr>
+                        <tr id="row-empty"><td colspan="6" class="text-center"><span class="alert">Pas de courriers validés.</span></td></tr>
                         @endforelse
                     </tbody>
                 </table>

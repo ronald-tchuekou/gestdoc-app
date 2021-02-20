@@ -26,3 +26,23 @@
 <script src="{{ asset('js/axios.min.js') }}"></script>
 <script src="{{ asset('js/rest.api.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/notifyEventListener.js') }}"></script>
+
+<script>
+    (function (window, document, $) {
+        $(document).ready(() => {
+
+            let current_account = window.location.pathname.split('/')[1];
+            let user_id = {{Auth::id()}};
+            var intervalID = -1;
+
+            intervalID = setInterval(() => {
+
+                // GET THE HOSTNAME.
+                let host = window.location;
+                new ListenChange(current_account, user_id, intervalID);
+
+            }, 1000);
+        });
+    })(window, document, jQuery);
+</script>

@@ -7,7 +7,7 @@
 <div class="card">
     <div class="card-header">
         <div class="d-flex mb-3">
-            <a class="ml-1 text-secondary backPerss" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
+            <a href="{{URL::previous()}}" class="ml-1 text-secondary dbackPerss" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Détails sur le courrier</h4>
         </div>
     </div>

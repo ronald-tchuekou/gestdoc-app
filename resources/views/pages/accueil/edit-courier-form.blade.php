@@ -1,6 +1,9 @@
 <div class="card">
     <div class="card-header">
-        <h4 class="font-weight-bolder">Modification d'un courrier</h4>
+        <div class="d-flex mb-3">
+            <a href="{{URL::previous()}}" class="ml-1 text-secondary rbackPerss" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Modification d'un courrier</h4>
+        </div>
     </div>
     <div class="card-content">
         @include('errors.errors')

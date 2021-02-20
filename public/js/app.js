@@ -21,17 +21,17 @@ var $white = '#fff';
 
 
 // Initialisation of service workers.
-function initializeService() {
-  if('serviceWorker' in navigator) {
-      // Supported 😍
-      toastr.info('Les services workers sont supporté par ce navigateur. 😍','Information', 
-      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
-  } else {
-      // Not supported 😥
-      toastr.warning('Les services workers ne sont pas supporté par ce navigateur. 😥','Information', 
-      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
-  }
-}
+// function initializeService() {
+//   if('serviceWorker' in navigator) {
+//       // Supported 😍
+//       toastr.info('Les services workers sont supporté par ce navigateur. 😍','Information', 
+//       { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+//   } else {
+//       // Not supported 😥
+//       toastr.warning('Les services workers ne sont pas supporté par ce navigateur. 😥','Information', 
+//       { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+//   }
+// }
 
 // Fonction qui afficher les pourcentages des courriers.
 function setChartAnalyst(_data) {
@@ -102,7 +102,6 @@ function renderAnalystCourrierChart(_from) {
 
     if (response.status == 200) {
 
-      console.log(response.data);
       let data = response.data.record;
 
       $('#total_valide_courrier').html(data.valide);
@@ -176,7 +175,6 @@ function renderAnalystUserChart() {
     if (response.status == 200) {
       
       let data = response.data.record;
-      console.log('This is the users analyst : ', response.data);
 
       $('#total_active_users').html(data.active_users);
       $('#total_non_active_users').html(data.non_active_users);
@@ -270,7 +268,9 @@ function admin_agent_filter() {
   $(document).ready(() => {
 
     // init the service.
-    initializeService();
+    //initializeService();
+
+    $('.badge-pill.noti').hide();
 
     // Set the listener.
     admin_agent_filter();
@@ -315,10 +315,10 @@ function admin_agent_filter() {
       
       if (agent_id == '') { // Check the agent.
         toastr.warning('Veuillez selectionner un agent chez qui assigner le dossier.', 'Avertissement',
-          { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+          { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
       } else if (tache == '') { // Check the task.
         toastr.warning('Veuillez renseigner la tâche à faire sur le dossier.', 'Avertissement',
-          { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+          { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
       } else { // Submit the data and get the response.
         data = {
           'courier_id': parseInt(courier_id),
@@ -332,11 +332,11 @@ function admin_agent_filter() {
 
           if (response.status != 200) {
             toastr.warning(response.data, 'Averitssement',
-            { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+              { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
           } else {
             $(row).parent().parent().parent().parent().remove();
             toastr.success('Dossier assigné avec succès.', 'Succès',
-            { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+              { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
           }
           dismiss_block(d);
         }).catch(reason => {
@@ -353,7 +353,7 @@ function admin_agent_filter() {
         let courier = $(this).attr('data-courier').split('/'),
           courier_id = courier[0],
           reject_mode = courier[1];
-          row = elt;
+        row = elt;
         
         let title = $('#title-reject-modal'),
           label = $('#label-reject-modal'),
@@ -383,15 +383,15 @@ function admin_agent_filter() {
               .then(response => {
                 if (response.status != 200) {
                   toastr.warning(response.data, 'Erreur',
-                     { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+                    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
                 } else {
                   $(row).parent().parent().parent().parent().remove();
                   if (reject_mode === 'modify') {
                     toastr.info('Dossier rejeté pour une modification.', 'Succès',
-                      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+                      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
                   } else {
                     toastr.info('Dossier rejeté, pas de retour possible.', 'Succès',
-                      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+                      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 })
                   }
                 }
                 dismiss_block(modal);
@@ -420,10 +420,10 @@ function admin_agent_filter() {
             if (response.status == 200) {
               $(row).parent().parent().parent().parent().remove();
               toastr.success('Dossier validé avec succès.', 'Message de succès',
-                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
             } else {
               toastr.warning('Une erreur s\'est produite. ' + response.data, 'Message d\'erreur',
-               { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
             }
             dismiss_block(loader);
           }).catch(reason => {
@@ -446,10 +446,10 @@ function admin_agent_filter() {
             if (response.status == 200) {
               $(row).parent().parent().remove();
               toastr.success('Dossier Traité avec succès.', 'Message de succès',
-                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
             } else {
               toastr.error('Une erreur s\'est produite. ' + response.data, 'Message d\'erreur',
-               { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3});
+                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
             }
             dismiss_block(bo);
           }).catch(reason => {
@@ -462,8 +462,8 @@ function admin_agent_filter() {
 
 
 
-  // courrier Order Chart starts
-  // -----------------------------
+    // courrier Order Chart starts
+    // -----------------------------
     
     renderAnalystCourrierChart("none");
 
@@ -472,11 +472,11 @@ function admin_agent_filter() {
         let content = $(this).attr('data-content');
         $('#dropdownItem2').html($(this).html());
         let date = new Date();
-        if(content == "28d"){ // Il y'a 28 jours.
+        if (content == "28d") { // Il y'a 28 jours.
           date.setDate(date.getDate() - 28);
-        }else if(content == "1m"){ // Il y'a 1 moi.
+        } else if (content == "1m") { // Il y'a 1 moi.
           date.setDate(date.getDate() - 31);
-        }else{ // Il y'a 1 an.
+        } else { // Il y'a 1 an.
           date.setDate(date.getDate() - 365);
         }
         const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
@@ -488,16 +488,16 @@ function admin_agent_filter() {
       });
     });
     
-  // courrier Order Chart ends //
+    // courrier Order Chart ends //
 
 
-  // users Order Chart starts
-  // -----------------------------
+    // users Order Chart starts
+    // -----------------------------
 
-  renderAnalystUserChart();
+    renderAnalystUserChart();
 
-  // users Order Chart ends //
+    // users Order Chart ends //
 
 
   });
-})(window, document, jQuery)
+})(window, document, jQuery);

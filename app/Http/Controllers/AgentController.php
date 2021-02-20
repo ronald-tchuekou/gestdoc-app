@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotifyEvent;
 use App\Models\Assigne;
 use App\Models\Courier;
 use App\Models\History;
+use App\Models\User;
+use App\Models\Utils;
+use DateInterval;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +79,7 @@ class AgentController extends Controller
      * Function to finish a work.
      */
     public function finishCourier (int $id) {
+     
         try{
 
             $courier = Courier::find($id);
@@ -105,9 +110,14 @@ class AgentController extends Controller
             $history->action_type = 6;
             $history->user_id = Auth::id();
             $history->save();
+
+            // Send the notification to the administrator.
+            $event = new NotifyEvent([
+                'user' => Auth::user(),
+                'action' => 'Traitement du courrier N° ' . $courier->id . ' Terminé.',
+            ]);
+            event($event);
             
-            // TODO Notify the administrator if the traitement is finish.
-    
             return response('', 200);
         }catch(Exception $e){
             return response($e, 201);
@@ -121,5 +131,43 @@ class AgentController extends Controller
     public function showCourier (int $id) {
         $courier = Courier::find($id);
         dd($courier);
+    }
+
+    public function handleChange (int $id) {
+        try{
+            $date_to = now();
+            $date_from = now();
+            $date_from->sub(new DateInterval('PT1S'));
+
+            $user = User::find($id);
+            $assigne = $user->assignes()
+                ->whereBetween('created_at', [$date_from, $date_to])
+                ->first();
+            if($assigne != null){
+                $courrier = $assigne->courier;
+                $assigner = $assigne->assigner;
+
+                $genre = $user->personne->sexe == 'Masculin' ? 'Mr' : 'Mme';
+
+                $date = Utils::full_date_format($assigne->created_at);
+
+                $result = Array(
+                    'id' => $courrier->id,
+                    'tache' => $assigne->tache,
+                    'objet' => $courrier->objet,
+                    'created_at' => $date,
+                    'user_profile' => $assigner->profile,
+                    'action' => 'Traitement du courrier N° '. $courrier->id,
+                    'content' =>  'Courrier assigné par ' . $genre . ' ' . $assigner->personne->nom . ' ' . $assigner->personne->prenom . ' le ' . $date,
+                );
+
+                return response([
+                    'status' => 'OK',
+                    'record' => $result,
+                ], 200);
+            }
+        }catch(Exception $th) {
+            return response($th->getMessage(), 201);
+        }
     }
 }

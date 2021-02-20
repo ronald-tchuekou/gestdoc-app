@@ -8,7 +8,9 @@ use App\Models\Courier;
 use App\Models\History;
 use App\Models\Personne;
 use App\Models\Service;
+use App\Models\User;
 use App\Models\Utils;
+use DateInterval;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -139,9 +141,7 @@ class AccueilController extends Controller
         $courier->observation = $request->observation;
         $courier->nbPiece = $request->nbPiece;
         
-        if(isset($request->modify) && $request->modify == 'modify'){
-            $courier->etat = 7;
-        }
+        $courier->etat = 7;
 
         $courier->update();
 
@@ -153,8 +153,7 @@ class AccueilController extends Controller
         $history->user_id = Auth::id();
         $history->save();
 
-        return redirect('/accueil/couriers')
-            ->withInput($request->all())
+        return redirect()->back()
             ->with('success', 'Courier mis à jour avec succèss');
     }
 
@@ -297,5 +296,85 @@ class AccueilController extends Controller
     public function showCourier (int $id) {
         $courier = Courier::find($id);
         dd($courier);
+    }
+
+    public function handleChange (int $id) {
+        try{
+            $date_to = now();
+            $date_from = now();
+            $date_from->sub(new DateInterval('PT1S'));
+
+            $user = User::find($id);
+
+            // Les couriers validés.
+            $valide_couriers = $user->couriers_initialises()->where('etat', 5)
+              ->whereBetween('updated_at', [$date_from, $date_to])
+                ->first();
+
+            // Les couriers rejetés.
+            $reject_couriers = $user->couriers_initialises()->where('etat', 6)
+              ->whereBetween('updated_at', [$date_from, $date_to])
+                ->first();
+
+            // Les couriers à modifier.
+            $modify_couriers = $user->couriers_initialises()->where('etat', 8)
+              ->whereBetween('updated_at', [$date_from, $date_to])
+                ->first();
+
+            $courrier = $valide_couriers != null ? $valide_couriers : 
+                ($reject_couriers != null ? $reject_couriers : 
+                    ($modify_couriers != null ? $modify_couriers : null));
+                    
+            if($courrier != null){
+
+                $date = Utils::full_date_format($courrier->updated_at);
+
+                $result = Array(
+                    'id' => $courrier->id,
+                    'etat' => $courrier->etat,
+                    'motif' => $this->getMotif($courrier),
+                    'objet' => $courrier->objet,
+                    'date' => $date,
+                    'prestataire' => $courrier->prestataire,
+                    'name' => $courrier->personne->nom,
+                    'surname' => $courrier->personne->prenom,
+                    'phone' => $courrier->personne->telephone,
+                    'user_profile' => User::where('role', 2)->first()->profile,
+                    'action' => $this->getAction($courrier->etat). $courrier->id,
+                    'content' =>  'Action faite le ' . $date,
+                );
+
+                return response([
+                    'status' => 'OK',
+                    'record' => $result,
+                ], 200);
+            }
+        }catch(Exception $th) {
+            return response($th->getMessage(), 201);
+        }
+    }
+
+    private function getMotif($courrier) {
+        if($courrier->etat == 'Reprendre') {
+            return $courrier->to_modify->reason;
+        }
+        elseif($courrier->etat == 'Rejeté') {
+            return $courrier->reject->reason ;
+        }
+        elseif($courrier->etat == 'Validé') {
+            return '' ;
+        }
+    }
+
+    private function getAction($etat) {
+        if($etat == 'Reprendre') {
+            return 'Rejet (Modification) Courrier N° ';
+        }
+        elseif($etat == 'Rejeté') {
+            return 'Rejet (Définitif) Courrier N° ' ;
+        }
+        elseif($etat == 'Validé') {
+            return 'Validation du courrier N° ' ;
+        }
     }
 }

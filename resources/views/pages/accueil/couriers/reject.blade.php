@@ -19,7 +19,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="accueil-reject">
                         @forelse($reject_couriers as $courier)
                         <tr role="row" class="odd hover" id="row-{{$loop->index}}">
                             <td>
@@ -48,7 +48,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6" class="text-center"><span class="alert">Pas de courriers rejetés.</span></td></tr>
+                        <tr id="row-empty"><td colspan="6" class="text-center"><span class="alert">Pas de courriers rejetés.</span></td></tr>
                         @endforelse
                     </tbody>
                 </table>

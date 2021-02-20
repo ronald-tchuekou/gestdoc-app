@@ -492,6 +492,7 @@ class AdminController extends Controller
      * Fonction qui permet de supprimer un agent.
      */
     public function deleteAgent(int $agent_id) {
+       
         $agent  = User::find($agent_id);
         $agent->delete = 1;
         $agent->update();
@@ -505,5 +506,6 @@ class AdminController extends Controller
         $history->save();
 
          return redirect('/admin/agents')->with('success', 'L\'agent à été supprimé avec succès.');
+       
     }
 }
