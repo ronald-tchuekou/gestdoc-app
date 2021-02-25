@@ -14,8 +14,8 @@ class Personne extends Model
         'prenom',
         'sexe',
         'email',
-        'telephone', 
-        'cni', 
+        'telephone',
+        'cni',
         'localisation',
         'status'
     ];
@@ -28,4 +28,10 @@ class Personne extends Model
         'cni' => 'required|max:20|min:4',
         'status' => 'required',
     ];
+
+
+    public function user () {
+        return $this->hasOne(User::class);
+    }
 }
+

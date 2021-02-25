@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\PassForgotMail;
+use App\Models\Personne;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -31,8 +32,8 @@ class PassForgotController extends Controller
         }
 
         // Get user with email.
-        $user = User::where('login', $request->email)->first();
-
+        $personne = Personne::where('email', $request->email)->first();
+        $user = $personne->user;
         if($user == null){
             return redirect('/forgot-password')
                 ->withInput($request->all())
