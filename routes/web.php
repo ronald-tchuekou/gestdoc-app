@@ -20,8 +20,7 @@ Route::get('/register/{id}/{token}', [RegisterController::class, 'index']);
 Route::post('/register/{user_id}', [RegisterController::class, 'store']);
 Route::get('/forgot-password', [PassForgotController::class, 'index']);
 Route::post('/forgot-password/send', [PassForgotController::class, 'sendMail']);
-
-Route::view('/reset-password', 'auth.reset-password');
+Route::get('/reset-password', []);
 
 // Admin routes managers
 Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){
