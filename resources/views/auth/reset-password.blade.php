@@ -7,7 +7,6 @@ Réinitialisation de mot de passe - GestDoc
 
 @section('content')
 
-@include('errors.errors')
 @include('success.success')
 
 <div class="app-content content">
@@ -32,6 +31,7 @@ Réinitialisation de mot de passe - GestDoc
                                             </div>
                                         </div>
                                         <p class="px-2">Réinialiser votre formulaire en renseignant le formulaire suivant.</p>
+                                        @include('errors.errors')
                                         <div class="card-content">
                                             <div class="card-body pt-1">
                                                 <form action="/reset-password/reset/{{$user->id}}" method="post">
