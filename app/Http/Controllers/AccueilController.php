@@ -91,19 +91,25 @@ class AccueilController extends Controller
                 ->withErrors($validation->errors());
         }
         
-        $personne_id = $this->savePersonne($request);
-        $id = $this->saveCourier($request, $personne_id);
+        try {
+            $personne_id = $this->savePersonne($request);
+            $id = $this->saveCourier($request, $personne_id);
 
-        $history = new History;
-        $history->title = 'Initialisatin d\'un nouveau courrier';
-        $history->content = 'Le courrier N° ' . $id .' à été initialisé.';
-        $history->action_type = 1;
-        $history->user_id = Auth::id();
-        $history->save();
+            $history = new History;
+            $history->title = 'Initialisatin d\'un nouveau courrier';
+            $history->content = 'Le courrier N° ' . $id .' à été initialisé.';
+            $history->action_type = 1;
+            $history->user_id = Auth::id();
+            $history->save();
 
-        return redirect($this->redirectTo . '/add')
-            ->withInput($request->all())
-            ->with('success', 'Courier ajouter avec succèss');
+            return redirect($this->redirectTo . '/add')
+                ->withInput($request->all())
+                ->with('success', 'Courier ajouter avec succèss');
+        } catch (Exception $e) {
+            return redirect($this->redirectTo . '/add')
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);   
+        }
     }
 
     /**
@@ -375,6 +381,58 @@ class AccueilController extends Controller
         }
         elseif($etat == 'Validé') {
             return 'Validation du courrier N° ' ;
+        }
+    }
+
+    public function allInitCourriers ($user_id) {
+
+        try {
+            $date_to = now();
+            $date_from = now();
+            $date_from->sub(new DateInterval('PT10S'));
+
+            $user = User::find($user_id);
+
+            // Le courrier terminé par une seconde.
+            $courrier1 = $user->couriers_initialises()->where('etat', 2)
+                ->whereBetween('updated_at', [$date_from, $date_to])
+                ->first();
+            $courrier2 = $user->couriers_initialises()->where('etat', 6)
+                ->whereBetween('updated_at', [$date_from, $date_to])
+                ->first();
+            $courrier3 = $user->couriers_initialises()->where('etat', 8)
+                ->whereBetween('updated_at', [$date_from, $date_to])
+                ->first();
+
+            $courrier = $courrier1 != null ? $courrier1 : 
+                ($courrier2 != null ? $courrier2 : 
+                    ($courrier3 != null ? $courrier3 : null));
+
+            $result = [
+                'status' => 'OK',
+                'context' => $this->getContext($courrier),
+                'record' => $courrier == null ? null : $courrier->toArray(),
+            ];
+            return response ($result, 200);
+        } catch (Exception $e) {
+            return response ($e->getMessage(), 201);
+        }
+
+    }
+
+    /**
+     * Fonction qui permet de retourner le context selon, l'etat du courrier.
+     */
+    private function getContext ($courrier) {
+        $etat = $courrier->etat;
+        if($etat == 'Reprendre') {
+            return 'retourné pour modification';
+        }
+        if($etat == 'Rejeté'){
+            return 'rejeté';
+        }
+        if($etat == 'Assigné'){
+            return 'assigné';
         }
     }
 }

@@ -45,6 +45,8 @@ Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){
 
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
 
+    Route::get('/handle-new-courrier-init', [AdminController::class, 'handleNewCourrierInit']);
+
 });
 
 // Root routes managers
@@ -76,6 +78,7 @@ Route::middleware(['auth', 'authAccueil'])->prefix('accueil')->group(function(){
     Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
 
     Route::get('/handleChange/{user_id}', [AccueilController::class, 'handleChange']);
+    Route::get('/all-init-courriers/{user_id}', [AccueilController::class, 'allInitCourriers']);
 });
 
 // Agent routes managers

@@ -40,9 +40,9 @@
                         <th style="width: 40px;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="accueil-init-courrier">
                     @forelse($couriers as $courier)
-                    <tr role="row" class="odd hover">
+                    <tr role="row" class="odd hover" data-row="{{$courier->id}}">
                         <td>{{$courier->id}}</td>
                         <td>
                             <div class="d-flex justify-content-left align-items-center">
@@ -152,6 +152,8 @@
         </div>
     </div>
 </div>
+
+
 @endif
 
 

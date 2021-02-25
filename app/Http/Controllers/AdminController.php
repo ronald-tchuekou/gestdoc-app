@@ -13,6 +13,7 @@ use App\Models\Service;
 use App\Models\ToModify;
 use App\Models\User;
 use App\Models\Utils;
+use DateInterval;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -507,5 +508,46 @@ class AdminController extends Controller
 
          return redirect('/admin/agents')->with('success', 'L\'agent à été supprimé avec succès.');
        
+    }
+
+
+    public function handleNewCourrierInit() {
+        
+        try {
+            $date_to = now();
+            $date_from = now();
+            $date_from->sub(new DateInterval('PT1S'));
+
+            // Le courrier terminé par une seconde.
+            $courrier = Courier::where('etat', 1)
+                ->whereBetween('updated_at', [$date_from, $date_to])
+                ->first();
+
+            $record = null;
+
+            if($courrier != null) {
+                $date = Utils::full_date_format($courrier->dateEnregistrement);
+                $record = [
+                    'id' => $courrier->id,
+                    'nom' => $courrier->personne->nom,
+                    'prenom' => $courrier->personne->prenom,
+                    'telephone' => $courrier->personne->telephone,
+                    'objet' => $courrier->objet,
+                    'nbPiece' => $courrier->nbPiece,
+                    'etat' => $courrier->etat,
+                    'prestataire' => $courrier->prestataire,
+                    'date' => $date,
+                    'categorie' => $courrier->categorie->intitule,
+                ];
+    
+            }
+            $result = [
+                'status' => 'OK',
+                'record' => $courrier == null ? null : $record,
+            ];
+            return response ($result, 200);
+        } catch (Exception $e) {
+            return response ($e->getMessage(), 201);
+        }
     }
 }

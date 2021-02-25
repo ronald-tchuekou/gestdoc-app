@@ -73,13 +73,10 @@ class ListenChange {
     /**
      * Ecouter les changements pour un compte accueil. (Courriers à modifés, Courriers rejetés, Courriers validés.)
      */
-    accuiel_listener() {
-        console.log('Pour un agent.');
+    accuiel_listener() { 
         let route = HOST_BACKEND + '/' + this.current_account + '/handleChange/' + this.user_id;
         axios.get(route).then(response => {
             let data = response.data.record;
-
-            console.log('Numero de la ligne ', response.data);
             
             if (response.status == 200) {
                 if (data != undefined) {
@@ -100,12 +97,9 @@ class ListenChange {
      * Ecouter les changements pour les agent. (Les courriers assignés.)
      */
     agent_listener() {
-        console.log('Pour un agent.');
         let route = HOST_BACKEND + '/' + this.current_account + '/handleChange/' + this.user_id;
         axios.get(route).then(response => {
             let data = response.data.record;
-
-            console.log('Numero de la ligne ', response.data);
 
             if (response.status == 200 && data != undefined) {
                 
@@ -143,32 +137,95 @@ class ListenChange {
      */
     admin_listener() {
         console.log('Pour un admin.');
-        let route = HOST_BACKEND + '/' + this.current_account + '/' + this.user_id;
-        /*axios.get(route).then(response => {
+        let route = HOST_BACKEND + '/' + this.current_account + '/handle-new-courrier-init';
+        axios.get(route).then(response => {
             let data = response.data.record;
-            let emptyLine = $('#agent-finish #row-empty');
-            let content = `<tr role="row" class="odd hover" id="row-{{$loop->index}}">
-                <td>
-                    {{$courier->id}}
-                </td>
-                <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
-                <td><span>{{$courier->assignes()->where('user_id', Auth::user()->id)->first()->tache}}</span></td>
-                <td>{{App\Models\Utils::full_date_format(
-                    $courier->assignes()->where('user_id', Auth::user()->id)->first()->created_at
-                )}}</td>
-                <td>
-                    <button data-courier="{{$courier->id}}" class="btn btn-secondary btn-sm btn-traitement-finish">Terminer</button>
-                </td>
-            </tr>`;
 
-            if (response.status == 200) {
-                // Faire la mis à jour des courries à traité.
-                // Faire la mis à jour des notifications.
-                // Envoyer un toastr message.
+            console.log('Data : ', response)
+
+            if (response.status == 200 && data != null) {
+                let courier = data;
+                let emptyLine = $('#admin-initial-courriers #row-empty');
+                let row_count = document.querySelectorAll('#admin-initial-courriers tr[role="row"]').length + 1;
+                let content = `<tr role="row" class="odd hover" id="row-${row_count}">
+                                    <td>${courier.id} </td>
+                                    <td>
+                                        <div class="d-flex justify-content-left align-items-center">
+                                            <div class="d-flex flex-column">
+                                                <a href="javascript:void()" class="user_name text-truncate">
+                                                    <span class="font-weight-bold">${courier.nom} ${courier.prenom}</span>
+                                                </a>
+                                                <small class="emp_post text-muted">${courier.telephone}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="sorting_1 ellipsize" style="max-width: 250px;">${courier.objet}</td>
+                                    <td><span class="text-truncate align-middle text-nowrap">${courier.nbPiece}</span></td>
+                                    <td>${courier.prestataire}</td>
+                                    <td><span class="badge badge-pill badge-light-info" text-capitalized="">${courier.etat}</span></td>
+                                    <td>${courier.date}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm hide-arrow" data-toggle="dropdown">
+                                                <i class="feather icon-more-vertical font-medium-3 text-muted cursor-pointer"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <!-- <a href="/admin/couriers/${courier.id}" id="type-success" class="dropdown-item" style="padding: 7px 9px;"> -.
+                                                <a href="/${this.current_account}/courier-details/${courier.id}" class="dropdown-item" style="padding: 7px 9px;">
+                                                    <i class="feather icon-file-text" style="font-size: 1.5rem;"></i>
+                                                    &nbsp;&nbsp;&nbsp;Details
+                                                </a>
+                                                <a href="javascript:void()" class="dropdown-item assigner_btn" style="padding: 7px 9px;"
+                                                    tabindex="0" 
+                                                    aria-controls="courier_table_admin" 
+                                                    type="button" 
+                                                    data-courier="${courier.id}/${courier.categorie}/${courier.nbPiece}/${row_count}"
+                                                    data-toggle="modal"
+                                                    data-target="#assign-doc-modal">
+
+                                                    <i class="feather icon-send" style="font-size: 1.5rem;"></i>
+                                                    &nbsp;&nbsp;&nbsp;Assigner
+                                                </a>
+                                                <a href="javascript:void()" class="dropdown-item reject_btn" style="padding: 7px 9px;"
+                                                    tabindex="0" 
+                                                    aria-controls="courier_table_admin" 
+                                                    type="button" 
+                                                    data-courier="${courier.id}/reject/${row_count}"
+                                                    data-toggle="modal"
+                                                    data-target="#confirm-reject-modal">
+
+                                                    <i class="feather icon-x-circle" style="font-size: 1.5rem;"></i>
+                                                    &nbsp;&nbsp;&nbsp;Rejeter
+                                                </a>
+                                                <a href="javascript:void()" class="dropdown-item reject_btn" style="padding: 7px 9px;"
+                                                    tabindex="0" 
+                                                    aria-controls="courier_table_admin" 
+                                                    type="button" 
+                                                    data-courier="${courier.id}/modify/${row_count}"
+                                                    data-toggle="modal"
+                                                    data-target="#confirm-reject-modal">
+
+                                                    <i class="feather icon-edit-2" style="font-size: 1.5rem;"></i>
+                                                    &nbsp;&nbsp;&nbsp;Modifier
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                
+                this.setNotification(data);
+        
+                if (emptyLine != undefined)
+                    emptyLine.remove();
+                $('#admin-initial-courriers').prepend(content);
+        
+                toastr.info('Un nouveau courrier vous à été assigné', 'Information',
+                    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
+           
             }
         }).catch(reason => {
             toastr.error(reason, 'Erreur');
-        });*/
+        });
     }
 
     /**
