@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PassForgotController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RootController;
@@ -17,8 +18,9 @@ Route::post('/login', [LoginController::class, 'authenticate']);
 Route::get('/loginOut', [LoginController::class, 'loginOut']);
 Route::get('/register/{id}/{token}', [RegisterController::class, 'index']);
 Route::post('/register/{user_id}', [RegisterController::class, 'store']);
+Route::get('/forgot-password', [PassForgotController::class, 'index']);
+Route::post('/forgot-password/send', [PassForgotController::class, 'sendMail']);
 
-Route::view('/forgot-password', 'auth.forgot-password');
 Route::view('/reset-password', 'auth.reset-password');
 
 // Admin routes managers

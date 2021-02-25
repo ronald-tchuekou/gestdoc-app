@@ -14,8 +14,8 @@ class LoginController extends Controller
 
     public function index () {
 
+        // Check if the user are already authenticate.
         $user = Auth::user();
-
         if($user != null){
             if($user->role == 'Admin')
                 return redirect()->intended('/admin/dashboard');
@@ -24,7 +24,13 @@ class LoginController extends Controller
             else
                 return redirect()->intended('/agent/dashboard');
         }
-        return view('auth.login');
+
+        // Check the remember auth.
+        if(!Auth::viaRemember()){
+            return view('auth.login');
+        }
+
+        return back();
     }
 
     /**

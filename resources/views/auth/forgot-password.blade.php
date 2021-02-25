@@ -6,6 +6,8 @@ Mot de passe oublié
 
 @section('content')
 
+<form action="/forgot-password/send" method="post">
+@csrf
 <div class="app-content content">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
@@ -27,20 +29,19 @@ Mot de passe oublié
                                             <h4 class="mb-0">Réinitialiser de mot de passe</h4>
                                         </div>
                                     </div>
-                                    <p class="px-2 mb-0">Veuillez saisir votre adresse e-mail et nous vous enverrons des instructions pour réinitialiser votre mot de passe.</p>
+                                    <p class="px-2 mb-0">Veuillez saisir votre adresse e-mail et nous vous enverrons des instructions pour réinitialiser votre mot de passe par mail.</p>
                                     <div class="card-content">
                                         <div class="card-body">
-                                            <form action="index.html">
                                                 <div class="form-label-group">
-                                                    <input type="email" id="inputEmail" class="form-control" placeholder="Email">
-                                                    <label for="inputEmail">Email</label>
+                                                    <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+                                                    <label for="email">Email</label>
                                                 </div>
-                                            </form>
-                                            <div class="float-md-left d-block mb-1">
-                                                <a href="login" class="btn btn-outline-primary btn-block px-75">Connexion</a>
-                                            </div>
-                                            <div class="float-md-right d-block mb-1">
-                                                <a href="#" class="btn btn-primary btn-block px-75">Valider</a>
+                                                <div class="float-md-left d-block mb-1">
+                                                    <a href="login" class="btn btn-outline-primary btn-block px-75">Connexion</a>
+                                                </div>
+                                                <div class="float-md-right d-block mb-1">
+                                                    <button type="submit" class="btn btn-primary btn-block px-75">Valider</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -49,10 +50,9 @@ Mot de passe oublié
                         </div>
                     </div>
                 </div>
+            </section>
         </div>
-        </section>
-
     </div>
-</div>
+</form>
 
 @endSection

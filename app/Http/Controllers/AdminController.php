@@ -43,7 +43,7 @@ class AdminController extends Controller
 
         // HISTORIES.
         $histories = History::orderBy('created_at', 'DESC')->limit(5)->get();
-        
+
         return view('pages.admin.index', compact('histories', 'a_p', 'c_t', 'a_c_t','user', 'title', 'current_account', 'current_action'));
     }
 
@@ -109,13 +109,13 @@ class AdminController extends Controller
     public function redirectToEditView (int $agent_id) {
         $agent = User::find($agent_id);
         $personne = $agent->personne;
-        
+
         $agent_tab = $agent->toArray();
         $personne_tab = $personne->toArray();
         array_shift($personne_tab);
-        
+
         $inputResult = array_merge($agent_tab, $personne_tab);
-        
+
         return redirect("/admin/agents/$agent_id/edit")->withInput($inputResult);
     }
 
@@ -152,13 +152,13 @@ class AdminController extends Controller
         $personne = $user->personne;
 
         $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
-        
+
         if($validation->fails()){
             return redirect("/admin/agents/$agent_id/edit")
                 ->withInput($request->all())
                 ->withErrors($validation->errors());
         }
-        
+
         // save Personne Elements.
         $personne->nom = $request->nom;
         $personne->prenom = $request->prenom;
@@ -176,7 +176,7 @@ class AdminController extends Controller
         $history->content = 'Les informations de l\'agent ' . $personne->nom . ' ' . $personne->prenom .' ont été modifiés ';
         $history->action_type = 5;
         $history->user_id = Auth::id();
-        $history->save(); 
+        $history->save();
 
         return redirect('/admin/agents')
             ->with('success', 'Agent modifié avec succèss');
@@ -186,7 +186,7 @@ class AdminController extends Controller
      * Function that assign courier work to a service.
      */
     public function assignCourier(Request $request) {
-        
+
         $courier = Courier::find($request->courier_id);
 
         // Assignation.
@@ -224,7 +224,7 @@ class AdminController extends Controller
                 $history->content = 'Le courrier N° '. $request->courier_id .' à été assigné à l\'agent ' . $agent->nom . ' ' . $agent->prenom;
                 $history->action_type = 1;
                 $history->user_id = Auth::id();
-                $history->save(); 
+                $history->save();
 
                 return response('', 200);
             }
@@ -251,7 +251,7 @@ class AdminController extends Controller
     public function storeAgent(Request $request) {
 
         $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
-        
+
         if($validation->fails()){
             return redirect('/admin/agents/add')
                 ->withInput($request->all())
@@ -263,7 +263,7 @@ class AdminController extends Controller
                 ->withInput($request->all())
                 ->withErrors(['Utilisateur possède déjà ces informations dans le système.']);
         }
-        
+
         // save Personne Elements.
         $personne = new Personne;
         $personne->nom = $request->nom;
@@ -290,7 +290,7 @@ class AdminController extends Controller
         $history->content = 'L\'agent ' . $personne->nom . ' ' . $personne->prenom .' à été ajouté dans la platefrome ';
         $history->action_type = 1;
         $history->user_id = Auth::id();
-        $history->save(); 
+        $history->save();
 
 
         // TODO manage this to send the email.
@@ -332,14 +332,14 @@ class AdminController extends Controller
         $history->content = 'Le courrier N° ' . $id .' à été renvoyé pour une modification au service d\'accueil.';
         $history->action_type = 3;
         $history->user_id = Auth::id();
-        $history->save(); 
-        
+        $history->save();
+
         $courier->etat = 8; // set to  modify state.
         $courier->update();
 
         return response('', 200);
     }
-    
+
     /**
      * Fonction qui ajout un nouvelle etat de rejet.
      */
@@ -361,8 +361,8 @@ class AdminController extends Controller
         $history->content = 'Le courrier N° ' . $id .' à été rejeté.';
         $history->action_type = 3;
         $history->user_id = Auth::id();
-        $history->save(); 
-        
+        $history->save();
+
         $courier->etat = 6;
         $courier->update(); // Mettre à l'état de modification.
 
@@ -380,7 +380,7 @@ class AdminController extends Controller
             $validate = new CourierValide;
             $validate->courier_id = $id;
             $validate->user_id = Auth::user()->id;
-            
+
             if(!$validate->save()){
                 return response('Erreur de validation, veuillez reprendre.', 201);
             }
@@ -393,7 +393,7 @@ class AdminController extends Controller
             $history->content = 'Le courrier N° ' . $id .' à été validé.';
             $history->action_type = 4;
             $history->user_id = Auth::id();
-            $history->save(); 
+            $history->save();
 
             return response('', 200);
         }catch(Exception $e){
@@ -454,7 +454,7 @@ class AdminController extends Controller
             $from_date = $from != "" ? $from : strtotime($to. ' + 1 days');
 
             $agents = User::where('role', 1)/*->whereBetween('created_at', [$from_date, $to_date])*/->get();
-            
+
             $total_delete = $agents->filter(function($item){
                 if($item->delete == 1){
                     return $item;
@@ -493,7 +493,7 @@ class AdminController extends Controller
      * Fonction qui permet de supprimer un agent.
      */
     public function deleteAgent(int $agent_id) {
-       
+
         $agent  = User::find($agent_id);
         $agent->delete = 1;
         $agent->update();
@@ -506,13 +506,13 @@ class AdminController extends Controller
         $history->user_id = Auth::id();
         $history->save();
 
-         return redirect('/admin/agents')->with('success', 'L\'agent à été supprimé avec succès.');
-       
+        return redirect('/admin/agents')->with('success', 'L\'agent à été supprimé avec succès.');
+
     }
 
 
     public function handleNewCourrierInit() {
-        
+
         try {
             $date_to = now();
             $date_from = now();
@@ -539,7 +539,7 @@ class AdminController extends Controller
                     'date' => $date,
                     'categorie' => $courrier->categorie->intitule,
                 ];
-    
+
             }
             $result = [
                 'status' => 'OK',
