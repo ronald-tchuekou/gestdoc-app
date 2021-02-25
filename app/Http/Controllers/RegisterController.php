@@ -21,7 +21,7 @@ class RegisterController extends Controller
     }
 
     public function store (Request $request, int $id) {
-        
+
         // Validation
         $errors = ['msg' => 'Une erreur s\'est produite.'];;
         $validation = Validator::make($request->all(), [
@@ -29,7 +29,7 @@ class RegisterController extends Controller
             'password' => 'required',
             'confirmPass' => 'required',
         ]);
-        
+
         if($validation->fails()){
             $errors = ['msg' => 'Veuillez renseigner tous les champs du formulaire.'];
         }

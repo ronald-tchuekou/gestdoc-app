@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class LoginController extends Controller
 {
 
     public function index () {
+
         $user = Auth::user();
+
         if($user != null){
             if($user->role == 'Admin')
                 return redirect()->intended('/admin/dashboard');
@@ -22,6 +27,9 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+    /**
+     * Fonction qui permet d'authentifier un user.
+     */
     public function authenticate(Request $request)
     {
         $remember = $request->has('remember');
@@ -37,12 +45,16 @@ class LoginController extends Controller
             $currentUser->update();
 
             // Set the correct page.
+            $dashboard = '';
+
             if($user->role == 'Admin')
-                return redirect()->intended('/admin/dashboard');
+                $dashboard = '/admin/dashboard';
             elseif($user->role == 'Root')
-                return redirect()->intended('/root/dashboard');
+                $dashboard = '/root/dashboard';
             else
-                return redirect()->intended('/agent/dashboard');
+                $dashboard = '/agent/dashboard';
+
+            return redirect($dashboard);
         }
 
         return back()->withErrors([

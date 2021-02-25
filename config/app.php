@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Africa/Douala', // Default value is UTC
 
     /*
     |--------------------------------------------------------------------------
