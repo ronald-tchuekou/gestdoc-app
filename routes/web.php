@@ -8,6 +8,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PassForgotController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\RootController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +21,8 @@ Route::get('/register/{id}/{token}', [RegisterController::class, 'index']);
 Route::post('/register/{user_id}', [RegisterController::class, 'store']);
 Route::get('/forgot-password', [PassForgotController::class, 'index']);
 Route::post('/forgot-password/send', [PassForgotController::class, 'sendMail']);
-Route::get('/reset-password', []);
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'index']);
+Route::post('/reset-password/reset/{id}', [ResetPasswordController::class, 'reset']);
 
 // Admin routes managers
 Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){

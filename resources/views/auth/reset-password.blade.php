@@ -25,33 +25,25 @@ Réinitialisation de mot de passe - GestDoc
                                     <div class="card rounded-0 mb-0 px-2">
                                         <div class="card-header pb-1">
                                             <div class="card-title">
-                                                <h4 class="mb-0">Reset Password</h4>
+                                                <h4 class="mb-0">Réinitialisation de mot de passe</h4>
                                             </div>
                                         </div>
-                                        <p class="px-2">Please enter your new password.</p>
+                                        <p class="px-2">Réinialiser votre formulaire en renseignant le formulaire suivant.</p>
                                         <div class="card-content">
                                             <div class="card-body pt-1">
-                                                <form>
+                                                <form action="/reset-password/reset/{{$user->id}}" method="post">
+                                                    @csrf
                                                     <fieldset class="form-label-group">
-                                                        <input type="text" class="form-control" id="user-email" placeholder="Email" required>
-                                                        <label for="user-email">Email</label>
+                                                        <input type="password" class="form-control" name="password" id="user-password" placeholder="Password">
+                                                        <label for="user-password">Mot de passe</label>
                                                     </fieldset>
-
                                                     <fieldset class="form-label-group">
-                                                        <input type="password" class="form-control" id="user-password" placeholder="Password" required>
-                                                        <label for="user-password">Password</label>
-                                                    </fieldset>
-
-                                                    <fieldset class="form-label-group">
-                                                        <input type="password" class="form-control" id="user-confirm-password" placeholder="Confirm Password" required>
-                                                        <label for="user-confirm-password">Confirm Password</label>
+                                                        <input type="password" class="form-control" name="confirm_password" id="user-confirm-password" placeholder="Confirm Password">
+                                                        <label for="user-confirm-password">Confirmation de mot de passe</label>
                                                     </fieldset>
                                                     <div class="row pt-2">
                                                         <div class="col-12 col-md-6 mb-1">
-                                                            <a href="login" class="btn btn-outline-primary btn-block px-0">Go Back to Login</a>
-                                                        </div>
-                                                        <div class="col-12 col-md-6 mb-1">
-                                                            <button type="submit" class="btn btn-primary btn-block px-0">Reset</button>
+                                                            <button type="submit" class="btn btn-primary btn-block px-0">Réinitialiser</button>
                                                         </div>
                                                     </div>
                                                 </form>
