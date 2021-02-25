@@ -1,5 +1,5 @@
 @extends('layouts.template')
- 
+
 @section('content')
 
 @include('success.success')
@@ -91,10 +91,12 @@
                         </td>
                         <td>{{$agent->personne->email}}</td>
                         <td>{{$agent->personne->localisation}}</td>
-                        <td>{{$agent->service->intitule}}</td>
+                        <td>
+                            {{$agent->service == null ? $agent->role : $agent->service->intitule}}
+                        </td>
                         <td>{{$agent->last_connexion}}</td>
                         <td>
-                            @if($agent->register_token == '') 
+                            @if($agent->register_token == '')
                             <span data-toggle="tooltip" data-placement="bottom" title="Compte déjà créé" class="text-success cursor-pointer bg-success boule"></span>
                             @else
                             <span data-toggle="tooltip" title="Compte pas encore créé" class="text-success cursor-pointer bg-danger boule"></span>
