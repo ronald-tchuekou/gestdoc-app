@@ -6,6 +6,7 @@ Mot de passe oublié
 
 @section('content')
 
+@include('success.success')
 <form action="/forgot-password/send" method="post">
 @csrf
 <div class="app-content content">
@@ -30,6 +31,7 @@ Mot de passe oublié
                                         </div>
                                     </div>
                                     <p class="px-2 mb-0">Veuillez saisir votre adresse e-mail et nous vous enverrons des instructions pour réinitialiser votre mot de passe par mail.</p>
+                                    @include('errors.errors')
                                     <div class="card-content">
                                         <div class="card-body">
                                                 <div class="form-label-group">
