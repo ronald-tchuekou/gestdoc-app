@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Mail\PassForgotMail;
-use App\Mail\RegisterMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -24,9 +23,8 @@ class PassForgotController extends Controller
         Mail::to('Mot de passe oublié', 'Mail de réinitialisation de mot de passe')
             ->send(new PassForgotMail(''));
 
-        return redirect('/admin/agents/add')
+        return redirect('/forgot-password')
             ->withInput($request->all())
-            ->with('success', 'Agent ajouté avec succèss');
-
+            ->with('success', 'Un mail vous à été envoie, consulté votre boite et réinitialisé votre compte.');
     }
 }

@@ -71,39 +71,64 @@ class DatabaseSeeder extends Seeder
         // Categories.
         DB::table('categories')->insert([
             [
-                'intitule' => 'Categorie 1',
+                'intitule' => '',
             ],
             [
-                'intitule' => 'Categorie 2',
+                'intitule' => '',
             ],
             [
-                'intitule' => 'Categorie 3',
+                'intitule' => '',
             ],
             [
-                'intitule' => 'Categorie 4',
+                'intitule' => '',
             ],
             [
-                'intitule' => 'Categorie 5',
+                'intitule' => '',
             ]
         ]);
 
         // Services.
         DB::table('services')->insert([
             [
-                'intitule' => 'Service 1',
+                'intitule'   => "Bureau de la gestion des ressources matérielles",
+                'created_at' => now()
             ],
             [
-                'intitule' => 'Service 2',
+                'intitule'   => "Bureau de la police municipale",
+                'created_at' => now()
             ],
             [
-                'intitule' => 'Service 3',
+                'intitule'   => "Recette municipale",
+                'created_at' => now()
             ],
             [
-                'intitule' => 'Service 4',
+                'intitule'   => "Service de l'hygène et de l'enviroement",
+                'created_at' => now()
             ],
             [
-                'intitule' => 'Service 5',
-            ]
+                'intitule'   => "Service des affaires financières et économique",
+                'created_at' => now()
+            ],
+            [
+                'intitule'   => "Service des affaires générales",
+                'created_at' => now()
+            ],
+            [
+                'intitule'   => "Service des affaires sociales et culturelles",
+                'created_at' => now()
+            ],
+            [
+                'intitule'   => "Service technique de l'aménagement et du developpement",
+                'created_at' => now()
+            ],
+            [
+                'intitule'   => 'Bureau du courrier et de liaison',
+                'created_at' => now()
+            ],
+            [
+                'intitule'   => 'Cellule informatique',
+                'created_at' => now()
+            ],
         ]);
     }
 }

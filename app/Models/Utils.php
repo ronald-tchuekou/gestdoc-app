@@ -11,7 +11,16 @@ class Utils {
     ];
 
     static $PRESTATAIRES = [
-        'MINCOM', 'SSCO',
+        'PREFECTURE',
+        'MINDDEVEL',
+        'MINMAP',
+        'FEICOM',
+        'PNDP',
+        'MINTP',
+        'CONTRIBUABLE',
+        'COMITE DEVELOPPEMENT',
+        'PROJETS',
+        'AUTRES',
     ];
 
     /**
@@ -68,5 +77,5 @@ class Utils {
             }
         }
     }
-    
+
 }
