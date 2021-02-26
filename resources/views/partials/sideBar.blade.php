@@ -1,4 +1,4 @@
-<div class="main-menu menu-fixed menu-accordion menu-shadow expanded menu-light">
+<div class="main-menu menu-fixed menu-accordion menu-shadow menu-light">
     <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item mr-auto"><a class="navbar-brand"

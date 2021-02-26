@@ -5,7 +5,7 @@
     <!-- END: header-->
 
     <!-- BEGIN: Body-->
-    <body class="vertical-layout vertical-menu-modern semi-dark-layout 2-columns  navbar-floating footer-static  "
+    <body class="vertical-layout vertical-menu-modern menu-collapsed semi-dark-layout 2-columns  navbar-floating footer-static  "
         data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="semi-dark-layout">
 
         @yield('body')
