@@ -35,7 +35,7 @@ Mot de passe oublié
                                     <div class="card-content">
                                         <div class="card-body">
                                                 <div class="form-label-group">
-                                                    <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+                                                    <input type="email" value="{{old('email')}}" id="email" name="email" class="form-control" placeholder="Email">
                                                     <label for="email">Email</label>
                                                 </div>
                                                 <div class="float-md-left d-block mb-1">

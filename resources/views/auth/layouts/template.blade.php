@@ -62,7 +62,9 @@
     <!-- END: Theme JS-->
 
     <!-- BEGIN: Page JS-->
-    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
+    <script>
+        $('#alertSuccessDialog').modal('show'); // Show the success modal.
+    </script>
     <!-- END: Page JS-->
 
 </body>

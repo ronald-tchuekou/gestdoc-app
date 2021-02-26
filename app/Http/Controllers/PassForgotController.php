@@ -38,7 +38,7 @@ class PassForgotController extends Controller
             if($user == null){
                 return redirect('/forgot-password')
                     ->withInput($request->all())
-                    ->withErrors(['Aucun utilisateur ne possède cette adresse email dans cette plateforme.']);
+                    ->withErrors(['Vous n\'est pas un utilisateur dans cette plateforme.']);
             }
 
             $reset_token = str_replace('/', '', bcrypt(AdminController::str_random(20)));
@@ -48,13 +48,13 @@ class PassForgotController extends Controller
             // TODO manage this to send the email.
             Mail::to($request->email, 'Mail de réinitialisation de mot de passe')
                 ->send(new PassForgotMail($reset_token));
-                return redirect('/forgot-password')
-                    ->withInput($request->all())
-                    ->with('success', 'Un mail vous à été envoie, consulté votre boite et réinitialisé votre compte.');
+
+            return redirect('/forgot-password')
+                ->with('success', 'Un mail vous à été envoie, consulté votre boite et réinitialisé votre compte.');
         }else{
             return redirect('/forgot-password')
                 ->withInput($request->all())
-                ->withErrors($validate->errors());
+                ->withErrors(['Aucun utilisateur de la plateforme de possède cette adresse email.']);
         }
     }
 }
