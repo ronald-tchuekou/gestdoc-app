@@ -24,20 +24,27 @@
             </li>
 
             <li class="nav-item @if($current_action == 'profile') active @endif">
-                <a href="/{{$current_account}}/profile"><i class="feather icon-user"></i><span class="menu-title"
+                <a href="/{{strtolower(Auth::user()->role)}}/profile"><i class="feather icon-user"></i><span class="menu-title"
                         data-i18n="Profile">Profile</span></a>
             </li>
 
-            @if(Auth::user()->role == 'Admin' || Auth::user()->role == 'Root')
+@if(Auth::user()->role == 'Admin' || Auth::user()->role == 'Root')
             <li class="nav-item @if($current_action == 'agents') active @endif">
-                <a href="/{{$current_account}}/agents"><i class="feather icon-users"></i><span class="menu-title"
+                <a href="/{{strtolower(Auth::user()->role)}}/agents"><i class="feather icon-users"></i><span class="menu-title"
                         data-i18n="Agents">Agents</span></a>
             </li>
-            @endif
+@endif
+
+@if(Auth::user()->role == 'Root')
+            <li class="nav-item @if($current_action == 'adjoints') active @endif">
+                <a href="/{{strtolower(Auth::user()->role)}}/adjoints"><i class="feather icon-user-check"></i><span class="menu-title"
+                        data-i18n="Adjoints">Adjoints (Admin)</span></a>
+            </li>
+@endif
 
 @if(Auth::user()->role != 'Agent')
             <li class="nav-item @if($current_action == 'couriers') active @endif">
-                <a href="/{{$current_account}}/couriers">
+                <a href="/{{strtolower(Auth::user()->role)}}/couriers">
                     <i class="feather icon-clipboard"></i>
                     <span class="menu-title" data-i18n="Courriers">
                         @if(Auth::user()->role == 'Accueil') Courriers initialisés @else Gestion des courriers @endif
@@ -46,9 +53,9 @@
             </li>
 @endif
 
-@if(Auth::user()->role == 'Admin')
+@if(Auth::user()->role == 'Root')
             <li class="nav-item @if($current_action == 'categories') active @endif">
-                <a href="/{{$current_account}}/categories">
+                <a href="/{{strtolower(Auth::user()->role)}}/categories">
                     <i class="feather icon-folder"></i>
                     <span class="menu-title" data-i18n="Categories Courrier">
                         Categores Courrier
@@ -57,7 +64,7 @@
             </li>
 @endif
             <!-- <li class="nav-item @if($current_action == 'parametres') active @endif">
-                <a href="/{{$current_account}}/parametres"><i class="feather icon-settings"></i><span class="menu-title"
+                <a href="/{{strtolower(Auth::user()->role)}}/parametres"><i class="feather icon-settings"></i><span class="menu-title"
                         data-i18n="Parametres">Parametres</span></a>
             </li> -->
 

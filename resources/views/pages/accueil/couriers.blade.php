@@ -19,7 +19,7 @@
         <h5 class="font-weight-bolder">Courriers initialisés</h5>
         <div class="d-flex justify-content-between">
             <div class="text-md-center">
-                <a href="/{{$current_account}}/couriers/add" class="btn btn-primary text-white ml-1 text-nowrap btn-sm" style="font-size: 1rem;">
+                <a href="/{{strtolower(Auth::user()->role)}}/couriers/add" class="btn btn-primary text-white ml-1 text-nowrap btn-sm" style="font-size: 1rem;">
                     <i class="feather icon-plus" style="font-size: 1.3rem;"></i>&nbsp;&nbsp;Ajouter
                 </a>
             </div>

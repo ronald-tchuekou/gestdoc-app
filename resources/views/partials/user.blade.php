@@ -9,7 +9,7 @@
         </span>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item" href="/{{$current_account}}/profile"><i class="feather icon-user"></i> Compte</a>
+        <a class="dropdown-item" href="/{{strtolower(Auth::user()->role)}}/profile"><i class="feather icon-user"></i> Compte</a>
         <a class="dropdown-item" href=""><i class="feather icon-mail"></i>Boite de reception</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="/loginOut"><i class="feather icon-power"></i> Deconnexion</a>

@@ -27,8 +27,8 @@
                                     <i class="feather icon-more-vertical font-medium-3 text-muted cursor-pointer"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <!-- <a href="/admin/couriers/{{$courier->id}}" id="type-success" class="dropdown-item" style="padding: 7px 9px;"> -->
-                                    <a href="/{{$current_account}}/courier-details/{{$courier->id}}" class="dropdown-item" style="padding: 7px 9px;">
+                                    <!-- <a href="/{{strtolower(Auth::user()->role)}}/couriers/{{$courier->id}}" id="type-success" class="dropdown-item" style="padding: 7px 9px;"> -->
+                                    <a href="/{{strtolower(Auth::user()->role)}}/courier-details/{{$courier->id}}" class="dropdown-item" style="padding: 7px 9px;">
                                         <i class="feather icon-file-text" style="font-size: 1.5rem;"></i>
                                         &nbsp;&nbsp;&nbsp;Details
                                     </a>

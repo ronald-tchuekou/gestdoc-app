@@ -31,7 +31,7 @@
 {{-- <script src="{{ asset('js/notifyEventListener.js') }}"></script> --}}
 
 <!-- // About the home enter account. -->
-@if($current_account == 'accueil')
+@if(strtolower(Auth::user()->role) == 'accueil')
 
 {{-- <script>
     $(document).ready(function () {
@@ -41,7 +41,7 @@
         if(init_courrier_table != null) {
             setInterval(() => {
 
-                axios.get(HOST_BACKEND + "/{{$current_account}}/all-init-courriers/{{Auth::id()}}")
+                axios.get(HOST_BACKEND + "/{{strtolower(Auth::user()->role)}}/all-init-courriers/{{Auth::id()}}")
                     .then(response => {
 
                         let result = response.data

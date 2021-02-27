@@ -1,16 +1,16 @@
 <div class="card">
     <div class="card-header">
         <div class="d-flex mb-3">
-        <a href="/{{strtolower(Auth::user()->role)}}/agents" class="ml-1 text-secondary" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Formulaire de modification des information d'un agent.</h4>
+        <a href="/{{strtolower(Auth::user()->role)}}/adjoints" class="ml-1 text-secondary" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Formulaire d'ajout d'un nouveau adjoint.</h4>
         </div>
     </div>
     <div class="card-content">
         @include('errors.errors')
-        <form action="/{{strtolower(Auth::user()->role)}}/agents/{{$agent->id}}/update" class="form pb-1" method="post">
+        <form action="/{{strtolower(Auth::user()->role)}}/adjoints/store" class="form pb-1" method="post">
         @csrf
-            <div class="row w-100 px-0 m-0">
-                <div class="col-md-6 col-12 mx-0 px-0">
+            <div class="row justify-content-around w-100 px-0 m-0">
+                <div class="col-md-8 col-12 mx-0 px-0">
                     <fieldset class="form-group border mx-1 pb-1">
                         <legend class="scheduler-border text-small" style="font-size: 1rem;">Information personnels</legend>
                         <div class="row px-1">
@@ -100,28 +100,6 @@
                                     </fieldset>
                                 </li>
                             </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-md-6 col-12 mx-0 px-0">
-                    <fieldset class="form-group border mx-1 pb-1">
-                        <legend class="scheduler-border text-small" style="font-size: 1rem;">Fonctionnalité / Post</legend>
-                        <div class="container px-1" style="padding-top: 4px; padding-bottom: 4px;">
-                            <label for="nom">Sevice *</label>
-                            <select class="select2 form-control @if($errors->has('service_id')) is-invalid @endif" id="service" name="service_id">
-                                <option
-                                    value=""
-                                    @if(old('service_id') == '') selected @endif>
-                                        ....
-                                </option>
-                                @foreach($services as $service)
-                                    <option
-                                        value="{{$service->id}}"
-                                        @if(old('service_id') == $service->id) selected @endif>
-                                            {{ $service->intitule }}
-                                    </option>
-                                @endforeach
-                            </select>
                         </div>
                     </fieldset>
                 </div>

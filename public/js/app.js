@@ -496,6 +496,7 @@ function admin_agent_filter() {
               { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
           } else {
             $(row).parent().parent().parent().parent().remove();
+            $("#init_courier_table_admin").DataTable();
             toastr.success('Dossier assigné avec succès.', 'Succès',
               { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
           }
@@ -547,6 +548,7 @@ function admin_agent_filter() {
                     { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
                 } else {
                   $(row).parent().parent().parent().parent().remove();
+                  $("#init_courier_table_admin").DataTable();
                   if (reject_mode === 'modify') {
                     toastr.info('Dossier rejeté pour une modification.', 'Succès',
                       { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
@@ -580,6 +582,7 @@ function admin_agent_filter() {
           .then(response => {
             if (response.status == 200) {
               $(row).parent().parent().parent().parent().remove();
+              $("#finish_courier_table_admin").DataTable();
               toastr.success('Dossier validé avec succès.', 'Message de succès',
                 { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
             } else {
@@ -606,6 +609,7 @@ function admin_agent_filter() {
           .then(response => {
             if (response.status == 200) {
               $(row).parent().parent().remove();
+              $("#finish_courier_table_agent").DataTable();
               toastr.success('Dossier Traité avec succès.', 'Message de succès',
                 { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
             } else {
@@ -669,6 +673,7 @@ $(document).ready(function() {
     $("#finish_courier_table_admin").DataTable();
     $("#modify_courier_table_admin").DataTable();
     $("#agents_table_admin").DataTable();
+    $("#adjoints_table_root").DataTable();
     $("#finish_courier_table_agent").DataTable();
     $("#init_courier_table_accueil").DataTable();
     $("#reject_courier_table_accueil").DataTable();

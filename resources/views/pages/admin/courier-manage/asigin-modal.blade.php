@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="/admin/couriers/assignment" method="post" id="assign-form">
+        <form action="/{{strtolower(Auth::user()->role)}}/couriers/assignment" method="post" id="assign-form">
         @csrf
           <div class="row px-1">
             <div class="col-md-3 col-3 m-0 p-0" style="padding: 0 3px">
@@ -63,14 +63,14 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="/admin/couriers/reject" method="post" id="reject-form">
+        <form action="/{{strtolower(Auth::user()->role)}}/couriers/reject" method="post" id="reject-form">
         @csrf
-          
+
           <div class="form-group m-0" style="padding: 0 2px;">
             <label for="reason" class="col-form-label" id="label-reject-modal">Indiquer la raison du rejet et/ou les modifications à aporter sur ce dossier</label>
             <textarea maxlength="100" class="form-control" name="reason" id="reason"></textarea>
           </div>
-          
+
         </form>
       </div>
       <div class="modal-footer d-flex justify-content-between">

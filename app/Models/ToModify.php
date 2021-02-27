@@ -10,12 +10,17 @@ class ToModify extends Model
     use HasFactory;
 
     protected $fillable = [
-        'courier_id', 
+        'courier_id',
         'reason',
+        'user_id',
     ];
 
     public function courier () {
         return $this->belongsTo(Courier::class);
+    }
+
+    public function author(){
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
 }

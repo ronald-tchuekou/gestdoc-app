@@ -26,48 +26,64 @@ Route::post('/reset-password/reset/{id}', [ResetPasswordController::class, 'rese
 
 Route::get('/all-activities', [AdminController::class, 'showAllActivities'])->middleware('auth');
 
-// Admin routes managers
-Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){
+$accounts = [
+    [
+        'mid' => 'authAdmin',
+        'prefix' => 'admin',
+    ],
+    [
+        'mid' => 'authRoot',
+        'prefix' => 'root',
+    ],
+];
 
-    Route::get('/dashboard', [AdminController::class, 'index']);
-    Route::get('/profile', [AdminController::class, 'showProfileView']);
-    Route::get('/parametres', [AdminController::class, 'showParametresView']);
+// ADMIN AND ROOT
+foreach ($accounts as $account) {
+    Route::middleware(['auth', $account['mid']])->prefix($account['prefix'])->group(function(){
 
-    Route::get('/categories', [AdminController::class, 'showCategoriesView']);
-    Route::post('/categories/store', [AdminController::class, 'storeCategory']);
-    Route::get('/categories/delete/{id}', [AdminController::class, 'deleteCategory']);
-    Route::post('/categories/update/{id}', [AdminController::class, 'updateCategory']);
+        Route::get('/dashboard', [AdminController::class, 'index']);
+        Route::get('/profile', [AdminController::class, 'showProfileView']);
+        Route::get('/parametres', [AdminController::class, 'showParametresView']);
 
-    Route::get('/agents', [AdminController::class, 'showAgentsView']);
-    Route::get('/agents/add', [AdminController::class, 'showAddAgentView']);
-    Route::post('/agents/store', [AdminController::class, 'storeAgent']);
-    Route::get('/agents/{id}/edit', [AdminController::class, 'showEditAgentView']);
-    Route::get('/agents/{id}/delete', [AdminController::class, 'deleteAgent']);
-    Route::get('/agents/{id}/details', [AdminController::class, 'showAgentView']);
-    Route::post('/agents/{id}/update', [AdminController::class, 'update_agent']);
-    Route::get('/agents/edition/{id}', [AdminController::class, 'redirectToEditView']);
+        Route::get('/categories', [AdminController::class, 'showCategoriesView']);
+        Route::post('/categories/store', [AdminController::class, 'storeCategory']);
+        Route::get('/categories/delete/{id}', [AdminController::class, 'deleteCategory']);
+        Route::post('/categories/update/{id}', [AdminController::class, 'updateCategory']);
 
-    Route::get('/couriers', [AdminController::class, 'showCouriersView']);
-    Route::post('/couriers/assignment', [AdminController::class, 'assignCourier']);
-    Route::get('/couriers/{id}/{reason}/modify', [AdminController::class, 'add_to_modify']);
-    Route::get('/couriers/{id}/{reason}/reject', [AdminController::class, 'add_to_reject']);
-    Route::get('/couriers/validate/{id}', [AdminController::class, 'validate_courier']);
+        Route::get('/agents', [AdminController::class, 'showAgentsView']);
+        Route::get('/agents/add', [AdminController::class, 'showAddAgentView']);
+        Route::post('/agents/store', [AdminController::class, 'storeAgent']);
+        Route::get('/agents/{id}/edit', [AdminController::class, 'showEditAgentView']);
+        Route::get('/agents/{id}/delete', [AdminController::class, 'deleteAgent']);
+        Route::get('/agents/{id}/details', [AdminController::class, 'showAgentView']);
+        Route::post('/agents/{id}/update', [AdminController::class, 'update_agent']);
+        Route::get('/agents/edition/{id}', [AdminController::class, 'redirectToEditView']);
 
-    Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
+        Route::get('/couriers', [AdminController::class, 'showCouriersView']);
+        Route::post('/couriers/assignment', [AdminController::class, 'assignCourier']);
+        Route::get('/couriers/{id}/{reason}/modify', [AdminController::class, 'add_to_modify']);
+        Route::get('/couriers/{id}/{reason}/reject', [AdminController::class, 'add_to_reject']);
+        Route::get('/couriers/validate/{id}', [AdminController::class, 'validate_courier']);
 
-    Route::get('/handle-new-courrier-init', [AdminController::class, 'handleNewCourrierInit']);
+        Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
 
-});
+        Route::get('/handle-new-courrier-init', [AdminController::class, 'handleNewCourrierInit']);
+
+    });
+}
 
 // Root routes managers
 Route::middleware(['auth', 'authRoot'])->prefix('root')->group(function(){
 
-    Route::get('/dashboard', [RootController::class, 'index']);
-    Route::get('/profile', [RootController::class, 'showProfileView']);
-    Route::get('/parametres', [RootController::class, 'showParametresView']);
-    Route::get('/couriers', [RootController::class, 'showCouriersView']);
+    Route::get('/adjoints', [RootController::class, 'showAdjointsView']);
+    Route::get('/adjoints/add', [RootController::class, 'showAddAdjointView']);
+    Route::post('/adjoints/store', [RootController::class, 'storeAdjoint']);
+    Route::get('/adjoints/{id}/edit', [RootController::class, 'showEditAdjointView']);
+    Route::get('/adjoints/{id}/delete', [RootController::class, 'deleteAdjoint']);
+    Route::get('/adjoints/{id}/details', [RootController::class, 'showAdjointView']);
+    Route::post('/adjoints/{id}/update', [RootController::class, 'update_adjoint']);
+    Route::get('/adjoints/edition/{id}', [RootController::class, 'redirectToEditView']);
 
-    Route::get('/courier-details/{courier_id}', [PageController::class, 'showDetails']);
 });
 
 // Accueil routes managers

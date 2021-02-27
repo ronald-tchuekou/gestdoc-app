@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form action="/{{$current_account}}/categories/store" class="form" id="cat_form">
+                <form action="/{{strtolower(Auth::user()->role)}}/categories/store" class="form" id="cat_form">
                     <div class="row">
                         <div class="col-12 form-group">
                             <label for="category">Intitulé de la categorie</label>

@@ -37,7 +37,7 @@
                             </div>
                         </td>
                         <td>
-                            <a href="/{{$current_account}}/courier-details/{{$courier->id}}" class="btn btn-info btn-sm">
+                            <a href="/{{strtolower(Auth::user()->role)}}/courier-details/{{$courier->id}}" class="btn btn-info btn-sm">
                                 <i class="feather icon-file-text" style="font-size: 1rem;"></i>
                                 &nbsp;&nbsp;&nbsp;Details
                             </a>

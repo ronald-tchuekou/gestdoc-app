@@ -47,7 +47,7 @@
                                 <td>{{App\Models\Utils::full_date_format($a_c_t[$loop->index]->created_at)}}</td>
                                 <td>
                                     <a data-toggle="tooltip" data-popup="tooltip-custom"  data-original-title="Details"
-                                        href="/{{$current_account}}/courier-details/{{$courrier->id}}" class="btn d-inline btn-info btn-sm">
+                                        href="/{{strtolower(Auth::user()->role)}}/courier-details/{{$courrier->id}}" class="btn d-inline btn-info btn-sm">
                                         <i class="feather icon-file-text" style="font-size: 1rem;"></i>
                                     </a>
                                 </td>

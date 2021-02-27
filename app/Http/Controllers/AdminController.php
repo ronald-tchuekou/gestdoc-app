@@ -164,7 +164,7 @@ class AdminController extends Controller
 
         $inputResult = array_merge($agent_tab, $personne_tab);
 
-        return redirect("/admin/agents/$agent_id/edit")->withInput($inputResult);
+        return redirect("/" . strtolower(Auth::user()->role) . "/agents/$agent_id/edit")->withInput($inputResult);
     }
 
     /**
@@ -178,7 +178,7 @@ class AdminController extends Controller
         $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
 
         if($validation->fails()){
-            return redirect("/admin/agents/$agent_id/edit")
+            return redirect("/" . strtolower(Auth::user()->role) . "/agents/$agent_id/edit")
                 ->withInput($request->all())
                 ->withErrors($validation->errors());
         }
@@ -202,7 +202,7 @@ class AdminController extends Controller
         $history->user_id = Auth::id();
         $history->save();
 
-        return redirect('/admin/agents')
+        return redirect('/'.strtolower(Auth::user()->role).'/agents')
             ->with('success', 'Agent modifié avec succèss');
     }
 
@@ -233,7 +233,7 @@ class AdminController extends Controller
             $assign = new Assigne;
             $assign->courier_id = $request->courier_id;
             $assign->user_id = $request->agent_id;
-            $assign->assignePar = Auth::user()->id;
+            $assign->assignePar = Auth::id();
             $assign->tache = $request->tache;
             $assign->position = $position;
             $assign->terminer = $position == 1 ? 1 : 0;
@@ -277,13 +277,13 @@ class AdminController extends Controller
         $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
 
         if($validation->fails()){
-            return redirect('/admin/agents/add')
+            return redirect('/'.strtolower(Auth::user()->role).'/agents/add')
                 ->withInput($request->all())
                 ->withErrors($validation->errors());
         }
 
         if(Personne::where('nom', $request->nom)->where('prenom', $request->prenom)->count() != 0){
-            return redirect('/admin/agents/add')
+            return redirect('/'.strtolower(Auth::user()->role).'/agents/add')
                 ->withInput($request->all())
                 ->withErrors(['Utilisateur possède déjà ces informations dans le système.']);
         }
@@ -321,7 +321,7 @@ class AdminController extends Controller
         Mail::to($personne->email, $personne->nom . ' ' . $personne->prenom)
             ->send(new RegisterMail($user));
 
-        return redirect('/admin/agents/add')
+        return redirect('/'.strtolower(Auth::user()->role).'/agents/add')
             ->withInput($request->all())
             ->with('success', 'Agent ajouté avec succèss');
     }
@@ -413,6 +413,7 @@ class AdminController extends Controller
         $toModify = new ToModify;
         $toModify->courier_id = $id;
         $toModify->reason = $reason;
+        $toModify->user_id = Auth::id();
         $toModify->save();
 
         // HISTORY.
@@ -595,7 +596,7 @@ class AdminController extends Controller
         $history->user_id = Auth::id();
         $history->save();
 
-        return redirect('/admin/agents')->with('success', 'L\'agent à été supprimé avec succès.');
+        return redirect('/'.strtolower(Auth::user()->role).'/agents')->with('success', 'L\'agent à été supprimé avec succès.');
 
     }
 
