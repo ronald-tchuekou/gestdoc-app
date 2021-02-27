@@ -24,6 +24,8 @@ Route::post('/forgot-password/send', [PassForgotController::class, 'sendMail']);
 Route::get('/reset-password/{token}', [ResetPasswordController::class, 'index']);
 Route::post('/reset-password/reset/{id}', [ResetPasswordController::class, 'reset']);
 
+Route::get('/all-activities', [AdminController::class, 'showAllActivities'])->middleware('auth');
+
 // Admin routes managers
 Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){
 

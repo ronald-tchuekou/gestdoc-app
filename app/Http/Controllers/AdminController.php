@@ -104,6 +104,19 @@ class AdminController extends Controller
         return view('pages.admin.agents', compact('user', 'services', 'agent_mode', 'title', 'current_account', 'current_action'));
     }
 
+    public function showAllActivities() {
+        $title = 'MARIE GEST';
+        $current_account =  'admin';
+        $agent_mode = 'add';
+        $user = Auth::user();
+
+        // HISTORIES.
+        $histories = History::orderBy('created_at', 'DESC')->get();
+
+        $current_action = 'tous les activités';
+        return view('pages.all-activities', compact('user', 'histories', 'agent_mode', 'title', 'current_account', 'current_action'));
+    }
+
     public function showCategoriesView() {
         $title = 'MARIE GEST';
         $current_account =  'admin';
@@ -112,7 +125,6 @@ class AdminController extends Controller
         $categories = Categorie::all();
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.admin.categories', compact('user', 'categories', 'agent_mode', 'title', 'current_account', 'current_action'));
-
     }
 
     public function showEditAgentView(int $agent_id) {
@@ -337,7 +349,7 @@ class AdminController extends Controller
                 return response('Cette categorie existe déjà', 201);
             }
 
-            $id = DB::table('categories')->insertGetId(['intitule' => $request->category]);
+            $id = DB::table('categories')->insertGetId(['id' => null, 'intitule' => $request->category]);
 
             $result = Array(
                 'status' => 'OK',
