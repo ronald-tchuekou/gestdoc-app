@@ -13,7 +13,7 @@
 
                     @foreach($histories as $history)
 
-                        <li class="mb-4">
+                        <li>
                             @if($history->action_type == 'Ajout')
 
                             <div class="timeline-icon bg-primary">
@@ -63,6 +63,10 @@
                             </div>
                             <small class="text-muted">{{App\Models\Utils::get_time_ago(strtotime($history->created_at))}}</small>
                         </li>
+
+                        @if (!$loop->last)
+                            <hr>
+                        @endif
 
                     @endforeach
 
