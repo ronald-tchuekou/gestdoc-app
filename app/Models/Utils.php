@@ -27,7 +27,7 @@ class Utils {
      * Fonction qui permet de formter les dates.
      */
     public static function full_date_format ($date){
-        return date_format(new DateTime($date), 'd M Y h:i');
+        return date_format(new DateTime($date), 'd M Y H:i');
     }
 
     /**
