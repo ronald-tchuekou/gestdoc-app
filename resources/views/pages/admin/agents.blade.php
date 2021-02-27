@@ -14,7 +14,7 @@
 
 @else
 
-<div class="card">
+{{-- <div class="card">
     <div class="card-header"><h5 class="font-weight-bloder">Eléments de filtrage</h5></div>
     <div class="card-body">
         <div class="row">
@@ -44,14 +44,13 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 
 <div class="card">
     <div class="card-header d-flex justify-content-between p-0 pt-2 px-1">
         <h5 class="font-weight-bolder">agents initialisés</h5>
         <div class="d-flex justify-content-between">
-            <input type="search" class="form-control" placeholder="Rechercher" aria-controls="DataTables_Table_0" />
             <div class="text-md-center">
                 <a href="/{{$current_account}}/agents/add" class="btn btn-primary text-white ml-1 text-nowrap btn-sm" style="font-size: 1rem;">
                      <i class="feather icon-plus" style="font-size: 1.3rem;"></i>&nbsp;&nbsp;Ajouter
@@ -59,145 +58,75 @@
             </div>
         </div>
     </div>
-    <div class="card-datatable table-responsive pt-0">
-        <div class="dataTables_wrapper dt-bootstrap4 no-footer">
-            <table class="user-list-table table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" >
-                <thead class="thead-light">
-                    <tr role="row">
-                        <th>Agent</th>
-                        <th>E-mail</th>
-                        <th>Localisation</th>
-                        <th>Service</th>
-                        <th>Dernière connexion</th>
-                        <th>actif</th>
-                        <th style="width: 40px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($agents as $agent)
-                    <tr role="row" class="odd hover">
-                        <td>
-                            <div class="d-flex justify-content-left align-items-center">
-                                <div class="avatar-wrapper">
-                                    <div class="avatar mr-1"><img src="{{$agent->profile}}" alt="Avatar" height="34" width="34" /></div>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <a href="" class="user_name text-truncate">
-                                        <span class="font-weight-bold">{{$agent->personne->nom}} {{$agent->personne->prenom}}</span>
-                                    </a>
-                                    <small class="emp_post text-muted">{{$agent->personne->telephone}}</small>
-                                </div>
+    <div class="card-body">
+        <table class="table table-striped table-bordered" style="width:100%" id="agents_table_admin">
+            <thead class="thead-light">
+                <tr role="row">
+                    <th>Agent</th>
+                    <th>E-mail</th>
+                    <th>Localisation</th>
+                    <th>Service</th>
+                    <th>Dernière connexion</th>
+                    <th>actif</th>
+                    <th style="width: 40px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($agents as $agent)
+                <tr role="row" class="odd hover">
+                    <td>
+                        <div class="d-flex justify-content-left align-items-center">
+                            <div class="avatar-wrapper">
+                                <div class="avatar mr-1"><img src="{{$agent->profile}}" alt="Avatar" height="34" width="34" /></div>
                             </div>
-                        </td>
-                        <td>{{$agent->personne->email}}</td>
-                        <td>{{$agent->personne->localisation}}</td>
-                        <td>
-                            {{$agent->service == null ? $agent->role : $agent->service->intitule}}
-                        </td>
-                        <td>{{$agent->last_connexion}}</td>
-                        <td>
-                            @if($agent->register_token == '')
-                            <span data-toggle="tooltip" data-placement="bottom" title="Compte déjà créé" class="text-success cursor-pointer bg-success boule"></span>
-                            @else
-                            <span data-toggle="tooltip" title="Compte pas encore créé" class="text-success cursor-pointer bg-danger boule"></span>
-                            @endif
-                        </td>
-                        <td>
-                            <div class="btn-group">
-                                <a class="btn btn-sm hide-arrow" data-toggle="dropdown">
-                                <i class="feather icon-more-vertical font-medium-3 text-muted cursor-pointer"></i>
+                            <div class="d-flex flex-column">
+                                <a href="" class="user_name text-truncate">
+                                    <span class="font-weight-bold">{{$agent->personne->nom}} {{$agent->personne->prenom}}</span>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="/{{$current_account}}/agents/{{$agent->id}}/details"  class="dropdown-item" style="padding: 7px 9px;">
-                                        <i class="feather icon-file-text" style="font-size: 1.5rem;"></i>
-                                        &nbsp;&nbsp;&nbsp;Details
-                                    </a>
-                                    <a href="/{{$current_account}}/agents/edition/{{$agent->id}}" class="dropdown-item" style="padding: 7px 9px;">
-                                        <i class="feather icon-edit-2" style="font-size: 1.5rem;"></i>
-                                        &nbsp;&nbsp;&nbsp;Edit
-                                    </a>
-                                    <a href="/{{$current_account}}/agents/{{$agent->id}}/delete" class="dropdown-item" style="padding: 7px 9px;">
-                                        <i class="feather icon-trash-2" style="font-size: 1.5rem;"></i>
-                                        &nbsp;&nbsp;&nbsp;Suprimer
-                                    </a>
-                                </div>
+                                <small class="emp_post text-muted">{{$agent->personne->telephone}}</small>
                             </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="6" class="text-center"><span class="alert">Aucun agent enregistré.</span></td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-between mx-2 row mb-1">
-                <div class="col-sm-12 col-md-6">
-                    <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
-                        1 à 10 / 50 agents
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <div class="dataTables_paginate paging_simple_numbers" id="">
-                        <ul class="pagination w-auto float-right">
-                            <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
-                                <a
-                                    href="#"
-                                    aria-controls="DataTables_Table_0"
-                                    data-dt-idx="0"
-                                    tabindex="0"
-                                    class="page-link"
-                                >
-                                    &nbsp;
+                        </div>
+                    </td>
+                    <td>{{$agent->personne->email}}</td>
+                    <td>{{$agent->personne->localisation}}</td>
+                    <td>
+                        {{$agent->service == null ? $agent->role : $agent->service->intitule}}
+                    </td>
+                    <td>{{$agent->last_connexion}}</td>
+                    <td>
+                        @if($agent->register_token == '')
+                        <span data-toggle="tooltip" data-placement="bottom" title="Compte déjà créé" class="text-success cursor-pointer bg-success boule"></span>
+                        @else
+                        <span data-toggle="tooltip" title="Compte pas encore créé" class="text-success cursor-pointer bg-danger boule"></span>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-sm hide-arrow" data-toggle="dropdown">
+                            <i class="feather icon-more-vertical font-medium-3 text-muted cursor-pointer"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="/{{$current_account}}/agents/{{$agent->id}}/details"  class="dropdown-item" style="padding: 7px 9px;">
+                                    <i class="feather icon-file-text" style="font-size: 1.5rem;"></i>
+                                    &nbsp;&nbsp;&nbsp;Details
                                 </a>
-                            </li>
-                            <li class="paginate_button page-item active">
-                                <a
-                                    href="#"
-                                    aria-controls="DataTables_Table_0"
-                                    data-dt-idx="1"
-                                    tabindex="0"
-                                    class="page-link"
-                                >
-                                    1
+                                <a href="/{{$current_account}}/agents/edition/{{$agent->id}}" class="dropdown-item" style="padding: 7px 9px;">
+                                    <i class="feather icon-edit-2" style="font-size: 1.5rem;"></i>
+                                    &nbsp;&nbsp;&nbsp;Edit
                                 </a>
-                            </li>
-                            <li class="paginate_button page-item">
-                                <a
-                                    href="#"
-                                    aria-controls="DataTables_Table_0"
-                                    data-dt-idx="2"
-                                    tabindex="0"
-                                    class="page-link"
-                                >
-                                    2
+                                <a href="/{{$current_account}}/agents/{{$agent->id}}/delete" class="dropdown-item" style="padding: 7px 9px;">
+                                    <i class="feather icon-trash-2" style="font-size: 1.5rem;"></i>
+                                    &nbsp;&nbsp;&nbsp;Suprimer
                                 </a>
-                            </li>
-                            <li class="paginate_button page-item">
-                                <a
-                                    href="#"
-                                    aria-controls="DataTables_Table_0"
-                                    data-dt-idx="3"
-                                    tabindex="0"
-                                    class="page-link"
-                                >
-                                    3
-                                </a>
-                            </li>
-                            <li class="paginate_button page-item next" id="DataTables_Table_0_next">
-                                <a
-                                    href="#"
-                                    aria-controls="DataTables_Table_0"
-                                    data-dt-idx="6"
-                                    tabindex="0"
-                                    class="page-link"
-                                >
-                                    &nbsp;
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                {{-- <tr><td colspan="6" class="text-center"><span class="alert">Aucun agent enregistré.</span></td></tr> --}}
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 @endif

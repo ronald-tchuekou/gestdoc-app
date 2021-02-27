@@ -662,3 +662,16 @@ function admin_agent_filter() {
 
   });
 })(window, document, jQuery);
+
+
+$(document).ready(function() {
+    $("#init_courier_table_admin").DataTable();
+    $("#finish_courier_table_admin").DataTable();
+    $("#modify_courier_table_admin").DataTable();
+    $("#agents_table_admin").DataTable();
+    $("#finish_courier_table_agent").DataTable();
+    $("#init_courier_table_accueil").DataTable();
+    $("#reject_courier_table_accueil").DataTable();
+    $("#valide_courier_table_accueil").DataTable();
+    $("#modify_courier_table_accueil").DataTable();
+} );
