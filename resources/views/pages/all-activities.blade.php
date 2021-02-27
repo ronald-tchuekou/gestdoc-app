@@ -2,69 +2,71 @@
 
 @section('content')
 
-    <div class="container">
-        <div class="row justify-content-around">
-            <div class="col-8 card">
-                <div class="card-head">
-                    @include('partials.previous')
-                </div>
-                <div class="card-content">
-                    <div class="card-body">
-                        <ul class="activity-timeline timeline-left list-unstyled">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-head">
+                @include('partials.previous')
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <ul class="activity-timeline timeline-left list-unstyled">
 
-                        @foreach($histories as $history)
+                    @foreach($histories as $history)
 
-                            <li>
-                                @if($history->action_type == 'Ajout')
+                        <li class="mb-4">
+                            @if($history->action_type == 'Ajout')
 
-                                <div class="timeline-icon bg-primary">
-                                    <i class="feather icon-plus font-medium-2 align-middle"></i>
-                                </div>
+                            <div class="timeline-icon bg-primary">
+                                <i class="feather icon-plus font-medium-2 align-middle"></i>
+                            </div>
 
-                                @elseif($history->action_type == 'Supperssion')
+                            @elseif($history->action_type == 'Supperssion')
 
-                                <div class="timeline-icon bg-info">
-                                    <i class="feather icon-trash-2 font-medium-2 align-middle"></i>
-                                </div>
+                            <div class="timeline-icon bg-info">
+                                <i class="feather icon-trash-2 font-medium-2 align-middle"></i>
+                            </div>
 
-                                @elseif($history->action_type == 'Rejet')
+                            @elseif($history->action_type == 'Rejet')
 
-                                <div class="timeline-icon bg-danger">
-                                    <i class="feather icon-x font-medium-2 align-middle"></i>
-                                </div>
+                            <div class="timeline-icon bg-danger">
+                                <i class="feather icon-x font-medium-2 align-middle"></i>
+                            </div>
 
-                                @elseif($history->action_type == 'Validation')
+                            @elseif($history->action_type == 'Validation')
 
-                                <div class="timeline-icon bg-success">
-                                    <i class="feather icon-check font-medium-2 align-middle"></i>
-                                </div>
+                            <div class="timeline-icon bg-success">
+                                <i class="feather icon-check font-medium-2 align-middle"></i>
+                            </div>
 
-                                @elseif($history->action_type == 'Modification')
+                            @elseif($history->action_type == 'Modification')
 
-                                <div class="timeline-icon bg-warning">
-                                    <i class="feather icon-edit-2 font-medium-2 align-middle"></i>
-                                </div>
+                            <div class="timeline-icon bg-warning">
+                                <i class="feather icon-edit-2 font-medium-2 align-middle"></i>
+                            </div>
 
-                                @else
+                            @else
 
-                                <div class="timeline-icon bg-info">
-                                    <i class="feather icon-bookmark font-medium-2 align-middle"></i>
-                                </div>
+                            <div class="timeline-icon bg-info">
+                                <i class="feather icon-bookmark font-medium-2 align-middle"></i>
+                            </div>
 
-                                @endif
+                            @endif
 
-                                <div class="timeline-info">
+                            <div class="timeline-info">
+                                <div class="d-flex justify-content-between">
                                     <p class="font-weight-bold mb-0">{{$history->title}}</p>
-                                    <span class="font-small-3">{{$history->content}}</span>
+                                    <span>
+                                        par : <small class="text-primary text-bold-700">{{$history->user->personne->nom}} {{$history->user->personne->prenom}}</small>
+                                    </span>
                                 </div>
-                                <small class="text-muted">{{App\Models\Utils::get_time_ago(strtotime($history->created_at))}}</small> par :
-                                <small class="text-primary text-bold-700">{{$history->user->personne->nom}} {{$history->user->personne->prenom}}</small>
-                            </li>
+                                <span class="font-small-3">{{$history->content}}</span>
+                            </div>
+                            <small class="text-muted">{{App\Models\Utils::get_time_ago(strtotime($history->created_at))}}</small>
+                        </li>
 
-                        @endforeach
+                    @endforeach
 
-                        </ul>
-                    </div>
+                    </ul>
                 </div>
             </div>
         </div>
