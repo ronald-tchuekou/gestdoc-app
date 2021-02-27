@@ -329,4 +329,33 @@ legend.scheduler-border {
   padding: 15px 10px;
 }
 
+/****************************
+    Categorie manager list.
+*/
+#cat_courrier_id {
+  font-size: 1.3rem;
+}
+#cat_courrier_id li .options {
+  visibility: hidden;
+}
+#cat_courrier_id li .options span {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s ease-in-out;
+}
+#cat_courrier_id li .options span:hover {
+  background-color: #0000001c;
+  box-shadow: 0px 2px 3px 2px #07070733;
+}
+#cat_courrier_id li .options span:active {
+  box-shadow: unset;
+}
+#cat_courrier_id li:hover .options {
+  visibility: visible;
+}
+
 /*# sourceMappingURL=app.css.map */

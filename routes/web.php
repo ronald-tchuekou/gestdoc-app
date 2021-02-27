@@ -31,6 +31,11 @@ Route::middleware(['auth', 'authAdmin'])->prefix('admin')->group(function(){
     Route::get('/profile', [AdminController::class, 'showProfileView']);
     Route::get('/parametres', [AdminController::class, 'showParametresView']);
 
+    Route::get('/categories', [AdminController::class, 'showCategoriesView']);
+    Route::post('/categories/store', [AdminController::class, 'storeCategory']);
+    Route::get('/categories/delete/{id}', [AdminController::class, 'deleteCategory']);
+    Route::post('/categories/update/{id}', [AdminController::class, 'updateCategory']);
+
     Route::get('/agents', [AdminController::class, 'showAgentsView']);
     Route::get('/agents/add', [AdminController::class, 'showAddAgentView']);
     Route::post('/agents/store', [AdminController::class, 'storeAgent']);

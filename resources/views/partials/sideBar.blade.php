@@ -45,6 +45,17 @@
                 </a>
             </li>
 @endif
+
+@if(Auth::user()->role == 'Admin')
+            <li class="nav-item @if($current_action == 'categories') active @endif">
+                <a href="/{{$current_account}}/categories">
+                    <i class="feather icon-folder"></i>
+                    <span class="menu-title" data-i18n="Categories Courrier">
+                        Categores Courrier
+                    </span>
+                </a>
+            </li>
+@endif
             <!-- <li class="nav-item @if($current_action == 'parametres') active @endif">
                 <a href="/{{$current_account}}/parametres"><i class="feather icon-settings"></i><span class="menu-title"
                         data-i18n="Parametres">Parametres</span></a>

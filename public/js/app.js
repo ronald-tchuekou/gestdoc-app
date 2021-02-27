@@ -19,16 +19,168 @@ var $strok_color = '#b9c3cd';
 var $label_color = '#e7eef7';
 var $white = '#fff';
 
+/**
+ * Fonction qui permet de gérer le formulaire d'ajout/modification de categorie de courriers.
+ */
+function manager_cat_from(){
+    const form = $("#cat_form");
+
+    $(form).submit((e)=>{
+        e.preventDefault();
+        const category_input = $("#cat_form #category");
+        let category = category_input.val(),
+            action = e.target.getAttribute("action");
+
+        let progress = set_progress_block(
+            document.querySelector('#cat-form-content')
+        );
+
+        axios.post(HOST_BACKEND + action, {
+            category: category,
+        }).then(response => {
+
+            let status = response.status;
+            let data = response.data;
+
+            // If 201
+            if(status == 201){
+                toastr.warning(data, '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+            }
+
+            // If 202
+            if(status == 202){
+                toastr.error('😥' + data, '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+            }
+
+            // If 200
+            if(status == 200){
+                let cat = data.record;
+                let id = cat.id, intitule = cat.intitule, edit = cat.edit, title = '';
+
+
+                if(edit){ // Pour le mode mise à jour.
+                    title = 'Catégorie mis à jour avec succès.';
+                    $('#item-' + id).html(
+                        `<span class="text-truncate">
+                        ${id} <i class="feather icon-minus"></i> ${intitule}
+                        </span>
+                        <div class="options d-flex">
+                            <span class="cursor-pointer edit" data-id="${id}" data-intitule="${intitule}"><i class="feather icon-edit-2"></i></span>
+                            <span class="cursor-pointer delete" data-id="${id}"><i class="feather icon-trash"></i></span>
+                        </div>`
+                    );
+                }else{ // Pour le mode ajout.
+                    title = 'Catégorie ajouter avec succès.';
+                    // Update the list of categories.
+                    let content = `<li id="item-${id}" class="list-group-item d-flex justify-content-between cat-item align-items-center">
+                        <span class="text-truncate">
+                            ${id} <i class="feather icon-minus"></i> ${intitule}
+                        </span>
+                        <div class="options d-flex">
+                            <span class="cursor-pointer edit" data-id="${id}" data-intitule="${intitule}"><i class="feather icon-edit-2"></i></span>
+                            <span class="cursor-pointer delete" data-id="${id}"><i class="feather icon-trash"></i></span>
+                        </div>
+                    </li>`;
+                    $("#cat_courrier_id").append(content);
+                }
+
+                toastr.success(title, '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+
+
+            }
+
+            console.log(response);
+
+            manager_cat_list();
+
+            dismiss_block(progress);
+        }).catch(reason => {
+            dismiss_block(progress);
+            toastr.error('😥' + reason, 'Erreur', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+
+        });
+
+    });
+}
+
+/**
+ * Fonction qui permet de gérer la liste des categories.
+ */
+function manager_cat_list () {
+
+    // DELETION
+    $('#cat_courrier_id .delete').each((i, elt)=> {
+        $(elt).click(()=>{
+            let id = $(elt).attr("data-id");
+            let action = '/admin/categories/delete/' + id;
+
+            let progress = set_progress_block($('#item-'+id));
+
+            axios.get(HOST_BACKEND + action).then(response => {
+                let status = response.status;
+
+                // If 202
+                if(status == 202){
+                    toastr.error('😥' + data, '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+                }
+
+                // If 200
+                if(status == 200){
+                    toastr.success('Catégorie supprimée avec succès.', '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+
+                    $("#item-" + id).slideUp(100, ()=>{
+                        $("#item-" + id).remove();
+                    });
+                }
+
+                dismiss_block(progress);
+            }).catch(reason=> {
+                dismiss_block(progress);
+                toastr.error('😥' + reason, 'Erreur', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+            })
+        });
+    })
+
+    // EDITION
+    $('#cat_courrier_id .edit').each((i, elt) => {
+        $(elt).click(()=>{
+            $("#form-back").show();
+            let id = $(elt).attr("data-id");
+            let intitule = $(elt).attr("data-intitule");
+            let form = $('#cat_form');
+
+            console.log(id, intitule, form);
+
+            form.attr('action', '/admin/categories/update/' + id);
+            $('#category').val(intitule);
+            $('#form-title').html('Modification d\'une categorie')
+            $('#cat_form button').html('Mettre à jour');
+        });
+    })
+
+    // FROM BACK
+    $("#form-back").click(function(){
+
+        $(this).hide();
+
+        let form = $('#cat_form');
+
+        form.attr('action', '/admin/categories/store');
+        $('#category').val('');
+        $('#form-title').html('Formulaire d\'ajout d\'une nouvelle categorie')
+        $('#cat_form button').html('Valider');
+    })
+}
 
 // Initialisation of service workers.
 // function initializeService() {
 //   if('serviceWorker' in navigator) {
 //       // Supported 😍
-//       toastr.info('Les services workers sont supporté par ce navigateur. 😍','Information', 
+//       toastr.info('Les services workers sont supporté par ce navigateur. 😍','Information',
 //       { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
 //   } else {
 //       // Not supported 😥
-//       toastr.warning('Les services workers ne sont pas supporté par ce navigateur. 😥','Information', 
+//       toastr.warning('Les services workers ne sont pas supporté par ce navigateur. 😥','Information',
 //       { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
 //   }
 // }
@@ -114,7 +266,7 @@ function renderAnalystCourrierChart(_from) {
         document.querySelector("#courrier-order-chart"),
         courrierChartoptions
       );
-    
+
       courrierChart.render();
 
     } else {
@@ -123,7 +275,7 @@ function renderAnalystCourrierChart(_from) {
     }
 
   }).catch(reason => {
-    toastr.error('😥' + reason,'Message d\'erreur', 
+    toastr.error('😥' + reason,'Message d\'erreur',
     { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
   });
 
@@ -169,11 +321,11 @@ function setUserAnalystChar(_data){
 }
 
 function renderAnalystUserChart() {
- 
+
   axios.get(HOST_BACKEND + '/statistiquesAgents').then(response => {
-    
+
     if (response.status == 200) {
-      
+
       let data = response.data.record;
 
       $('#total_active_users').html(data.active_users);
@@ -186,7 +338,7 @@ function renderAnalystUserChart() {
         document.querySelector("#users-chart"),
         customerChartoptions
       );
-    
+
       customerChart.render();
 
     } else {
@@ -195,7 +347,7 @@ function renderAnalystUserChart() {
     }
 
   }).catch(reason => {
-    toastr.error('😥' + reason,'Message d\'erreur', 
+    toastr.error('😥' + reason,'Message d\'erreur',
     { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
   });
 
@@ -220,7 +372,7 @@ function set_progress_block(_id_elt) {
     overlayCSS: {
       backgroundColor: '#fff',
       opacity: 0.8,
-      borderRadius:'4px', 
+      borderRadius:'4px',
     }
   });
 }
@@ -270,6 +422,15 @@ function admin_agent_filter() {
     // init the service.
     //initializeService();
 
+
+
+    // Category form manager.
+    manager_cat_from();
+
+    $("#form-back").hide();
+    // Category list manager.
+    manager_cat_list();
+
     $('.badge-pill.noti').hide();
 
     // Set the listener.
@@ -285,7 +446,7 @@ function admin_agent_filter() {
     $('#alertSuccessDialog').modal('show'); // Show the success modal.
 
     var row;
-    
+
     $('.assigner_btn').each((i, elt) => {
       $(elt).on('click', function () {
 
@@ -312,7 +473,7 @@ function admin_agent_filter() {
         courier_id = $('#courier_id').val(),
         agent_id = $('#agent_id').val(),
         tache = $('#tache').val();
-      
+
       if (agent_id == '') { // Check the agent.
         toastr.warning('Veuillez selectionner un agent chez qui assigner le dossier.', 'Avertissement',
           { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
@@ -354,7 +515,7 @@ function admin_agent_filter() {
           courier_id = courier[0],
           reject_mode = courier[1];
         row = elt;
-        
+
         let title = $('#title-reject-modal'),
           label = $('#label-reject-modal'),
           input_reason = $('#reason'),
@@ -378,7 +539,7 @@ function admin_agent_filter() {
             input_reason.removeClass('is-invalid');
 
             let modal = set_progress_block('#confirm-reject-modal-content');
-            
+
             axios.get(HOST_BACKEND + '/admin/couriers/' + courier_id + '/' + reason + '/' + reject_mode)
               .then(response => {
                 if (response.status != 200) {
@@ -400,10 +561,10 @@ function admin_agent_filter() {
                 dismiss_block(modal);
               });
           }
-         
+
 
         });
-        
+
       });
     });
 
@@ -414,7 +575,7 @@ function admin_agent_filter() {
         row = elt;
 
         let loader = set_progress_block($(elt));
-       
+
         axios.get(HOST_BACKEND + '/admin/couriers/validate/' + courier_id)
           .then(response => {
             if (response.status == 200) {
@@ -436,7 +597,7 @@ function admin_agent_filter() {
     // Finish a courier.
     $('.btn-traitement-finish').each((i, elt) => {
       $(elt).on('click', function (e) {
-        
+
         row = elt;
         let courier_id = $(this).attr('data-courier')
         let bo = set_progress_block(elt);
@@ -456,7 +617,7 @@ function admin_agent_filter() {
             toastr.error(reason, 'Error');
             dismiss_block(bo);
           });
-        
+
       });
     });
 
@@ -464,7 +625,7 @@ function admin_agent_filter() {
 
     // courrier Order Chart starts
     // -----------------------------
-    
+
     renderAnalystCourrierChart("none");
 
     $('.courrier-date_intervalle').each(function (i, elt) {
@@ -483,11 +644,11 @@ function admin_agent_filter() {
         const mo = new Intl.DateTimeFormat('en', { month: 'numeric' }).format(date);
         const dm = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
         let from = `${dm}-${mo}-${ye}`;
-        
+
         renderAnalystCourrierChart(from);
       });
     });
-    
+
     // courrier Order Chart ends //
 
 

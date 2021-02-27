@@ -3,16 +3,16 @@ legend.scheduler-border {
     padding:0 10px; /* To give a bit of padding on the left and right */
     border-bottom:none;
 }
-.ellipsize 
+.ellipsize
 {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 .boule{
-    width:15px; 
-    height: 15px; 
-    overflow: hidden; 
+    width:15px;
+    height: 15px;
+    overflow: hidden;
     display: block;
     border-radius: 50%;
 }
@@ -280,3 +280,35 @@ legend.scheduler-border {
         }
     }
 }
+
+/****************************
+    Categorie manager list.
+*/
+#cat_courrier_id{
+    font-size: 1.3rem;
+    li .options {
+        visibility: hidden;
+        span{
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background .3s ease-in-out;
+            &:hover{
+                background-color: #0000001c;
+                box-shadow: 0px 2px 3px 2px #07070733;
+            }
+            &:active{
+                box-shadow: unset;
+            }
+        }
+    }
+    li:hover{
+        .options{
+            visibility: visible;
+        }
+    }
+}
+

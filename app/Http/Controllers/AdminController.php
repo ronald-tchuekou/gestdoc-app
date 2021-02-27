@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\RegisterMail;
 use App\Models\Assigne;
+use App\Models\Categorie;
 use App\Models\Courier;
 use App\Models\CourierValide;
 use App\Models\History;
@@ -103,20 +104,15 @@ class AdminController extends Controller
         return view('pages.admin.agents', compact('user', 'services', 'agent_mode', 'title', 'current_account', 'current_action'));
     }
 
-    /**
-     * Fonction qui permet de rediriger vers la page d'édition.
-     */
-    public function redirectToEditView (int $agent_id) {
-        $agent = User::find($agent_id);
-        $personne = $agent->personne;
+    public function showCategoriesView() {
+        $title = 'MARIE GEST';
+        $current_account =  'admin';
+        $agent_mode = 'add';
+        $user = Auth::user();
+        $categories = Categorie::all();
+        $current_action = explode('/', Route::current()->uri)[1];
+        return view('pages.admin.categories', compact('user', 'categories', 'agent_mode', 'title', 'current_account', 'current_action'));
 
-        $agent_tab = $agent->toArray();
-        $personne_tab = $personne->toArray();
-        array_shift($personne_tab);
-
-        $inputResult = array_merge($agent_tab, $personne_tab);
-
-        return redirect("/admin/agents/$agent_id/edit")->withInput($inputResult);
     }
 
     public function showEditAgentView(int $agent_id) {
@@ -141,6 +137,22 @@ class AdminController extends Controller
         $agent = User::find($user_id);
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.admin.agent-manage.detail-agent', compact('agent', 'user', 'agent_mode', 'title', 'current_account', 'current_action'));
+    }
+
+    /**
+     * Fonction qui permet de rediriger vers la page d'édition.
+     */
+    public function redirectToEditView (int $agent_id) {
+        $agent = User::find($agent_id);
+        $personne = $agent->personne;
+
+        $agent_tab = $agent->toArray();
+        $personne_tab = $personne->toArray();
+        array_shift($personne_tab);
+
+        $inputResult = array_merge($agent_tab, $personne_tab);
+
+        return redirect("/admin/agents/$agent_id/edit")->withInput($inputResult);
     }
 
     /**
@@ -310,6 +322,71 @@ class AdminController extends Controller
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
+    }
+
+    /**
+     * Fonction qui permet de sauvegarder une nouvelle categorie.
+     */
+    public function storeCategory(Request $request){
+
+        try {
+
+            // Check if this not exist.
+            $exist = Categorie::where('intitule', $request->category)->first();
+            if($exist != null){
+                return response('Cette categorie existe déjà', 201);
+            }
+
+            $id = DB::table('categories')->insertGetId(['intitule' => $request->category]);
+
+            $result = Array(
+                'status' => 'OK',
+                'record' => ['id' => $id, 'intitule' => $request->category, 'edit' => false],
+            );
+
+            return response($result, 200);
+        } catch (Exception $th) {
+            return response($th->getMessage(), 202);
+        }
+    }
+
+    /**
+     * Fonction qui permet de supprimer une categorie.
+     */
+    public function deleteCategory(int $id){
+        try {
+            $cat = Categorie::find($id);
+            $cat->delete();
+            return response('', 200);
+        } catch (Exception $th) {
+            return response($th->getMessage(), 202);
+        }
+    }
+
+    /**
+     * Fonction qui permet de faire la mise à jour d'une categorie.
+     */
+    public function updateCategory (int $id, Request $request){
+        try {
+            // Check if this not exist.
+            $exist = Categorie::where('intitule', $request->category)->first();
+            if($exist != null && $exist->id != $id){
+                return response('Cette categorie existe déjà', 201);
+            }
+
+            $cat = Categorie::find($id);
+            $cat->intitule = $request->category;
+            $cat->update();
+
+            $result = Array(
+                'status' => 'OK',
+                'record' => ['id' => $id, 'intitule' => $request->category, 'edit' => true],
+            );
+
+            return response($result, 200);
+        } catch (Exception $th) {
+            return response($th->getMessage(), 202);
+        }
     }
 
     /**
