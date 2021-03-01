@@ -22,7 +22,7 @@
                             {{$courier->id}}
                         </td>
                         <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
-                        <td>{{$courier->reject->reason}}</td>
+                        <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->reject->reason}}</td>
                         <td>{{App\Models\Utils::full_date_format(
                             $courier->reject->created_at
                         )}}</td>

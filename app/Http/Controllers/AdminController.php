@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotifyEvent;
 use App\Mail\RegisterMail;
 use App\Models\Assigne;
 use App\Models\Categorie;
@@ -77,7 +78,7 @@ class AdminController extends Controller
     public function showCouriersView() {
         $title = 'MARIE GEST';
         $user = Auth::user();
-        $agents = User::where(['role' => 1, 'register_token' => null])->get();
+        $agents = User::where(['role' => 1, 'register_token' => null, 'delete' => 0])->get();
         $current_account =  'admin';
 
         $couriers_initial = Courier::where('etat', 1)
@@ -250,6 +251,25 @@ class AdminController extends Controller
                 $history->user_id = Auth::id();
                 $history->save();
 
+                $user = Auth::user();
+                $user_agent = User::find($request->agent_id);
+
+                // Send the notification to the administrator.
+                $event = new NotifyEvent([
+                    'title' => 'Courrier assigné', // Title of the notification.
+                    'content' => 'Le courrier N° '. $request->courier_id .' vous à été assigné.', // Contne to the notification.
+                    'receiver_id' => $user_agent->id,// Id of the receiver.
+                    'receiver_role' => $user_agent->role,// Id of the receiver.
+                    'user_id' => Auth::id(),
+                    'user_profile' => $user->profile,
+                    'user_name' => $user->personne->nom,
+                    'user_surname' => $user->personne->prenom,
+                    'courrier_tache' => $assign->tache,
+                    'courrier_id' => $courier->id,
+                    'courrier_action' => Utils::$COURRIER_STATE['finish'],
+                ]);
+                event($event);
+
                 return response('', 200);
             }
 
@@ -405,58 +425,100 @@ class AdminController extends Controller
      * Fonction qui ajout nouvelle etat de modification.
      */
     public function add_to_modify($id, $reason) {
-        $courier = Courier::find($id);
+        try{
+            $courier = Courier::find($id);
 
-        if($courier->etat != 'Initial' && $courier->etat != 'Modifié'){
-            return response('Le dossier n\'est plus modifiable.', 201);
+            if($courier->etat != 'Initial' && $courier->etat != 'Modifié'){
+                return response('Le dossier n\'est plus modifiable.', 201);
+            }
+            $toModify = new ToModify;
+            $toModify->courier_id = $id;
+            $toModify->reason = $reason;
+            $toModify->user_id = Auth::id();
+            $toModify->save();
+
+            // HISTORY.
+            $history = new History;
+            $history->title = 'Renvoie d\'un courrier';
+            $history->content = 'Le courrier N° ' . $id .' à été renvoyé pour une modification au service d\'accueil.';
+            $history->action_type = 3;
+            $history->user_id = Auth::id();
+            $history->save();
+
+            $user = Auth::user();
+
+            // Send the notification to the administrator.
+            $event = new NotifyEvent([
+                'title' => 'Renvoie d\'un courrier', // Title of the notification.
+                'content' => 'Le courrier N° '. $id .' vous à été renvoyé pour une modification.', // Contne to the notification.
+                'receiver_id' => $courier->user->id,// Id of the receiver.
+                'receiver_role' => $courier->user->role,// Id of the receiver.
+                'user_id' => Auth::id(),
+                'user_profile' => $user->profile,
+                'user_name' => $user->personne->nom,
+                'user_surname' => $user->personne->prenom,
+                'courrier_id' => $id,
+                'courrier_action' => Utils::$COURRIER_STATE['modify'],
+            ]);
+            event($event);
+
+            $courier->etat = 8; // set to  modify state.
+            $courier->update();
+
+            return response('', 200);
+        }catch(Exception $th){
+            return response($th->getMessage(), 201);
         }
-        $toModify = new ToModify;
-        $toModify->courier_id = $id;
-        $toModify->reason = $reason;
-        $toModify->user_id = Auth::id();
-        $toModify->save();
-
-        // HISTORY.
-        $history = new History;
-        $history->title = 'Renvoie d\'un courrier';
-        $history->content = 'Le courrier N° ' . $id .' à été renvoyé pour une modification au service d\'accueil.';
-        $history->action_type = 3;
-        $history->user_id = Auth::id();
-        $history->save();
-
-        $courier->etat = 8; // set to  modify state.
-        $courier->update();
-
-        return response('', 200);
     }
 
     /**
      * Fonction qui ajout un nouvelle etat de rejet.
      */
     public function add_to_reject($id, $reason) {
-        $courier = Courier::find($id);
+        try{
+            $courier = Courier::find($id);
 
-        if($courier->etat == 'Rejeté'){
-            return response('Le dossier à déjà été rejeté.', 201);
+            if($courier->etat == 'Rejeté'){
+                return response('Le dossier à déjà été rejeté.', 201);
+            }
+            $reject = new Reject;
+            $reject->courier_id = $id;
+            $reject->reason = $reason;
+            $reject->user_id = Auth::id();
+            $reject->save();
+
+            // HISTORY.
+            $history = new History;
+            $history->title = 'Rejet d\'un courrier';
+            $history->content = 'Le courrier N° ' . $id .' à été rejeté.';
+            $history->action_type = 3;
+            $history->user_id = Auth::id();
+            $history->save();
+
+            $courier->etat = 6;
+            $courier->update(); // Mettre à l'état de modification.
+
+            $user = Auth::user();
+
+            // Send the notification to the administrator.
+            $event = new NotifyEvent([
+                'title' => 'Courrier rejeté', // Title of the notification.
+                'content' => 'Le courrier N° '. $id .' a été rejeté.', // Contne to the notification.
+                'receiver_id' => $courier->user->id,// Id of the receiver.
+                'receiver_role' => $courier->user->role,// Id of the receiver.
+                'courrier_id' => $courier->id,
+                'courrier_action' => Utils::$COURRIER_STATE['reject'],
+                'user_id' => Auth::id(),
+                'user_profile' => $user->profile,
+                'user_name' => $user->personne->nom,
+                'user_surname' => $user->personne->prenom,
+            ]);
+            event($event);
+
+            return response('', 200);
+        }catch(Exception $th){
+            return response($th->getMessage(), 201);
         }
-        $reject = new Reject;
-        $reject->courier_id = $id;
-        $reject->reason = $reason;
-        $reject->user_id = Auth::id();
-        $reject->save();
-
-        // HISTORY.
-        $history = new History;
-        $history->title = 'Rejet d\'un courrier';
-        $history->content = 'Le courrier N° ' . $id .' à été rejeté.';
-        $history->action_type = 3;
-        $history->user_id = Auth::id();
-        $history->save();
-
-        $courier->etat = 6;
-        $courier->update(); // Mettre à l'état de modification.
-
-        return response('', 200);
     }
 
     /**
@@ -484,6 +546,23 @@ class AdminController extends Controller
             $history->action_type = 4;
             $history->user_id = Auth::id();
             $history->save();
+
+            $user = Auth::user();
+
+            // Send the notification to the administrator.
+            $event = new NotifyEvent([
+                'title' => 'Courrier validé', // Title of the notification.
+                'content' => 'Le courrier N° '. $id .' à été validé.', // Contne to the notification.
+                'receiver_id' => $courier->user->id,// Id of the receiver.
+                'receiver_role' => $courier->user->role,// Id of the receiver.
+                'courrier_id' => $courier->id,
+                'courrier_action' => Utils::$COURRIER_STATE['validate'],
+                'user_id' => Auth::id(),
+                'user_profile' => $user->profile,
+                'user_name' => $user->personne->nom,
+                'user_surname' => $user->personne->prenom,
+            ]);
+            event($event);
 
             return response('', 200);
         }catch(Exception $e){

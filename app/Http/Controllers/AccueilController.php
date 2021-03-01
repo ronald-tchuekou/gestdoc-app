@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AdminEvent;
 use App\Models\Assigne;
 use App\Models\Categorie;
 use App\Models\Courier;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 class AccueilController extends Controller
@@ -42,7 +44,7 @@ class AccueilController extends Controller
 
         return view('pages.accueil.index', compact('valide_couriers', 'reject_couriers', 'modify_couriers', 'title', 'current_account', 'current_action'));
     }
-    
+
     public function showProfileView () {
         $title = 'ACCUEIL GEST';
         $current_account = 'accueil';
@@ -56,7 +58,7 @@ class AccueilController extends Controller
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.agent.parametres', compact('title', 'current_account', 'current_action'));
     }
-    
+
     public function showCouriersView() {
         $title = 'ACCUEIL GEST';
         $user = Auth::user();
@@ -65,7 +67,7 @@ class AccueilController extends Controller
         $couriers = $user->couriers_initialises()->where('etat', 1)->get();
         return view('pages.accueil.couriers', compact('couriers', 'title', 'current_account', 'current_action'));
     }
-    
+
     public function showAddCouriersView() {
         $title = 'ACCUEIL GEST';
         $current_account = 'accueil';
@@ -82,7 +84,7 @@ class AccueilController extends Controller
      * Function that store the new Courier.
      */
     public function storeCourier (Request $request) {
-        
+
         // Validations
         $validation = Validator::make($request->all(), array_merge(Courier::$rules, Personne::$rules));
         if($validation->fails()){
@@ -90,7 +92,7 @@ class AccueilController extends Controller
                 ->withInput($request->all())
                 ->withErrors($validation->errors());
         }
-        
+
         try {
             $personne_id = $this->savePersonne($request);
             $id = $this->saveCourier($request, $personne_id);
@@ -102,13 +104,30 @@ class AccueilController extends Controller
             $history->user_id = Auth::id();
             $history->save();
 
+            $user = Auth::user();
+
+            // Send the notification to the administrator.
+            $event = new AdminEvent([
+                'title' => 'Nouveau courrier initialisé', // Title of the notification.
+                'content' => 'Le courrier N° ' . $id .' à été initialisé.', // Contne to the notification.
+                'receiver_id' => $id,// Id of the receiver.
+                'receiver_role' => 'admin/root',// Id of the receiver.
+                'user_id' => Auth::id(),
+                'user_profile' => $user->profile,
+                'courrier_id' => $id,
+                'courrier_action' => Utils::$COURRIER_STATE['init'],
+                'user_name' => $user->personne->nom,
+                'user_surname' => $user->personne->prenom,
+            ]);
+            event($event);
+
             return redirect($this->redirectTo . '/add')
                 ->withInput($request->all())
                 ->with('success', 'Courier ajouter avec succèss');
         } catch (Exception $e) {
             return redirect($this->redirectTo . '/add')
                 ->withInput($request->all())
-                ->withErrors([$e->getMessage()]);   
+                ->withErrors([$e->getMessage()]);
         }
     }
 
@@ -121,11 +140,11 @@ class AccueilController extends Controller
 
         $validation = Validator::make($request->all(), array_merge(Courier::$rules, Personne::$rules));
         if($validation->fails()){
-            return redirect('/agent/couriers/update/' . $id)
+            return back()
                 ->withInput($request->all())
                 ->withErrors($validation->errors());
         }
-        
+
         // Update Personne Elements.
         $personne = $courier->personne;
         $personne->nom = $request->nom;
@@ -146,8 +165,27 @@ class AccueilController extends Controller
         $courier->recommandation = $request->recommandation;
         $courier->observation = $request->observation;
         $courier->nbPiece = $request->nbPiece;
-        
-        $courier->etat = 7;
+
+        if($request->modify == 'modify'){
+            $courier->etat = 7;
+
+            $user = Auth::user();
+
+            // Send the notification to the administrator.
+            $event = new AdminEvent([
+                'title' => 'Modification d\'un courrier', // Title of the notification.
+                'content' => 'Le courrier N° ' . $id .' à été Modifié.', // Contne to the notification.
+                'receiver_id' => null,// Id of the receiver.
+                'receiver_role' => 'admin/root',// Id of the receiver.
+                'user_id' => Auth::id(),
+                'user_profile' => $user->profile,
+                'courrier_id' => $id,
+                'courrier_action' => Utils::$COURRIER_STATE['modify'],
+                'user_name' => $user->personne->nom,
+                'user_surname' => $user->personne->prenom,
+            ]);
+            event($event);
+        }
 
         $courier->update();
 
@@ -159,7 +197,7 @@ class AccueilController extends Controller
         $history->user_id = Auth::id();
         $history->save();
 
-        return redirect()->back()
+        return redirect('/accueil/dashboard')
             ->with('success', 'Courier mis à jour avec succèss');
     }
 
@@ -208,7 +246,7 @@ class AccueilController extends Controller
     public function editCourier (int $id) {
         $courier_obj = Courier::find($id);
         $personne_obj = $courier_obj->personne;
-        
+
         $courier = $courier_obj->toArray();
         $element = $personne_obj->toArray();
         array_shift($element);
@@ -225,7 +263,7 @@ class AccueilController extends Controller
     public function modifyCourier(int $id){
         $courier_obj = Courier::find($id);
         $personne_obj = $courier_obj->personne;
-        
+
         $courier = $courier_obj->toArray();
         $element = $personne_obj->toArray();
         array_shift($element);
@@ -244,14 +282,14 @@ class AccueilController extends Controller
 
             $courier = Courier::find($id);
             $user = Auth::user();
-    
+
             $assigne = $courier->assignes()->where('user_id', $user->id)->first();
             $assigne->terminer = 2;
             $assigne->update();
-    
+
             $completAssign = $courier->assignes()->where('terminer', 2)->count();
             $totalAssign = $courier->assignes()->count();
-            
+
             if($completAssign == $totalAssign){
                 $courier->etat = 4;
             } else {
@@ -260,7 +298,7 @@ class AccueilController extends Controller
                 $nextAssign->terminer = 1;
                 $nextAssign->update();
             }
-            
+
             $courier->update();
 
             // HISTORY.
@@ -271,9 +309,9 @@ class AccueilController extends Controller
             $history->action_type = 6;
             $history->user_id = Auth::id();
             $history->save();
-            
+
             // TODO Notify the administrator if the traitement is finish.
-    
+
             return response('', 200);
         }catch(Exception $e){
             return response($e, 201);
@@ -304,135 +342,135 @@ class AccueilController extends Controller
         dd($courier);
     }
 
-    public function handleChange (int $id) {
-        try{
-            $date_to = now();
-            $date_from = now();
-            $date_from->sub(new DateInterval('PT1S'));
+    // public function handleChange (int $id) {
+    //     try{
+    //         $date_to = now();
+    //         $date_from = now();
+    //         $date_from->sub(new DateInterval('PT1S'));
 
-            $user = User::find($id);
+    //         $user = User::find($id);
 
-            // Les couriers validés.
-            $valide_couriers = $user->couriers_initialises()->where('etat', 5)
-              ->whereBetween('updated_at', [$date_from, $date_to])
-                ->first();
+    //         // Les couriers validés.
+    //         $valide_couriers = $user->couriers_initialises()->where('etat', 5)
+    //           ->whereBetween('updated_at', [$date_from, $date_to])
+    //             ->first();
 
-            // Les couriers rejetés.
-            $reject_couriers = $user->couriers_initialises()->where('etat', 6)
-              ->whereBetween('updated_at', [$date_from, $date_to])
-                ->first();
+    //         // Les couriers rejetés.
+    //         $reject_couriers = $user->couriers_initialises()->where('etat', 6)
+    //           ->whereBetween('updated_at', [$date_from, $date_to])
+    //             ->first();
 
-            // Les couriers à modifier.
-            $modify_couriers = $user->couriers_initialises()->where('etat', 8)
-              ->whereBetween('updated_at', [$date_from, $date_to])
-                ->first();
+    //         // Les couriers à modifier.
+    //         $modify_couriers = $user->couriers_initialises()->where('etat', 8)
+    //           ->whereBetween('updated_at', [$date_from, $date_to])
+    //             ->first();
 
-            $courrier = $valide_couriers != null ? $valide_couriers : 
-                ($reject_couriers != null ? $reject_couriers : 
-                    ($modify_couriers != null ? $modify_couriers : null));
-                    
-            if($courrier != null){
+    //         $courrier = $valide_couriers != null ? $valide_couriers :
+    //             ($reject_couriers != null ? $reject_couriers :
+    //                 ($modify_couriers != null ? $modify_couriers : null));
 
-                $date = Utils::full_date_format($courrier->updated_at);
+    //         if($courrier != null){
 
-                $result = Array(
-                    'id' => $courrier->id,
-                    'etat' => $courrier->etat,
-                    'motif' => $this->getMotif($courrier),
-                    'objet' => $courrier->objet,
-                    'date' => $date,
-                    'prestataire' => $courrier->prestataire,
-                    'name' => $courrier->personne->nom,
-                    'surname' => $courrier->personne->prenom,
-                    'phone' => $courrier->personne->telephone,
-                    'user_profile' => User::where('role', 2)->first()->profile,
-                    'action' => $this->getAction($courrier->etat). $courrier->id,
-                    'content' =>  'Action faite le ' . $date,
-                );
+    //             $date = Utils::full_date_format($courrier->updated_at);
 
-                return response([
-                    'status' => 'OK',
-                    'record' => $result,
-                ], 200);
-            }
-        }catch(Exception $th) {
-            return response($th->getMessage(), 201);
-        }
-    }
+    //             $result = Array(
+    //                 'id' => $courrier->id,
+    //                 'etat' => $courrier->etat,
+    //                 'motif' => $this->getMotif($courrier),
+    //                 'objet' => $courrier->objet,
+    //                 'date' => $date,
+    //                 'prestataire' => $courrier->prestataire,
+    //                 'name' => $courrier->personne->nom,
+    //                 'surname' => $courrier->personne->prenom,
+    //                 'phone' => $courrier->personne->telephone,
+    //                 'user_profile' => User::where('role', 2)->first()->profile,
+    //                 'action' => $this->getAction($courrier->etat). $courrier->id,
+    //                 'content' =>  'Action faite le ' . $date,
+    //             );
 
-    private function getMotif($courrier) {
-        if($courrier->etat == 'Reprendre') {
-            return $courrier->to_modify->reason;
-        }
-        elseif($courrier->etat == 'Rejeté') {
-            return $courrier->reject->reason ;
-        }
-        elseif($courrier->etat == 'Validé') {
-            return '' ;
-        }
-    }
+    //             return response([
+    //                 'status' => 'OK',
+    //                 'record' => $result,
+    //             ], 200);
+    //         }
+    //     }catch(Exception $th) {
+    //         return response($th->getMessage(), 201);
+    //     }
+    // }
 
-    private function getAction($etat) {
-        if($etat == 'Reprendre') {
-            return 'Rejet (Modification) Courrier N° ';
-        }
-        elseif($etat == 'Rejeté') {
-            return 'Rejet (Définitif) Courrier N° ' ;
-        }
-        elseif($etat == 'Validé') {
-            return 'Validation du courrier N° ' ;
-        }
-    }
+    // private function getMotif($courrier) {
+    //     if($courrier->etat == 'Reprendre') {
+    //         return $courrier->to_modify->reason;
+    //     }
+    //     elseif($courrier->etat == 'Rejeté') {
+    //         return $courrier->reject->reason ;
+    //     }
+    //     elseif($courrier->etat == 'Validé') {
+    //         return '' ;
+    //     }
+    // }
 
-    public function allInitCourriers ($user_id) {
+    // private function getAction($etat) {
+    //     if($etat == 'Reprendre') {
+    //         return 'Rejet (Modification) Courrier N° ';
+    //     }
+    //     elseif($etat == 'Rejeté') {
+    //         return 'Rejet (Définitif) Courrier N° ' ;
+    //     }
+    //     elseif($etat == 'Validé') {
+    //         return 'Validation du courrier N° ' ;
+    //     }
+    // }
 
-        try {
-            $date_to = now();
-            $date_from = now();
-            $date_from->sub(new DateInterval('PT10S'));
+    // public function allInitCourriers ($user_id) {
 
-            $user = User::find($user_id);
+    //     try {
+    //         $date_to = now();
+    //         $date_from = now();
+    //         $date_from->sub(new DateInterval('PT10S'));
 
-            // Le courrier terminé par une seconde.
-            $courrier1 = $user->couriers_initialises()->where('etat', 2)
-                ->whereBetween('updated_at', [$date_from, $date_to])
-                ->first();
-            $courrier2 = $user->couriers_initialises()->where('etat', 6)
-                ->whereBetween('updated_at', [$date_from, $date_to])
-                ->first();
-            $courrier3 = $user->couriers_initialises()->where('etat', 8)
-                ->whereBetween('updated_at', [$date_from, $date_to])
-                ->first();
+    //         $user = User::find($user_id);
 
-            $courrier = $courrier1 != null ? $courrier1 : 
-                ($courrier2 != null ? $courrier2 : 
-                    ($courrier3 != null ? $courrier3 : null));
+    //         // Le courrier terminé par une seconde.
+    //         $courrier1 = $user->couriers_initialises()->where('etat', 2)
+    //             ->whereBetween('updated_at', [$date_from, $date_to])
+    //             ->first();
+    //         $courrier2 = $user->couriers_initialises()->where('etat', 6)
+    //             ->whereBetween('updated_at', [$date_from, $date_to])
+    //             ->first();
+    //         $courrier3 = $user->couriers_initialises()->where('etat', 8)
+    //             ->whereBetween('updated_at', [$date_from, $date_to])
+    //             ->first();
 
-            $result = [
-                'status' => 'OK',
-                'context' => $this->getContext($courrier),
-                'record' => $courrier == null ? null : $courrier->toArray(),
-            ];
-            return response ($result, 200);
-        } catch (Exception $e) {
-            return response ($e->getMessage(), 201);
-        }
+    //         $courrier = $courrier1 != null ? $courrier1 :
+    //             ($courrier2 != null ? $courrier2 :
+    //                 ($courrier3 != null ? $courrier3 : null));
 
-    }
+    //         $result = [
+    //             'status' => 'OK',
+    //             'context' => $this->getContext($courrier),
+    //             'record' => $courrier == null ? null : $courrier->toArray(),
+    //         ];
+    //         return response ($result, 200);
+    //     } catch (Exception $e) {
+    //         return response ($e->getMessage(), 201);
+    //     }
 
-    /**
-     * Fonction qui permet de retourner le context selon, l'etat du courrier.
-     */
-    private function getContext ($courrier) {
-        $etat = $courrier->etat;
-        if($etat == 'Reprendre') {
-            return 'retourné pour modification';
-        }
-        if($etat == 'Rejeté'){
-            return 'rejeté';
-        }
-        if($etat == 'Assigné'){
-            return 'assigné';
-        }
-    }
+    // }
+
+    // /**
+    //  * Fonction qui permet de retourner le context selon, l'etat du courrier.
+    //  */
+    // private function getContext ($courrier) {
+    //     $etat = $courrier->etat;
+    //     if($etat == 'Reprendre') {
+    //         return 'retourné pour modification';
+    //     }
+    //     if($etat == 'Rejeté'){
+    //         return 'rejeté';
+    //     }
+    //     if($etat == 'Assigné'){
+    //         return 'assigné';
+    //     }
+    // }
 }

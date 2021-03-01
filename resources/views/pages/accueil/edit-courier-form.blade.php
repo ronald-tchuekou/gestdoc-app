@@ -1,15 +1,15 @@
 <div class="card">
     <div class="card-header">
         <div class="d-flex mb-3">
-            <a href="{{URL::previous()}}" class="ml-1 text-secondary rbackPerss" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
+            <a {{--href="{{URL::previous()}}"--}} class="ml-1 text-secondary backPerss" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Modification d'un courrier</h4>
         </div>
     </div>
     <div class="card-content">
         @include('errors.errors')
 
-        <form action="/accueil/couriers/update/{{$courier->id}}" class="form pb-1" method="post">
-            @method('PUT')
+        <form action="/accueil/couriers/item/{{$courier->id}}/update" class="form pb-1" method="post">
+            {{-- @method('PUT') --}}
             @csrf
             <input type="hidden" name="modify" value="{{old('modify', 'none')}}">
             <div class="row w-100 px-0 m-0">
@@ -114,7 +114,7 @@
                                 <label for="nom">Categorie *</label>
                                 <select class="select2 form-control @if($errors->has('categorie_id')) is-invalid @endif" id="categorie" name="categorie_id">
                                     <option
-                                        value="" 
+                                        value=""
                                         @if($courier->categorie_id == '') selected @endif>
                                             ....
                                     </option>
@@ -131,13 +131,13 @@
                                 <label for="nom">Prestataire *</label>
                                 <select class="select2 form-control @if($errors->has('prestataire')) is-invalid @endif" id="prestataire" name="prestataire">
                                     <option
-                                        value="" 
+                                        value=""
                                         @if($courier->prestataire == '') selected @endif>
                                             ....
                                     </option>
                                     @foreach($prestataires as $prestataire)
                                         <option
-                                            value="{{$prestataire}}" 
+                                            value="{{$prestataire}}"
                                             @if($courier->prestataire == $prestataire) selected @endif>
                                                 {{ $prestataire }}
                                         </option>
@@ -171,7 +171,7 @@
                             <select disabled class="select2 form-control @if($errors->has('service_id')) is-invalid @endif" id="service" name="service_id">
                                 @foreach($services as $service)
                                     <option
-                                        value="{{$service->id}}" 
+                                        value="{{$service->id}}"
                                         @if($courier->service_id == $service->id) selected @endif>
                                             {{ $service->intitule }}
                                     </option>
@@ -193,7 +193,7 @@
                 <button class="btn btn-primary mx-1" type="submit">Valider</button>
                 <button class="btn btn-danger mx-1" type="reset">Annuler</button>
             </div>
-                    
+
         </form>
     </div>
 </div>

@@ -13,6 +13,17 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+Broadcast::channel('gestdoc-channel.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+// Admin channels.
+Broadcast::channel('gestdoc-channel.admin', function ($user){
+    return (string) $user->role === 'Admin';
+});
+
+// Root channels.
+Broadcast::channel('gestdoc-channel.root', function ($user){
+    return (string) $user->role === 'Root';
+});
+

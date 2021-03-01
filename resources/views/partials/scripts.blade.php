@@ -28,42 +28,55 @@
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
-{{-- <script src="{{ asset('js/notifyEventListener.js') }}"></script> --}}
+<script src="{{ asset('js/notifyEventListener.js') }}"></script>
 
-<!-- // About the home enter account. -->
-@if(strtolower(Auth::user()->role) == 'accueil')
+<script>
+    var pusher = new Pusher('{{env('PUSHER_APP_KEY', 'b46572e408aed6297050')}}', {
+        cluster: 'eu'
+    });
 
-{{-- <script>
-    $(document).ready(function () {
+    // Listen to channel with id account.
+    var channel = pusher.subscribe('gestdoc-channel.{{Auth::id()}}');
+    channel.bind('gestdoc-notify', function(data) {
 
-        let init_courrier_table = document.querySelector('#accueil-init-courrier')
+        // Update the correspondant component.
+        var role = data.receiver.role, action = data.courrier.action;
+        var tache = data.courrier.tache;
 
-        if(init_courrier_table != null) {
-            setInterval(() => {
+        axios.get(HOST_BACKEND + '/courrier/info/all/' + data.courrier.id)
+        .then(response => {
+            let status = response.status;
+            if(status == 200){
+                let response_data = response.data.record;
+                if(role == "Accueil"){
+                    accuiel_listener(action, response_data);
+                }else if(role == 'Agent'){
+                    agent_listener(response_data, tache);
+                }
+            }
+        })
 
-                axios.get(HOST_BACKEND + "/{{strtolower(Auth::user()->role)}}/all-init-courriers/{{Auth::id()}}")
-                    .then(response => {
+        // Display the notification.
+        setNotification(data)
+    });
 
-                        let result = response.data
+    // Listent to admin channel.
+    var channel = pusher.subscribe('gestdoc-channel.{{strtolower(Auth::user()->role)}}');
+    channel.bind('gestdoc-notify-admin', function(data) {
 
-                        if(response.data.record != null) {
-                            let row = $(`#accueil-init-courrier tr[data-row="${result.record.id}"]`)
-                            // remove the row.
-                            $(row).remove()
-                            toastr.info(`Le courrier N° ${result.record.id} à été ${result.context}`)
-                        }
+        // Update the correspondant component.
+        var role = data.receiver.role, action = data.courrier.action;
+        axios.get(HOST_BACKEND + '/courrier/info/all/' + data.courrier.id)
+        .then(response => {
+            let status = response.status;
+            if(status == 200){
+                let response_data = response.data.record;
+                admin_listener(response_data, action, role.toLowerCase());
+            }
+        })
 
-                        console.log('The content of this page is reloaded.')
+        // Display the notification.
+        setNotification(data)
+    });
 
-                        console.log('The response : ', response.data)
-                    }).catch(reason => {
-                        console.error(reason)
-                    })
-
-            }, 10000);
-        }
-
-    })
-</script> --}}
-
-@endif
+</script>

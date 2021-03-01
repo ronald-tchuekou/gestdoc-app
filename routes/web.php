@@ -95,7 +95,7 @@ Route::middleware(['auth', 'authAccueil'])->prefix('accueil')->group(function(){
     Route::get('/couriers', [AccueilController::class, 'showCouriersView']);
     Route::get('/couriers/add', [AccueilController::class, 'showAddCouriersView']);
     Route::post('/couriers/store', [AccueilController::class, 'storeCourier']);
-    Route::put('/couriers/update/{id}', [AccueilController::class, 'updateCourier']);
+    Route::post('/couriers/item/{id}/update', [AccueilController::class, 'updateCourier']);
     Route::get('/couriers/{id}', [AccueilController::class, 'showCourier']);
     Route::get('/couriers/{id}/edit', [AccueilController::class, 'editCourierShowView']);
     Route::get('/couriers/{id}/modify', [AccueilController::class, 'modifyCourier']);
@@ -128,6 +128,7 @@ Route::middleware(['auth', 'authAgent'])->prefix('agent')->group(function(){
 });
 
 Route::middleware(['auth'])->group(function(){
+    Route::get('/courrier/info/all/{id}', [AgentController::class, 'getCourrierIfon']);
     Route::post('/profile/update-password', [ProfileController::class, 'update_pass']);
     Route::post('/profile/upload-profile', [ProfileController::class, 'upload_profile']);
 });

@@ -4,11 +4,13 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NotifyEvent implements ShouldBroadcast
+class AdminEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -56,7 +58,6 @@ class NotifyEvent implements ShouldBroadcast
         ];
 
         $this->courrier = [
-            'tache' => isset($data['courrier_tache']) ? $data['courrier_tache'] : null,
             'id' => $data['courrier_id'],
             'action' => $data['courrier_action']
         ];
@@ -69,12 +70,15 @@ class NotifyEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('gestdoc-channel.' . $this->receiver['id']);
+        return [
+            new Channel('gestdoc-channel.admin'),
+            new Channel('gestdoc-channel.root')
+        ];
     }
 
     public function broadcastAs()
     {
-        return "gestdoc-notify";
+        return "gestdoc-notify-admin";
     }
 
     public function broadcastWith ()

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NotifyEvent;
+use App\Events\AdminEvent;
 use App\Models\Assigne;
 use App\Models\Courier;
 use App\Models\History;
@@ -21,6 +21,7 @@ class AgentController extends Controller
     protected $finish_couriers;
 
     public function index () {
+
         $user = Auth::user();
         $title = 'AGENT GEST';
         $current_account =  'agent';
@@ -65,7 +66,7 @@ class AgentController extends Controller
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.agent.parametres', compact('title', 'current_account', 'current_action'));
     }
-    
+
     public function showCouriersView() {
         $title = 'AGENT GEST';
         $user = Auth::user();
@@ -74,24 +75,24 @@ class AgentController extends Controller
         $couriers = $user->couriers_initialises()->where('etat', 1)->get();
         return view('pages.agent.couriers', compact('couriers', 'title', 'current_account', 'current_action'));
     }
-    
+
     /**
      * Function to finish a work.
      */
     public function finishCourier (int $id) {
-     
+
         try{
 
             $courier = Courier::find($id);
             $user = Auth::user();
-    
+
             $assigne = $courier->assignes()->where('user_id', $user->id)->first();
             $assigne->terminer = 2;
             $assigne->update();
-    
+
             $completAssign = $courier->assignes()->where('terminer', 2)->count();
             $totalAssign = $courier->assignes()->count();
-            
+
             if($completAssign == $totalAssign){
                 $courier->etat = 4;
             } else {
@@ -100,7 +101,7 @@ class AgentController extends Controller
                 $nextAssign->terminer = 1;
                 $nextAssign->update();
             }
-            
+
             $courier->update();
 
             // HISTORY
@@ -112,12 +113,20 @@ class AgentController extends Controller
             $history->save();
 
             // Send the notification to the administrator.
-            $event = new NotifyEvent([
-                'user' => Auth::user(),
-                'action' => 'Traitement du courrier N° ' . $courier->id . ' Terminé.',
+            $event = new AdminEvent([
+                'title' => 'Traitement d\'un courrier', // Title of the notification.
+                'content' => 'Le courrier N° ' . $id .' à été Traité.', // Contne to the notification.
+                'receiver_id' => $id,// Id of the receiver.
+                'receiver_role' => 'admin/root',// Id of the receiver.
+                'user_id' => Auth::id(),
+                'user_profile' => $user->profile,
+                'courrier_id' => $id,
+                'courrier_action' => Utils::$COURRIER_STATE['finish'],
+                'user_name' => $user->personne->nom,
+                'user_surname' => $user->personne->prenom,
             ]);
             event($event);
-            
+
             return response('', 200);
         }catch(Exception $e){
             return response($e, 201);
@@ -133,41 +142,57 @@ class AgentController extends Controller
         dd($courier);
     }
 
-    public function handleChange (int $id) {
-        try{
-            $date_to = now();
-            $date_from = now();
-            $date_from->sub(new DateInterval('PT1S'));
+    /**
+     * Fonction renvoie les information d'un courrier.
+     */
+    public function getCourrierIfon(int $id){
+        try {
+            $courrier = Courier::find($id);
 
-            $user = User::find($id);
-            $assigne = $user->assignes()
-                ->whereBetween('created_at', [$date_from, $date_to])
-                ->first();
-            if($assigne != null){
-                $courrier = $assigne->courier;
-                $assigner = $assigne->assigner;
+            $date = Utils::full_date_format($courrier->dateEnregistrement);
+            $update = $courrier->updated_at == null ? null : Utils::full_date_format($courrier->updated_at);
 
-                $genre = $user->personne->sexe == 'Masculin' ? 'Mr' : 'Mme';
+            $record = [
+                'id' => $courrier->id,
+                'nom' => $courrier->personne->nom,
+                'prenom' => $courrier->personne->prenom,
+                'telephone' => $courrier->personne->telephone,
+                'phone' => $courrier->personne->telephone,
+                'name' => $courrier->personne->prenom,
+                'surname' => $courrier->personne->telephone,
+                'objet' => $courrier->objet,
+                'nbPiece' => $courrier->nbPiece,
+                'etat' => $courrier->etat,
+                'prestataire' => $courrier->prestataire,
+                'date' => $date,
+                'update' => $update,
+                'categorie' => $courrier->categorie->intitule,
+                'motif' => $this->getMotif($courrier),
+            ];
 
-                $date = Utils::full_date_format($assigne->created_at);
+            $result = [
+                'status' => 'OK',
+                'record' => $record,
+            ];
+            return response ($result, 200);
 
-                $result = Array(
-                    'id' => $courrier->id,
-                    'tache' => $assigne->tache,
-                    'objet' => $courrier->objet,
-                    'created_at' => $date,
-                    'user_profile' => $assigner->profile,
-                    'action' => 'Traitement du courrier N° '. $courrier->id,
-                    'content' =>  'Courrier assigné par ' . $genre . ' ' . $assigner->personne->nom . ' ' . $assigner->personne->prenom . ' le ' . $date,
-                );
-
-                return response([
-                    'status' => 'OK',
-                    'record' => $result,
-                ], 200);
-            }
-        }catch(Exception $th) {
+        } catch (Exception $th) {
             return response($th->getMessage(), 201);
+        }
+    }
+
+    /**
+     * Fonction qui permet de récupérer les motif d'un courrier.
+     */
+    private function getMotif($courrier) {
+        if($courrier->etat == 'Reprendre') {
+            return $courrier->to_modify->reason;
+        }
+        elseif($courrier->etat == 'Rejeté') {
+            return $courrier->reject->reason ;
+        }
+        elseif($courrier->etat == 'Validé') {
+            return '' ;
         }
     }
 }

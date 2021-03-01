@@ -14,7 +14,7 @@
                         <th style="width: 50px;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="admin-finish-courriers">
                     @forelse($couriers_traite as $courier)
                     <tr role="row" class="odd hover" id="row-{{$loop->index}}">
                         <td>{{$courier->id}}</td>

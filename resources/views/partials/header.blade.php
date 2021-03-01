@@ -48,4 +48,6 @@
     <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
     <!-- END: Custom CSS-->
 
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+
 </head>

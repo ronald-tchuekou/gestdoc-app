@@ -23,6 +23,14 @@ class Utils {
         'AUTRES',
     ];
 
+    public static $COURRIER_STATE = [
+        'init' => 'init',
+        'modify' => 'modify',
+        'finish' => 'finish',
+        'reject' => 'reject',
+        'validate' => 'validate',
+    ];
+
     /**
      * Fonction qui permet de formter les dates.
      */
