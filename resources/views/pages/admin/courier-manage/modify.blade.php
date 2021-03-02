@@ -11,7 +11,7 @@
                         <th>Objet</th>
                         <th>Prestataire</th>
                         <th>Modifié le</th>
-                        <th>Par</th>
+                        <th>Dépositaire</th>
                         <th style="width: 40px;">Actions</th>
                     </tr>
                 </thead>
@@ -26,9 +26,9 @@
                             <div class="d-flex justify-content-left align-items-center">
                                 <div class="d-flex flex-column">
                                     <a href="javascript:void()" class="user_name text-truncate">
-                                        <span class="font-weight-bold">{{$courier->user->personne->nom}} {{$courier->user->personne->prenom}}</span>
+                                        <span class="font-weight-bold">{{$courier->personne->nom}} {{$courier->personne->prenom}}</span>
                                     </a>
-                                    <small class="emp_post text-muted">{{$courier->user->personne->telephone}}</small>
+                                    <small class="emp_post text-muted">{{$courier->personne->telephone}}</small>
                                 </div>
                             </div>
                         </td>
