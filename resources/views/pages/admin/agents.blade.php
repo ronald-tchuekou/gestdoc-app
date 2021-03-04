@@ -59,7 +59,7 @@
         </div>
     </div>
     <div class="card-body">
-        <table class="table table-striped table-bordered" style="width:100%" id="agents_table_admin">
+        <table class="table table-striped table-bordered table-responsive" style="width:100%" id="agents_table_admin">
             <thead class="thead-light">
                 <tr role="row">
                     <th>Agent</th>

@@ -8,7 +8,7 @@
         </div>
         <div class="card-datatable table-responsive pt-0">
             <div class="dataTables_wrapper dt-bootstrap4 no-footer">
-                <table class="user-list-table table dataTable no-footer dtr-column collapsed" id="courier_table_admin" role="grid" aria-describedby="courier_table_admin_info" >
+                <table class="user-list-table table dataTable no-footer dtr-column collapsed table-responsive" id="courier_table_admin" role="grid" aria-describedby="courier_table_admin_info" >
                     <thead class="thead-light">
                         <tr role="row">
                             <th>N° Courrier</th>

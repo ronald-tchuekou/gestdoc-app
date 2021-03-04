@@ -4,7 +4,7 @@
             <h5 class="font-weight-bolder">Courriers à traités</h5>
         </div>
         <div class="card-body">
-            <table class="table table-striped table-bordered" style="width:100%" id="finish_courier_table_agent">
+            <table class="table table-striped table-bordered table-responsive" style="width:100%" id="finish_courier_table_agent">
                 <thead class="thead-light">
                     <tr role="row">
                         <th>N° Courrier</th>

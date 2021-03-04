@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            <table class="user-list-table table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="width: 995px;">
+            <table class="user-list-table table dataTable no-footer dtr-column collapsed table-responsive" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="width: 995px;">
                 <thead class="thead-light">
                     <tr role="row">
                         <th class="control sorting_disabled" rowspan="1" colspan="1" style="width: 2px;" aria-label=""></th>
