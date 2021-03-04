@@ -36,7 +36,7 @@
                 <option value="">....</option>
                 @foreach($agents as $agent)
                     <option value="{{$agent->id}}">
-                        {{ $agent->personne->nom }}&nbsp;{{ $agent->personne->prenom }}<i class="feather icon-minus"></i>{{ $agent->service->intitule }}
+                        {{ $agent->personne->nom }}&nbsp;{{ $agent->personne->prenom }}--{{ $agent->service->intitule }}
                     </option>
                 @endforeach
             </select>
