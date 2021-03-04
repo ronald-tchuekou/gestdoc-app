@@ -13,7 +13,7 @@ class AddUserIdToRejectsTables extends Migration
      */
     public function up()
     {
-        Schema::table('rejects_tables', function (Blueprint $table) {
+        Schema::table('rejects', function (Blueprint $table) {
             $table->foreignId("user_id");
         });
     }
@@ -25,7 +25,7 @@ class AddUserIdToRejectsTables extends Migration
      */
     public function down()
     {
-        Schema::table('rejects_tables', function (Blueprint $table) {
+        Schema::table('rejects', function (Blueprint $table) {
             //
         });
     }
