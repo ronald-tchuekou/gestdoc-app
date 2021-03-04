@@ -35,7 +35,9 @@
             <select class="select2 form-control" id="agent_id" name="agent_id">
                 <option value="">....</option>
                 @foreach($agents as $agent)
-                    <option value="{{$agent->id}}" > {{ $agent->personne->nom }}&nbsp;{{ $agent->personne->prenom }} </option>
+                    <option value="{{$agent->id}}">
+                        {{ $agent->personne->nom }}&nbsp;{{ $agent->personne->prenom }}<i class="feather icon-minus"></i>{{ $agent->service->intitule }}
+                    </option>
                 @endforeach
             </select>
           </div>
