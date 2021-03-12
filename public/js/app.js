@@ -109,7 +109,7 @@ function manager_cat_list () {
     $('#cat_courrier_id .delete').each((i, elt)=> {
         $(elt).click(()=>{
             let id = $(elt).attr("data-id");
-            let action = '/root/categories/delete/' + id; // Pour les root (super admin).
+          let action = '/root/categories/delete/' + id; // Pour les root (super admin). 
 
             let progress = set_progress_block($('#item-'+id));
 
@@ -146,7 +146,8 @@ function manager_cat_list () {
             let id = $(elt).attr("data-id");
             let intitule = $(elt).attr("data-intitule");
             let form = $('#cat_form');
-            form.attr('action', '/root/categories/update/' + id);
+          form.attr('action', '/root/categories/update/' + id);
+          console.error("This is my error.");
             $('#category').val(intitule);
             $('#form-title').html('Modification d\'une categorie')
             $('#cat_form button').html('Mettre à jour');
