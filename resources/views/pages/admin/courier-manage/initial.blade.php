@@ -8,13 +8,13 @@
             <table class="table table-striped table-bordered table-responsive" style="width:100%" id="init_courier_table_admin">
                 <thead class="thead-light">
                     <tr role="row">
-                        <th>N° Courier</th>
-                        <th>Dépositaire</th>
+                        <th style="width: auto;">N° Courier</th>
+                        <th style="width: auto;">Dépositaire</th>
                         <th style="width: 250px;">Objet</th>
-                        <th class="text-nowrap">Nb Pièce</th>
-                        <th>Prestataire</th>
-                        <th>Status</th>
-                        <th>Fait le</th>
+                        <th style="width: auto;" class="text-nowrap">Nb Pièce</th>
+                        <th style="width: auto;">Prestataire</th>
+                        <th style="width: auto;">Status</th>
+                        <th style="width: auto;">Fait le</th>
                         <th style="width: 40px;">Actions</th>
                     </tr>
                 </thead>

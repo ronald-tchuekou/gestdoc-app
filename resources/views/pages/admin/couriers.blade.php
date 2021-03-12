@@ -6,17 +6,34 @@
     <ul class="nav nav-pills flex-row nav-left">
         <li class="nav-item">
             <a class="nav-link btn-sm active py-1" id="courier-pill-initial" data-toggle="pill" href="#courier-tab-initial" aria-expanded="true">
-                <span class="font-weight-bold">Couriers initials</span>
+                <span class="font-weight-bold">
+                    Couriers initials 
+                   @if(count($couriers_initial) != 0)
+                    &nbsp;&nbsp;&nbsp;<span class="badge badge-light-danger badge-pill" id="badge-initial">
+                        {{count($couriers_initial)}}
+                    </span>
+                    @endif
+                </span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link btn-sm py-1" id="courier-pill-modify" data-toggle="pill" href="#courier-tab-modify" aria-expanded="false">
-                <span class="font-weight-bold">Couriers modifés</span>
+                <span class="font-weight-bold">
+                    Couriers modifés
+                    @if(count($couriers_modifie) != 0)
+                    &nbsp;&nbsp;&nbsp;<span class="badge badge-light-danger badge-pill" id="badge-modify">{{count($couriers_modify)}}</span>
+                    @endif
+                </span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link btn-sm py-1" id="courier-pill-finish" data-toggle="pill" href="#courier-tab-finish" aria-expanded="false">
-                <span class="font-weight-bold">Couriers traités</span>
+                <span class="font-weight-bold">
+                    Couriers traités
+                    @if(count($couriers_traite) != 0)
+                    &nbsp;&nbsp;&nbsp;<span class="badge badge-light-danger badge-pill" id="badge-finish">{{count($couriers_finish)}}</span>
+                    @endif
+                </span>
             </a>
         </li>
     </ul>

@@ -399,6 +399,7 @@ class AdminController extends Controller
      * Fonction qui permet de faire la mise à jour d'une categorie.
      */
     public function updateCategory (int $id, Request $request){
+       
         try {
             // Check if this not exist.
             $exist = Categorie::where('intitule', $request->category)->first();
@@ -417,7 +418,7 @@ class AdminController extends Controller
 
             return response($result, 200);
         } catch (Exception $th) {
-            return response($th->getMessage(), 202);
+            return response($th, 202);
         }
     }
 

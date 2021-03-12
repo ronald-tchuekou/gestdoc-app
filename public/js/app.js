@@ -40,7 +40,7 @@ function manager_cat_from(){
         }).then(response => {
 
             let status = response.status;
-            let data = response.data;
+          let data = response.data;
 
             // If 201
             if(status == 201){
@@ -49,12 +49,12 @@ function manager_cat_from(){
 
             // If 202
             if(status == 202){
-                toastr.error('😥' + data, '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+                toastr.warning('😥' + data, '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
             }
 
             // If 200
             if(status == 200){
-                let cat = data.record;
+              let cat = data.record;
                 let id = cat.id, intitule = cat.intitule, edit = cat.edit, title = '';
 
 
@@ -89,15 +89,12 @@ function manager_cat_from(){
 
             }
 
-            console.log(response);
-
             manager_cat_list();
 
             dismiss_block(progress);
         }).catch(reason => {
             dismiss_block(progress);
             toastr.error('😥' + reason, 'Erreur', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
-
         });
 
     });
@@ -112,7 +109,7 @@ function manager_cat_list () {
     $('#cat_courrier_id .delete').each((i, elt)=> {
         $(elt).click(()=>{
             let id = $(elt).attr("data-id");
-            let action = '/admin/categories/delete/' + id;
+            let action = '/root/categories/delete/' + id;
 
             let progress = set_progress_block($('#item-'+id));
 
@@ -120,9 +117,9 @@ function manager_cat_list () {
                 let status = response.status;
 
                 // If 202
-                if(status == 202){
-                    toastr.error('😥' + data, '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
-                }
+              if (status == 202) {
+                toastr.warning('😥' + data, '', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+              }
 
                 // If 200
                 if(status == 200){
@@ -135,8 +132,9 @@ function manager_cat_list () {
 
                 dismiss_block(progress);
             }).catch(reason=> {
-                dismiss_block(progress);
-                toastr.error('😥' + reason, 'Erreur', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
+              dismiss_block(progress);
+              
+              toastr.error('😥' + reason, 'Erreur', { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3})
             })
         });
     })
@@ -148,10 +146,7 @@ function manager_cat_list () {
             let id = $(elt).attr("data-id");
             let intitule = $(elt).attr("data-intitule");
             let form = $('#cat_form');
-
-            console.log(id, intitule, form);
-
-            form.attr('action', '/admin/categories/update/' + id);
+            form.attr('action', '/root/categories/update/' + id);
             $('#category').val(intitule);
             $('#form-title').html('Modification d\'une categorie')
             $('#cat_form button').html('Mettre à jour');
@@ -165,7 +160,7 @@ function manager_cat_list () {
 
         let form = $('#cat_form');
 
-        form.attr('action', '/admin/categories/store');
+        form.attr('action', '/root/categories/store');
         $('#category').val('');
         $('#form-title').html('Formulaire d\'ajout d\'une nouvelle categorie')
         $('#cat_form button').html('Valider');
@@ -583,6 +578,7 @@ function admin_agent_filter() {
             if (response.status == 200) {
               $(row).parent().parent().parent().parent().remove();
               $("#finish_courier_table_admin").DataTable();
+              update_badge_count("#badge-finish", -1);
               toastr.success('Dossier validé avec succès.', 'Message de succès',
                 { showMethod: "slideDown", hideMethod: "slideUp", timeOut: 3e3 });
             } else {
@@ -668,15 +664,35 @@ function admin_agent_filter() {
 })(window, document, jQuery);
 
 
-$(document).ready(function() {
-    $("#init_courier_table_admin").DataTable();
-    $("#finish_courier_table_admin").DataTable();
-    $("#modify_courier_table_admin").DataTable();
-    $("#agents_table_admin").DataTable();
-    $("#adjoints_table_root").DataTable();
-    $("#finish_courier_table_agent").DataTable();
-    $("#init_courier_table_accueil").DataTable();
-    $("#reject_courier_table_accueil").DataTable();
-    $("#valide_courier_table_accueil").DataTable();
-    $("#modify_courier_table_accueil").DataTable();
+$(document).ready(function () {
+  
+  let options = {
+    "responsive": true,
+    "autoWidth": false,
+    "columnDefs": [
+      { "width": "35%", "targets": '_all' }
+    ]
+  };
+  
+  $("#init_courier_table_admin").DataTable(options);
+    $("#finish_courier_table_admin").DataTable(options);
+    $("#modify_courier_table_admin").DataTable(options);
+    $("#agents_table_admin").DataTable(options);
+    $("#adjoints_table_root").DataTable(options);
+    $("#finish_courier_table_agent").DataTable(options);
+    $("#init_courier_table_accueil").DataTable(options);
+    $("#reject_courier_table_accueil").DataTable(options);
+    $("#valide_courier_table_accueil").DataTable(options);
+    $("#modify_courier_table_accueil").DataTable(options);
 } );
+
+/**
+ * Fonction qui permet de mettre à jour le nombre contenu dans un badge.
+ * @param {String} target_id éléments sélectionné.
+ * @param {Number} value valeur à ajouter sur la valeur courante.
+ */
+function update_badge_count(target_id, value) {
+  let target = $(target_id),
+    count = parseInt(target.html());
+  target.html(count + (value));
+}

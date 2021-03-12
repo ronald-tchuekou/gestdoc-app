@@ -74,6 +74,8 @@ var agent_listener = (data, tache) => {
                     </td>
                 </tr>`;
     $('#agent-finish').append(content);
+
+    update_badge_count('#badge-finish', 1);
 }
 
 /**
@@ -102,6 +104,8 @@ var setModifyCourrier_accueil = (data) => {
                 </tr>`;
 
     $('#accueil-modify').append(content);
+
+    update_badge_count('#badge-modify', 1);
 }
 
 var setRejectCourrier_accueil = (role, data) => {
@@ -133,6 +137,8 @@ var setRejectCourrier_accueil = (role, data) => {
                 </tr>`;
 
     $('#accueil-reject').append(content);
+
+    update_badge_count("#badge-reject", 1);
 }
 
 var setValidateCourrier_accueil = (data) => {
@@ -163,6 +169,7 @@ var setValidateCourrier_accueil = (data) => {
                     </tr>`;
 
     $('#accueil-valide').append(content);
+    update_badge_count('#badge-validate', 1);
 }
 
 var setInitCourrier_admin = (data, role) => {
@@ -238,6 +245,8 @@ var setInitCourrier_admin = (data, role) => {
     $('#admin-initial-courriers').append(content);
 
     $("#init_courier_table_admin").DataTable();
+
+    update_badge_count("#badge-initial", 1);
 }
 
 var setModifyCourrier_admin = (data, role) => {
@@ -311,6 +320,8 @@ var setModifyCourrier_admin = (data, role) => {
     $('#admin-modify-courriers').append(content);
 
     $("#modify_courier_table_admin").DataTable();
+
+    update_badge_count("#badge-modify", 1);
 }
 
 var setFinishCourrier_admin = (data, role) => {
@@ -347,4 +358,17 @@ var setFinishCourrier_admin = (data, role) => {
 
     $("#finish_courier_table_admin").DataTable();
 
+    update_badge_count("#badge-finish", 1);
+}
+
+
+/**
+ * Fonction qui permet de mettre à jour le nombre contenu dans un badge.
+ * @param {String} target_id éléments sélectionné.
+ * @param {Number} value valeur à ajouter sur la valeur courante.
+ */
+ function update_badge_count(target_id, value) {
+    let target = $(target_id),
+      count = parseInt(target.html());
+    target.html(count + (value));
 }

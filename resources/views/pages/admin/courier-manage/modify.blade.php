@@ -8,7 +8,7 @@
                 <thead class="thead-light">
                     <tr role="row">
                         <th>N° Courier</th>
-                        <th>Objet</th>
+                        <th style="width: 250px;">Objet</th>
                         <th>Prestataire</th>
                         <th>Modifié le</th>
                         <th>Dépositaire</th>

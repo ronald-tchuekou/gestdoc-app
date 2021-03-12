@@ -8,7 +8,7 @@
                 <thead class="thead-light">
                     <tr role="row">
                         <th>N° Courier</th>
-                        <th>Objet</th>
+                        <th style="width: 250px;">Objet</th>
                         <th>Prestataire</th>
                         <th>Terminé le</th>
                         <th style="width: 50px;">Actions</th>
@@ -18,8 +18,8 @@
                     @forelse($couriers_traite as $courier)
                     <tr role="row" class="odd hover" id="row-{{$loop->index}}">
                         <td>{{$courier->id}}</td>
-                        <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
-                        <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->prestataire}}</td>
+                        <td class="sorting_1 ellipsize" style="max-width: 250px; width: 250px">{{$courier->objet}}</td>
+                        <td class="sorting_1 ellipsize" style="max-width: 250px; width: 250px">{{$courier->prestataire}}</td>
                         <td><span class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</span></td>
                         <td>
                             <div class="btn-group">
