@@ -147,7 +147,7 @@ function manager_cat_list () {
             let intitule = $(elt).attr("data-intitule");
             let form = $('#cat_form');
           form.attr('action', '/root/categories/update/' + id);
-          console.error("This is my error.");
+          
             $('#category').val(intitule);
             $('#form-title').html('Modification d\'une categorie')
             $('#cat_form button').html('Mettre à jour');
