@@ -109,7 +109,7 @@ function manager_cat_list () {
     $('#cat_courrier_id .delete').each((i, elt)=> {
         $(elt).click(()=>{
             let id = $(elt).attr("data-id");
-            let action = '/root/categories/delete/' + id;
+            let action = '/root/categories/delete/' + id; // Pour les root (super admin).
 
             let progress = set_progress_block($('#item-'+id));
 
