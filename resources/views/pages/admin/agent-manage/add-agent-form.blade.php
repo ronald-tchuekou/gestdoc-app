@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         <div class="row px-1" style="padding-top: 4px; padding-bottom: 4px;">
-                            <div class="col-4">Status *</div>
+                            <div class="col-4">Status</div>
                             <div class="col-4">
                                 <li class="d-inline-block mr-2">
                                     <fieldset>
