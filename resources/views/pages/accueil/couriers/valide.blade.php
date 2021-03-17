@@ -22,7 +22,7 @@
                             {{$courier->id}}
                         </td>
                         <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
-                        <td>{{App\Models\Utils::full_date_format($courier->updated_at)}}</td>
+                        <td class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</td>
                         <td>{{$courier->prestataire}}</td>
                         <td>
                             <div class="d-flex justify-content-left align-items-center">
@@ -36,8 +36,8 @@
                         </td>
                         <td>
                             <a href="/{{strtolower(Auth::user()->role)}}/courier-details/{{$courier->id}}" class="btn btn-info btn-sm">
-                                <i class="feather icon-file-text" style="font-size: 1rem;"></i>
-                                &nbsp;&nbsp;&nbsp;Details
+                                <!-- <i class="feather icon-file-text" style="font-size: 1rem;"></i>&nbsp;&nbsp;&nbsp; -->
+                                Details
                             </a>
                 </td>
                     </tr>

@@ -21,7 +21,7 @@
                 <span class="font-weight-bold">
                     Couriers modifés
                     @if(count($couriers_modifie) != 0)
-                    &nbsp;&nbsp;&nbsp;<span class="badge badge-light-danger badge-pill" id="badge-modify">{{count($couriers_modify)}}</span>
+                    &nbsp;&nbsp;&nbsp;<span class="badge badge-light-danger badge-pill" id="badge-modify">{{count($couriers_modifie)}}</span>
                     @endif
                 </span>
             </a>
@@ -31,7 +31,7 @@
                 <span class="font-weight-bold">
                     Couriers traités
                     @if(count($couriers_traite) != 0)
-                    &nbsp;&nbsp;&nbsp;<span class="badge badge-light-danger badge-pill" id="badge-finish">{{count($couriers_finish)}}</span>
+                    &nbsp;&nbsp;&nbsp;<span class="badge badge-light-danger badge-pill" id="badge-finish">{{count($couriers_traite)}}</span>
                     @endif
                 </span>
             </a>

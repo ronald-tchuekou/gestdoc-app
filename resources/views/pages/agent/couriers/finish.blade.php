@@ -22,7 +22,7 @@
                         </td>
                         <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
                         <td><span>{{$courier->assignes()->where('user_id', Auth::user()->id)->first()->tache}}</span></td>
-                        <td>{{App\Models\Utils::full_date_format(
+                        <td class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format(
                             $courier->assignes()->where('user_id', Auth::user()->id)->first()->created_at
                         )}}</td>
                         <td>

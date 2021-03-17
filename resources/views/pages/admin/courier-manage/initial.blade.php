@@ -4,7 +4,7 @@
         <div class="card-header d-flex justify-content-between p-0 pt-2 px-1">
             <h5 class="font-weight-bolder">Couriers initialisés</h5>
         </div>
-        <div class="card-body">
+        <div class="card-body mt-0">
             <table class="table table-striped table-bordered table-responsive" style="width:100%" id="init_courier_table_admin">
                 <thead class="thead-light">
                     <tr role="row">
@@ -36,7 +36,7 @@
                         <td><span class="text-truncate align-middle text-nowrap">{{$courier->nbPiece}}</span></td>
                         <td>{{$courier->prestataire}}</td>
                         <td><span class="badge badge-pill badge-light-info" text-capitalized="">{{$courier->etat}}</span></td>
-                        <td>{{App\Models\Utils::full_date_format($courier->dateEnregistrement)}}</td>
+                        <td class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->dateEnregistrement)}}</td>
                         <td>
                             <div class="btn-group">
                                 <button class="btn btn-sm hide-arrow" data-toggle="dropdown">

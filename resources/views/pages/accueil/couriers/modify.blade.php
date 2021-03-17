@@ -20,7 +20,7 @@
                         <td>{{$courier->id}}</td>
                         <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
                         <td><span class="text-truncate align-middle text-nowrap">{{$courier->to_modify->reason}}</span></td>
-                        <td>{{App\Models\Utils::full_date_format($courier->to_modify->created_at)}}</td>
+                        <td class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->to_modify->created_at)}}</td>
                         <td>
                             <a href="/accueil/couriers/{{$courier->id}}/modify" class="btn btn-warning btn-sm">Modifier</a>
                         </td>
