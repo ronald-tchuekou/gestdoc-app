@@ -1,3 +1,4 @@
+
 <div class="card">
     <div class="card-header">
         <div class="d-flex mb-3">
@@ -35,8 +36,22 @@
                                 <input value="{{old('email')}}" type="email" name="email" id="email" class="form-control">
                             </div>
                             <div class="col-md-6 col-12 form-group mb-0">
-                                <label for="localisation">Localisation</label>
-                                <input value="{{old('localisation')}}" type="localisation" name="localisation" id="localisation" class="form-control">
+                                <label for="localisation">Localisation *</label>
+                                <select class="select2 form-control @if($errors->has('localisation')) is-invalid @endif" id="localisation" name="localisation">
+                                    <option
+                                        value=""
+                                        @if(old('localisation') == '') selected @endif>
+                                            ....
+                                    </option>
+                                    @foreach($locations as $location)
+                                        <option
+                                            value="{{$location->intitule}}"
+                                            @if(old('localisation') == $location->intitule) selected @endif>
+                                                {{ $location->intitule }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
                             </div>
                         </div>
                         <div class="row px-1" style="padding-top: 4px; padding-bottom: 4px;">

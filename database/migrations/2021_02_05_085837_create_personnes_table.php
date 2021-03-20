@@ -22,7 +22,7 @@ class CreatePersonnesTable extends Migration
             $table->string('telephone', 20);
             $table->string('cni', 20);
             $table->string('localisation', 255)->nullable();
-            $table->enum('status', ['Marié', 'Célibataire'])->default('Célibataire');
+            $table->enum('status', ['Marié', 'Célibataire'])->nullable();
             $table->timestamps();
         });
     }

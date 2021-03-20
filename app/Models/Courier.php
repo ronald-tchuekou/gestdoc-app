@@ -10,6 +10,7 @@ class Courier extends Model
     use HasFactory;
 
     protected $fillable = [
+        'code',
         'categorie_id',
         'service_id',
         'personne_id',
@@ -25,11 +26,19 @@ class Courier extends Model
     
     static $rules = [
         'categorie_id' => 'required',
-        'objet' => 'required|min:20|max:150',
+        'objet' => 'required|max:150',
         'prestataire' => 'required',
-        'observation' => 'required',
+        'code' => 'required',
         'nbPiece' => 'required',
     ];
+
+    /**
+     * Fonction to check if courrier code allready existe.
+     */
+    public static function chekcIfCodeExist (string $code) {
+        $courier = Courier::where('code', $code)->first();
+        return $courier != null;
+    }
 
     public function assignes () {
         return $this->hasMany(Assigne::class);

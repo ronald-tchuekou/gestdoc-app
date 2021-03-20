@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class LoginController extends Controller
 {
 
     public function index () {
+
+        // Check if the administrator user in present into the database.
+        $super_user = User::where('role', 'AppAdmin')->get();
+        if(count($super_user) == 0){
+            return redirect('admin-register-person');
+        }
 
         // Check if the user are already authenticate.
         $user = Auth::user();
@@ -21,6 +24,8 @@ class LoginController extends Controller
                 return redirect()->intended('/admin/dashboard');
             elseif($user->role == 'Root')
                 return redirect()->intended('/root/dashboard');
+            elseif($user->role == 'AppAdmin')
+                return redirect()->intended('/platfrom-administrator');
             else
                 return redirect()->intended('/agent/dashboard');
         }

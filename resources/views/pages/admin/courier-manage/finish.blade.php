@@ -7,9 +7,12 @@
             <table class="table table-striped table-bordered table-responsive" style="width:100%" id="finish_courier_table_admin">
                 <thead class="thead-light">
                     <tr role="row">
-                        <th>N° Courier</th>
-                        <th style="width: 250px;">Objet</th>
+                        <th style="width: 30px;"></th>
+                        <th style="width: auto;">Code</th>
                         <th>Prestataire</th>
+                        <th>Depositaire</th>
+                        <th style="width: 250px;">Objet</th>
+                        <th>Observation</th>
                         <th>Terminé le</th>
                         <th style="width: 50px;">Actions</th>
                     </tr>
@@ -17,9 +20,33 @@
                 <tbody id="admin-finish-courriers">
                     @forelse($couriers_traite as $courier)
                     <tr role="row" class="odd hover" id="row-{{$loop->index}}">
-                        <td>{{$courier->id}}</td>
-                        <td class="sorting_1 ellipsize" style="max-width: 250px; width: 250px">{{$courier->objet}}</td>
+                        <td class="p-1">
+                            @if ($courier->recieved == 1)
+                                <a href="/{{strtolower(Auth::user()->role)}}/courriers/marck-as-not-recieved/{{$courier->id}}" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Marquer comme non reçut" class="cursor-pointer" data-id="{{$courier->id}}" >
+                                    <i class="feather icon-compass text-success" style="font-size: 2rem;
+                                        font-weight: bold;"></i>
+                                </a>
+                            @else
+                                <a href="/{{strtolower(Auth::user()->role)}}/courriers/marck-as-recieved/{{$courier->id}}" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Marquer comme reçut" class="cursor-pointer" data-id="{{$courier->id}}" >
+                                    <i class="feather icon-aperture text-warning" style="font-size: 2rem;
+                                        font-weight: bold;"></i>
+                                </a>
+                            @endif
+                        </td>
+                        <td class="text-dark text-bold-700">{{$courier->code}} </td>
                         <td class="sorting_1 ellipsize" style="max-width: 250px; width: 250px">{{$courier->prestataire}}</td>
+                        <td>
+                            <div class="d-flex justify-content-left align-items-center">
+                                <div class="d-flex flex-column">
+                                    <a href="javascript:void()" class="user_name text-truncate">
+                                        <span class="font-weight-bold">{{$courier->personne->nom}} {{$courier->personne->prenom}}</span>
+                                    </a>
+                                    <small class="emp_post text-muted">{{$courier->personne->telephone}}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="sorting_1 ellipsize" style="max-width: 250px; width: 250px">{{$courier->objet}}</td>
+                        <td class="sorting_1 ellipsize" style="max-width: 200px; width: 200px">{{$courier->observation}}</td>
                         <td><span class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</span></td>
                         <td>
                             <div class="btn-group">
@@ -38,6 +65,17 @@
                                         <i class="feather icon-check" style="font-size: 1.5rem;"></i>
                                         &nbsp;&nbsp;&nbsp;Valider
                                     </a>
+                                    <a href="javascript:void()" class="dropdown-item observation_btn" style="padding: 7px 9px;"
+                                        tabindex="0"
+                                        aria-controls="courier_table_admin"
+                                        type="button"
+                                        data-courier="{{$courier->id}}/{{Auth::id()}}/{{strtolower(Auth::user()->role)}}"
+                                        data-toggle="modal"
+                                        data-target="#observation-modal">
+
+                                        <i class="feather icon-edit-2" style="font-size: 1.5rem;"></i>
+                                        &nbsp;&nbsp;&nbsp;Observation
+                                    </a>
                                 </div>
                             </div>
                         </td>
@@ -50,3 +88,5 @@
         </div>
     </div>
 </div>
+
+@include('partials.observation-modal')

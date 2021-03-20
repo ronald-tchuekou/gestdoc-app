@@ -14,7 +14,7 @@ class AddDeleteToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('delete')->default(0);
+            $table->integer('deleted')->default(0);
         });
     }
 

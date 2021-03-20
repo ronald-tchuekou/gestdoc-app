@@ -1,3 +1,4 @@
+@if(Auth::user()->role != 'AppAdmin')
 <li class="dropdown dropdown-user nav-item">
     <a class="nav-link" href="" data-toggle="dropdown">
         <i class="ficon feather icon-bell"></i>
@@ -15,3 +16,4 @@
         <li class="dropdown-menu-footer m-1"><button type="button" class="btn btn-primary btn-block">Lire tous les notifications</button></li>
     </ul>
 </li>
+@endif

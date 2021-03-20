@@ -1,3 +1,4 @@
+
 <div class="card">
     <div class="card-header">
         <div class="d-flex mb-3">
@@ -7,6 +8,7 @@
     </div>
     <div class="card-content">
         @include('errors.errors')
+        
         <form action="/{{strtolower(Auth::user()->role)}}/agents/{{$agent->id}}/update" class="form pb-1" method="post">
         @csrf
             <div class="row w-100 px-0 m-0">
@@ -16,27 +18,40 @@
                         <div class="row px-1">
                             <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="nom">Nom *</label>
-                                <input value="{{old('nom')}}" type="text" name="nom" id="nom" class="form-control @if($errors->has('nom')) is-invalid @endif">
+                                <input value="{{$agent->personne->nom}}" type="text" name="nom" id="nom" class="form-control @if($errors->has('nom')) is-invalid @endif">
                             </div>
                             <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="prenom"> Prenom *</label>
-                                <input value="{{old('prenom')}}" type="text" name="prenom" id="prenom" class="form-control @if($errors->has('prenom')) is-invalid @endif">
+                                <input value="{{$agent->personne->prenom}}" type="text" name="prenom" id="prenom" class="form-control @if($errors->has('prenom')) is-invalid @endif">
                             </div>
                             <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="telephone"> Telephone *</label>
-                                <input value="{{old('telephone')}}" type="text" name="telephone" id="telephone" class="form-control @if($errors->has('telephone')) is-invalid @endif">
+                                <input value="{{$agent->personne->telephone}}" type="text" name="telephone" id="telephone" class="form-control @if($errors->has('telephone')) is-invalid @endif">
                             </div>
                             <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="cni">CNI *</label>
-                                <input value="{{old('cni')}}" type="text" name="cni" id="cni" class="form-control @if($errors->has('cni')) is-invalid @endif">
+                                <input value="{{$agent->personne->cni}}" type="text" name="cni" id="cni" class="form-control @if($errors->has('cni')) is-invalid @endif">
                             </div>
                             <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="email">Email </label>
-                                <input value="{{old('email')}}" type="email" name="email" id="email" class="form-control">
+                                <input value="{{$agent->personne->email}}" type="email" name="email" id="email" class="form-control">
                             </div>
                             <div class="col-md-6 col-12 form-group mb-0">
-                                <label for="localisation">Localisation</label>
-                                <input value="{{old('localisation')}}" type="localisation" name="localisation" id="localisation" class="form-control">
+                                <label for="localisation">Localisation *</label>
+                                <select class="select2 form-control @if($errors->has('localisation')) is-invalid @endif" id="localisation" name="localisation">
+                                    <option
+                                        value=""
+                                        @if($agent->personne->localisation == '') selected @endif>
+                                            ....
+                                    </option>
+                                    @foreach($locations as $location)
+                                        <option
+                                            value="{{$location->intitule}}"
+                                            @if($agent->personne->localisation == $location->intitule) selected @endif>
+                                                {{ $location->intitule }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row px-1" style="padding-top: 4px; padding-bottom: 4px;">
@@ -45,7 +60,7 @@
                                 <li class="d-inline-block mr-2">
                                     <fieldset>
                                         <div class="vs-radio-con">
-                                            <input type="radio" name="sexe" @if(old('sexe', 'Feminin') == 'Feminin') checked @endif value="Feminin">
+                                            <input type="radio" name="sexe" @if($agent->personne->sexe == 'Feminin') checked @endif value="Feminin">
                                             <span class="vs-radio">
                                                 <span class="vs-radio--border"></span>
                                                 <span class="vs-radio--circle"></span>
@@ -59,7 +74,7 @@
                                 <li class="d-inline-block mr-2">
                                     <fieldset>
                                         <div class="vs-radio-con">
-                                            <input type="radio" name="sexe" @if(old('sexe') == 'Masculin') checked @endif value="Masculin">
+                                            <input type="radio" name="sexe" @if($agent->personne->sexe == 'Masculin') checked @endif value="Masculin">
                                             <span class="vs-radio">
                                                 <span class="vs-radio--border"></span>
                                                 <span class="vs-radio--circle"></span>
@@ -76,7 +91,7 @@
                                 <li class="d-inline-block mr-2">
                                     <fieldset>
                                         <div class="vs-radio-con">
-                                            <input type="radio" name="status" @if(old('status') == 'Marié') checked @endif value="Marié">
+                                            <input type="radio" name="status" @if($agent->personne->status == 'Marié') checked @endif value="Marié">
                                             <span class="vs-radio">
                                                 <span class="vs-radio--border"></span>
                                                 <span class="vs-radio--circle"></span>
@@ -90,7 +105,7 @@
                                 <li class="d-inline-block mr-2">
                                     <fieldset>
                                         <div class="vs-radio-con">
-                                            <input type="radio" name="status" @if(old('status', 'Célibataire') == 'Célibataire') checked @endif value="Célibataire">
+                                            <input type="radio" name="status" @if($agent->personne->status == 'Célibataire') checked @endif value="Célibataire">
                                             <span class="vs-radio">
                                                 <span class="vs-radio--border"></span>
                                                 <span class="vs-radio--circle"></span>
@@ -117,7 +132,7 @@
                                 @foreach($services as $service)
                                     <option
                                         value="{{$service->id}}"
-                                        @if(old('service_id') == $service->id) selected @endif>
+                                        @if($agent->service->id == $service->id) selected @endif>
                                             {{ $service->intitule }}
                                     </option>
                                 @endforeach

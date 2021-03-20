@@ -9,6 +9,7 @@ use App\Models\Categorie;
 use App\Models\Courier;
 use App\Models\CourierValide;
 use App\Models\History;
+use App\Models\Location;
 use App\Models\Personne;
 use App\Models\Reject;
 use App\Models\Service;
@@ -28,7 +29,7 @@ class AdminController extends Controller
 {
 
     public function index () {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'admin';
         $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
@@ -50,15 +51,21 @@ class AdminController extends Controller
     }
 
     public function showProfileView() {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'admin';
         $user = Auth::user();
+        $cat = $user->couriers_access_categories;
+        if($cat == "all"){
+            $categories = Categorie::all();
+        }else {
+            $categories = Categorie::whereIn('id', json_decode($cat))->get();
+        }
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.profile', compact('user', 'title', 'current_account', 'current_action'));
+        return view('pages.admin.profile', compact('categories', 'user', 'title', 'current_account', 'current_action'));
     }
 
     public function showParametresView() {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'admin';
         $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
@@ -66,47 +73,28 @@ class AdminController extends Controller
     }
 
     public function showAgentsView() {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'admin';
-        $agents = User::where('role', 1)->where('delete', 0)->get();
+        $agents = User::where('role', 1)->where('deleted', 0)->get();
         $services = Service::all();
         $user = Auth::user();
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.admin.agents', compact('user', 'services', 'agents', 'title', 'current_account', 'current_action'));
     }
 
-    public function showCouriersView() {
-        $title = 'MARIE GEST';
-        $user = Auth::user();
-        $agents = User::where(['role' => 1, 'register_token' => null, 'delete' => 0])->get();
-        $current_account =  'admin';
-
-        $couriers_initial = Courier::where('etat', 1)
-            ->orderBy('dateEnregistrement')->get();
-
-        $couriers_modifie = Courier::where('etat', 7)
-            ->orderBy('updated_at')->get();
-
-        $couriers_traite = Courier::where('etat', 4)
-            ->orderBy('updated_at')->get();
-
-        $couriers = Courier::where('etat', 1)->get();
-        $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.couriers', compact('user', 'agents', 'couriers_initial', 'couriers_modifie', 'couriers_traite', 'title', 'current_account', 'current_action'));
-    }
-
     public function showAddAgentView() {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'admin';
         $agent_mode = 'add';
         $user = Auth::user();
         $services = Service::all();
+        $locations = Location::all();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.agents', compact('user', 'services', 'agent_mode', 'title', 'current_account', 'current_action'));
+        return view('pages.admin.agents', compact('locations', 'user', 'services', 'agent_mode', 'title', 'current_account', 'current_action'));
     }
 
     public function showAllActivities() {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'admin';
         $agent_mode = 'add';
         $user = Auth::user();
@@ -118,54 +106,29 @@ class AdminController extends Controller
         return view('pages.all-activities', compact('user', 'histories', 'agent_mode', 'title', 'current_account', 'current_action'));
     }
 
-    public function showCategoriesView() {
-        $title = 'MARIE GEST';
-        $current_account =  'admin';
-        $agent_mode = 'add';
-        $user = Auth::user();
-        $categories = Categorie::all();
-        $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.categories', compact('user', 'categories', 'agent_mode', 'title', 'current_account', 'current_action'));
-    }
-
     public function showEditAgentView(int $agent_id) {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'admin';
         $agent_mode = 'edit';
         $user = Auth::user();
         $agent = User::find($agent_id);
         $services = Service::all();
+        $locations = Location::all();
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.admin.agents', compact('agent', 'services', 'user', 'agent_mode', 'title', 'current_account', 'current_action'));
+        return view('pages.admin.agents', compact('locations', 'agent', 'services', 'user', 'agent_mode', 'title', 'current_account', 'current_action'));
     }
 
     /**
      * Fonction qui affiche les informations d'un tutilisateur.
      */
     public function showAgentView (int $user_id) {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'admin';
         $agent_mode = 'edit';
         $user = Auth::user();
         $agent = User::find($user_id);
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.admin.agent-manage.detail-agent', compact('agent', 'user', 'agent_mode', 'title', 'current_account', 'current_action'));
-    }
-
-    /**
-     * Fonction qui permet de rediriger vers la page d'édition.
-     */
-    public function redirectToEditView (int $agent_id) {
-        $agent = User::find($agent_id);
-        $personne = $agent->personne;
-
-        $agent_tab = $agent->toArray();
-        $personne_tab = $personne->toArray();
-        array_shift($personne_tab);
-
-        $inputResult = array_merge($agent_tab, $personne_tab);
-
-        return redirect("/" . strtolower(Auth::user()->role) . "/agents/$agent_id/edit")->withInput($inputResult);
     }
 
     /**
@@ -179,7 +142,7 @@ class AdminController extends Controller
         $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
 
         if($validation->fails()){
-            return redirect("/" . strtolower(Auth::user()->role) . "/agents/$agent_id/edit")
+            return back()
                 ->withInput($request->all())
                 ->withErrors($validation->errors());
         }
@@ -205,91 +168,6 @@ class AdminController extends Controller
 
         return redirect('/'.strtolower(Auth::user()->role).'/agents')
             ->with('success', 'Agent modifié avec succèss');
-    }
-
-    /**
-     * Function that assign courier work to a service.
-     */
-    public function assignCourier(Request $request) {
-
-        $courier = Courier::find($request->courier_id);
-
-        // Assignation.
-        $findExist = Assigne::where(['user_id' => $request->agent_id, 'courier_id' => $request->courier_id])->first();
-        if($findExist != null){
-            return response('Cette agent est déjà assigné à ce dossier.', 201);
-        }
-
-        // Check if this element don't exist.
-        $assigne = Assigne::where('courier_id', $request->courier_id)
-            ->where('user_id', $request->agent_id)->first();
-
-        if($assigne != null) {
-            return response('Cette personne est déjà assigné à ce courier', 201);
-        }
-
-        try{ // Capture des erreurs produites.
-
-            $position = $this->getLastPosition($request->courier_id) + 1;
-            $assign = new Assigne;
-            $assign->courier_id = $request->courier_id;
-            $assign->user_id = $request->agent_id;
-            $assign->assignePar = Auth::id();
-            $assign->tache = $request->tache;
-            $assign->position = $position;
-            $assign->terminer = $position == 1 ? 1 : 0;
-
-            if($assign->save()){
-                $courier->update(['etat' => 2]);
-
-                // HISTORY.
-                $agent = User::find($request->agent_id)->personne;
-                $history = new History;
-                $history->title = 'Courrier assigné';
-                $history->content = 'Le courrier N° '. $request->courier_id .' à été assigné à l\'agent ' . $agent->nom . ' ' . $agent->prenom;
-                $history->action_type = 1;
-                $history->user_id = Auth::id();
-                $history->save();
-
-                $user = Auth::user();
-                $user_agent = User::find($request->agent_id);
-
-                // Send the notification to the administrator.
-                $event = new NotifyEvent([
-                    'title' => 'Courrier assigné', // Title of the notification.
-                    'content' => 'Le courrier N° '. $request->courier_id .' vous à été assigné.', // Contne to the notification.
-                    'receiver_id' => $user_agent->id,// Id of the receiver.
-                    'receiver_role' => $user_agent->role,// Id of the receiver.
-                    'user_id' => Auth::id(),
-                    'user_profile' => $user->profile,
-                    'user_name' => $user->personne->nom,
-                    'user_surname' => $user->personne->prenom,
-                    'courrier_tache' => $assign->tache,
-                    'courrier_id' => $courier->id,
-                    'courrier_action' => Utils::$COURRIER_STATE['finish'],
-                ]);
-                event($event);
-
-                return response('', 200);
-            }
-
-            return response('Assignation échouée.', 201);
-        }catch(Exception $e){
-            return response($e, 200);
-        }
-    }
-
-    /**
-     * fonction qui retourne la dernière position d'assignation de l'user sur un courier.
-     */
-    public function getLastPosition (int $courier_id) {
-        $assign = Assigne::where('courier_id', $courier_id)
-            ->where('assignePar', Auth::user()->id)
-            ->orderBy('position', 'DESC')->first();
-        if($assign == null)
-            return 0;
-        else
-            return $assign->position;
     }
 
     public function storeAgent(Request $request) {
@@ -357,221 +235,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Fonction qui permet de sauvegarder une nouvelle categorie.
-     */
-    public function storeCategory(Request $request){
-
-        try {
-
-            // Check if this not exist.
-            $exist = Categorie::where('intitule', $request->category)->first();
-            if($exist != null){
-                return response('Cette categorie existe déjà', 201);
-            }
-
-            $id = DB::table('categories')->insertGetId(['id' => null, 'intitule' => $request->category]);
-
-            $result = Array(
-                'status' => 'OK',
-                'record' => ['id' => $id, 'intitule' => $request->category, 'edit' => false],
-            );
-
-            return response($result, 200);
-        } catch (Exception $th) {
-            return response($th->getMessage(), 202);
-        }
-    }
-
-    /**
-     * Fonction qui permet de supprimer une categorie.
-     */
-    public function deleteCategory(int $id){
-        try {
-            $cat = Categorie::find($id);
-            $cat->delete();
-            return response('', 200);
-        } catch (Exception $th) {
-            return response($th->getMessage(), 202);
-        }
-    }
-
-    /**
-     * Fonction qui permet de faire la mise à jour d'une categorie.
-     */
-    public function updateCategory (int $id, Request $request){
-       
-        try {
-            // Check if this not exist.
-            $exist = Categorie::where('intitule', $request->category)->first();
-            if($exist != null && $exist->id != $id){
-                return response('Cette categorie existe déjà', 201);
-            }
-
-            $cat = Categorie::find($id);
-            $cat->intitule = $request->category;
-            $cat->update();
-
-            $result = Array(
-                'status' => 'OK',
-                'record' => ['id' => $id, 'intitule' => $request->category, 'edit' => true],
-            );
-
-            return response($result, 200);
-        } catch (Exception $th) {
-            return response($th, 202);
-        }
-    }
-
-    /**
-     * Fonction qui ajout nouvelle etat de modification.
-     */
-    public function add_to_modify($id, $reason) {
-        try{
-            $courier = Courier::find($id);
-
-            if($courier->etat != 'Initial' && $courier->etat != 'Modifié'){
-                return response('Le dossier n\'est plus modifiable.', 201);
-            }
-            $toModify = new ToModify;
-            $toModify->courier_id = $id;
-            $toModify->reason = $reason;
-            $toModify->user_id = Auth::id();
-            $toModify->save();
-
-            // HISTORY.
-            $history = new History;
-            $history->title = 'Renvoie d\'un courrier';
-            $history->content = 'Le courrier N° ' . $id .' à été renvoyé pour une modification au service d\'accueil.';
-            $history->action_type = 3;
-            $history->user_id = Auth::id();
-            $history->save();
-
-            $user = Auth::user();
-
-            // Send the notification to the administrator.
-            $event = new NotifyEvent([
-                'title' => 'Renvoie d\'un courrier', // Title of the notification.
-                'content' => 'Le courrier N° '. $id .' vous à été renvoyé pour une modification.', // Contne to the notification.
-                'receiver_id' => $courier->user->id,// Id of the receiver.
-                'receiver_role' => $courier->user->role,// Id of the receiver.
-                'user_id' => Auth::id(),
-                'user_profile' => $user->profile,
-                'user_name' => $user->personne->nom,
-                'user_surname' => $user->personne->prenom,
-                'courrier_id' => $id,
-                'courrier_action' => Utils::$COURRIER_STATE['modify'],
-            ]);
-            event($event);
-
-            $courier->etat = 8; // set to  modify state.
-            $courier->update();
-
-            return response('', 200);
-        }catch(Exception $th){
-            return response($th->getMessage(), 201);
-        }
-    }
-
-    /**
-     * Fonction qui ajout un nouvelle etat de rejet.
-     */
-    public function add_to_reject($id, $reason) {
-        try{
-            $courier = Courier::find($id);
-
-            if($courier->etat == 'Rejeté'){
-                return response('Le dossier à déjà été rejeté.', 201);
-            }
-            $reject = new Reject;
-            $reject->courier_id = $id;
-            $reject->reason = $reason;
-            $reject->user_id = Auth::id();
-            $reject->save();
-
-            // HISTORY.
-            $history = new History;
-            $history->title = 'Rejet d\'un courrier';
-            $history->content = 'Le courrier N° ' . $id .' à été rejeté.';
-            $history->action_type = 3;
-            $history->user_id = Auth::id();
-            $history->save();
-
-            $courier->etat = 6;
-            $courier->update(); // Mettre à l'état de modification.
-
-            $user = Auth::user();
-
-            // Send the notification to the administrator.
-            $event = new NotifyEvent([
-                'title' => 'Courrier rejeté', // Title of the notification.
-                'content' => 'Le courrier N° '. $id .' a été rejeté.', // Contne to the notification.
-                'receiver_id' => $courier->user->id,// Id of the receiver.
-                'receiver_role' => $courier->user->role,// Id of the receiver.
-                'courrier_id' => $courier->id,
-                'courrier_action' => Utils::$COURRIER_STATE['reject'],
-                'user_id' => Auth::id(),
-                'user_profile' => $user->profile,
-                'user_name' => $user->personne->nom,
-                'user_surname' => $user->personne->prenom,
-            ]);
-            event($event);
-
-            return response('', 200);
-        }catch(Exception $th){
-            return response($th->getMessage(), 201);
-        }
-    }
-
-    /**
-     * Fonction qui permet de valider un courier.
-     */
-    public function validate_courier ($id) {
-        try{
-            $courier = Courier::find($id);
-            $courier->etat = 5; // Etat de validation du courier.
-
-            $validate = new CourierValide;
-            $validate->courier_id = $id;
-            $validate->user_id = Auth::user()->id;
-
-            if(!$validate->save()){
-                return response('Erreur de validation, veuillez reprendre.', 201);
-            }
-
-            $courier->update();
-
-            // HISTORY.
-            $history = new History;
-            $history->title = 'Validation d\'un courrier';
-            $history->content = 'Le courrier N° ' . $id .' à été validé.';
-            $history->action_type = 4;
-            $history->user_id = Auth::id();
-            $history->save();
-
-            $user = Auth::user();
-
-            // Send the notification to the administrator.
-            $event = new NotifyEvent([
-                'title' => 'Courrier validé', // Title of the notification.
-                'content' => 'Le courrier N° '. $id .' à été validé.', // Contne to the notification.
-                'receiver_id' => $courier->user->id,// Id of the receiver.
-                'receiver_role' => $courier->user->role,// Id of the receiver.
-                'courrier_id' => $courier->id,
-                'courrier_action' => Utils::$COURRIER_STATE['validate'],
-                'user_id' => Auth::id(),
-                'user_profile' => $user->profile,
-                'user_name' => $user->personne->nom,
-                'user_surname' => $user->personne->prenom,
-            ]);
-            event($event);
-
-            return response('', 200);
-        }catch(Exception $e){
-            return response($e, 201);
-        }
-    }
-
-    /**
      * Fonctoin qui retourne les statistique des courriers en un intervalle de temps.
      */
     public function get_statCourrierBetween (String $from="none") {
@@ -626,19 +289,19 @@ class AdminController extends Controller
             $agents = User::where('role', 1)/*->whereBetween('created_at', [$from_date, $to_date])*/->get();
 
             $total_delete = $agents->filter(function($item){
-                if($item->delete == 1){
+                if($item->deleted == 1){
                     return $item;
                 }
             })->count();
 
             $total_active =  $agents->filter(function($item){
-                if($item->register_token == null && $item->delete == 0){
+                if($item->register_token == null && $item->deleted == 0){
                     return $item;
                 }
             })->count();
 
             $total_non_active =  $agents->filter(function($item){
-                if($item->register_token != null && $item->delete == 0){
+                if($item->register_token != null && $item->deleted == 0){
                     return $item;
                 }
             })->count();
@@ -665,7 +328,7 @@ class AdminController extends Controller
     public function deleteAgent(int $agent_id) {
 
         $agent  = User::find($agent_id);
-        $agent->delete = 1;
+        $agent->deleted = 1;
         $agent->update();
 
         // HISTORY.
@@ -680,44 +343,4 @@ class AdminController extends Controller
 
     }
 
-
-    public function handleNewCourrierInit() {
-
-        try {
-            $date_to = now();
-            $date_from = now();
-            $date_from->sub(new DateInterval('PT1S'));
-
-            // Le courrier terminé par une seconde.
-            $courrier = Courier::where('etat', 1)
-                ->whereBetween('updated_at', [$date_from, $date_to])
-                ->first();
-
-            $record = null;
-
-            if($courrier != null) {
-                $date = Utils::full_date_format($courrier->dateEnregistrement);
-                $record = [
-                    'id' => $courrier->id,
-                    'nom' => $courrier->personne->nom,
-                    'prenom' => $courrier->personne->prenom,
-                    'telephone' => $courrier->personne->telephone,
-                    'objet' => $courrier->objet,
-                    'nbPiece' => $courrier->nbPiece,
-                    'etat' => $courrier->etat,
-                    'prestataire' => $courrier->prestataire,
-                    'date' => $date,
-                    'categorie' => $courrier->categorie->intitule,
-                ];
-
-            }
-            $result = [
-                'status' => 'OK',
-                'record' => $courrier == null ? null : $record,
-            ];
-            return response ($result, 200);
-        } catch (Exception $e) {
-            return response ($e->getMessage(), 201);
-        }
-    }
 }

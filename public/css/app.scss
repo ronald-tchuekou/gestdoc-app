@@ -282,9 +282,9 @@ legend.scheduler-border {
 }
 
 /****************************
-    Categorie manager list.
+    Categorie and Service manager list.
 */
-#cat_courrier_id{
+#cat_courrier_id, #service_id, #location_id{
     font-size: 1.3rem;
     li .options {
         visibility: hidden;

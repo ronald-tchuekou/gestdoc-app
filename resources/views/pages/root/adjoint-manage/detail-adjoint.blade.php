@@ -63,6 +63,21 @@
 
         </div>
 
+        <div class="row w-100 px-0 m-0 pb-4">
+            <div class="col-12">
+                <h3 class="text-dark">Les categories de courriers dont cette adjoint aura la gestion</h3>
+            </div>
+            <div class="col-12">
+                @foreach ($categories as $category)
+                    <div class="badge badge-info text-bold-700" style="padding: 6px 9px; font-size: 1rem;">
+                        <span class="text-truncate">
+                            {{$category->id}} <i class="feather icon-minus"></i> {{$category->intitule}}
+                        </span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
     </div>
 </div>
 

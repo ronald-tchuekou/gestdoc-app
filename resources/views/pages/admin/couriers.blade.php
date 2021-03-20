@@ -39,6 +39,8 @@
     </ul>
 </div>
 
+@include('success.success')
+
 <div class="tab-content">
 
 @include('pages.admin.courier-manage.initial')

@@ -25,6 +25,7 @@ class CreateCouriersTable extends Migration
             $table->text('observation')->nullable();
             $table->dateTime('dateValidation')->nullable();
             $table->integer('nbPiece');
+            $table->integer('recieved')->default(0);
             $table->enum('etat', ['Initial','Assigné','Traitement','Traité','Validé','Rejeté', 'Modifié', 'Reprendre'])
                 ->default('Initial')
                 ->index();

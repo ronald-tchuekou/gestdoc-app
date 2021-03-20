@@ -28,6 +28,8 @@ class AdminMiddleware
             return redirect()->intended('/accueil/dashboard');
         }elseif($user->role == 'Root'){
             return redirect()->intended('/root/dashboard');
+        }elseif($user->role == 'AppAdmin'){
+            return redirect()->intended('/platfrom-administrator');
         }else{
             return redirect()->intended('/agent/dashboard');
         }

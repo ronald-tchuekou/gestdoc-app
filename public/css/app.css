@@ -330,15 +330,15 @@ legend.scheduler-border {
 }
 
 /****************************
-    Categorie manager list.
+    Categorie and Service manager list.
 */
-#cat_courrier_id {
+#cat_courrier_id, #service_id, #location_id {
   font-size: 1.3rem;
 }
-#cat_courrier_id li .options {
+#cat_courrier_id li .options, #service_id li .options, #location_id li .options {
   visibility: hidden;
 }
-#cat_courrier_id li .options span {
+#cat_courrier_id li .options span, #service_id li .options span, #location_id li .options span {
   height: 40px;
   width: 40px;
   border-radius: 50%;
@@ -347,14 +347,14 @@ legend.scheduler-border {
   align-items: center;
   transition: background 0.3s ease-in-out;
 }
-#cat_courrier_id li .options span:hover {
+#cat_courrier_id li .options span:hover, #service_id li .options span:hover, #location_id li .options span:hover {
   background-color: #0000001c;
   box-shadow: 0px 2px 3px 2px #07070733;
 }
-#cat_courrier_id li .options span:active {
+#cat_courrier_id li .options span:active, #service_id li .options span:active, #location_id li .options span:active {
   box-shadow: unset;
 }
-#cat_courrier_id li:hover .options {
+#cat_courrier_id li:hover .options, #service_id li:hover .options, #location_id li:hover .options {
   visibility: visible;
 }
 

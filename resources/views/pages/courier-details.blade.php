@@ -58,8 +58,8 @@
                     <legend class="scheduler-border text-small" style="font-size: 1rem;">Information du courrier</legend>
                     <div class="row px-1">
                         <div class="col-md-6 col-12 form-group mb-0">
-                            <label>N° Courrier : </label>
-                            <input disabled value="{{$courier->id}}" class="form-control">
+                            <label>Code du courrier : </label>
+                            <input disabled value="{{$courier->code}}" class="form-control">
                         </div>
                         <div class="col-md-6 col-12 form-group mb-0">
                             <label>Nombre de pièce : </label>

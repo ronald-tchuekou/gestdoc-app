@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Mail\RegisterMail;
+use App\Models\Categorie;
 use App\Models\History;
+use App\Models\Location;
 use App\Models\Personne;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -17,26 +19,40 @@ class RootController extends Controller
 {
 
     public function showAdjointsView() {
-        $title = 'MARIE GEST';
-        $adjoints = User::where('role', 2)->where('delete', 0)->get();
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
+        $adjoints = User::where('role', 2)->where('deleted', 0)->get();
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.root.adjoints', compact('adjoints', 'title', 'current_action'));
     }
 
 
     public function showAddAdjointView() {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $adjoint_mode = 'add';
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.root.adjoints', compact('adjoint_mode', 'title', 'current_action'));
+        $categories = Categorie::all();
+        $locations = Location::all();
+        return view('pages.root.adjoints', compact('locations', 'categories', 'adjoint_mode', 'title', 'current_action'));
     }
 
     public function showEditAdjointView(int $adjoint_id) {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $adjoint_mode = 'edit';
         $adjoint = User::find($adjoint_id);
+        $categories = Categorie::all();
+        $locations = Location::all();
+        $adjoint_categories = $adjoint->couriers_access_categories == 'all' ? $this->getIdsOfCategories($categories) : 
+            json_decode($adjoint->couriers_access_categories);
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.root.adjoints', compact('adjoint', 'adjoint_mode', 'title', 'current_action'));
+        return view('pages.root.adjoints', compact('adjoint_categories', 'categories', 'locations', 'adjoint', 'adjoint_mode', 'title', 'current_action'));
+    }
+
+    private function getIdsOfCategories ($categories) {
+        $result = [];
+        foreach($categories as $c){
+            array_push($result, $c->id);
+        }
+        return $result;
     }
 
 
@@ -44,27 +60,17 @@ class RootController extends Controller
      * Fonction qui affiche les informations d'un tutilisateur.
      */
     public function showAdjointView (int $user_id) {
-        $title = 'MARIE GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $adjoint_mode = 'edit';
         $adjoint = User::find($user_id);
+        $cat = $adjoint->couriers_access_categories;
+        if($cat == "all"){
+            $categories = Categorie::all();
+        }else {
+            $categories = Categorie::whereIn('id', json_decode($cat))->get();
+        }
         $current_action = explode('/', Route::current()->uri)[1];
-        return view('pages.root.adjoint-manage.detail-adjoint', compact('adjoint', 'adjoint_mode', 'title', 'current_action'));
-    }
-
-    /**
-     * Fonction qui permet de rediriger vers la page d'édition.
-     */
-    public function redirectToEditView (int $adjoint_id) {
-        $adjoint = User::find($adjoint_id);
-        $personne = $adjoint->personne;
-
-        $adjoint_tab = $adjoint->toArray();
-        $personne_tab = $personne->toArray();
-        array_shift($personne_tab);
-
-        $inputResult = array_merge($adjoint_tab, $personne_tab);
-
-        return redirect("/" . strtolower(Auth::user()->role) . "/adjoints/$adjoint_id/edit")->withInput($inputResult);
+        return view('pages.root.adjoint-manage.detail-adjoint', compact('categories', 'adjoint', 'adjoint_mode', 'title', 'current_action'));
     }
 
     /**
@@ -74,6 +80,7 @@ class RootController extends Controller
 
         $user = User::find($adjoint_id);
         $personne = $user->personne;
+        $categories = isset($request->categories) ? json_encode($request->categories) : "all";
 
         $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
 
@@ -94,6 +101,10 @@ class RootController extends Controller
         $personne->status = $request->status;
         $personne->update();
 
+        // USER LINKING.
+        $user->couriers_access_categories = $categories;
+        $user->update();
+
         // HISTORY.
         $history = new History;
         $history->title = 'Modification d\'un  adjoint';
@@ -108,6 +119,8 @@ class RootController extends Controller
 
 
     public function storeAdjoint(Request $request) {
+
+        $categories = isset($request->categories) ? json_encode($request->categories) : "all";
 
         $validation = Validator::make($request->all(), array_merge(Personne::$rules), ['service_id' => 'required']);
 
@@ -139,6 +152,7 @@ class RootController extends Controller
         $user = new User;
         $user->personne_id = $personne_id;
         $user->role = 2;
+        $user->couriers_access_categories = $categories;
         $user->service_id = null;
         $user->profile = '/images/profiles/default_profile.png?h=100&w=100&fit=crop';
         $user->register_token = str_replace('/', '', bcrypt(AdminController::str_random(20)));
@@ -167,7 +181,7 @@ class RootController extends Controller
     public function deleteAdjoint(int $adjoint_id) {
 
         $adjoint  = User::find($adjoint_id);
-        $adjoint->delete = 1;
+        $adjoint->deleted = 1;
         $adjoint->update();
 
         // HISTORY.

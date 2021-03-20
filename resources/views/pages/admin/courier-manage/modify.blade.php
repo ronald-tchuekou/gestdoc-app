@@ -7,21 +7,35 @@
             <table  class="table table-striped table-bordered table-responsive" style="width:100%" id="modify_courier_table_admin">
                 <thead class="thead-light">
                     <tr role="row">
-                        <th>N° Courier</th>
+                        <th style="width: 30px;"></th>
+                        <th style="width: auto;">Code</th>
+                        <th style="width: auto;">Prestataire</th>
+                        <th style="width: auto;">Dépositaire</th>
                         <th style="width: 250px;">Objet</th>
-                        <th>Prestataire</th>
-                        <th>Modifié le</th>
-                        <th>Dépositaire</th>
+                        <th style="width: auto;" class="text-nowrap">Nb Pièce</th>
+                        <th style="width: auto;">Status</th>
+                        <th style="width: auto;">Modifié le</th>
                         <th style="width: 40px;">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="admin-modify-courriers">
+                <tbody id="admin-initial-courriers">
                     @forelse($couriers_modifie as $courier)
                     <tr role="row" class="odd hover" id="row-{{$loop->index}}">
-                        <td>{{$courier->id}}</td>
-                        <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
+                        <td class="p-1">
+                            @if ($courier->recieved == 1)
+                                <a href="/{{strtolower(Auth::user()->role)}}/courriers/marck-as-not-recieved/{{$courier->id}}" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Marquer comme non reçut" class="cursor-pointer" data-id="{{$courier->id}}" >
+                                    <i class="feather icon-compass text-success" style="font-size: 2rem;
+                                        font-weight: bold;"></i>
+                                </a>
+                            @else
+                                <a href="/{{strtolower(Auth::user()->role)}}/courriers/marck-as-recieved/{{$courier->id}}" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Marquer comme reçut" class="cursor-pointer" data-id="{{$courier->id}}" >
+                                    <i class="feather icon-aperture text-warning" style="font-size: 2rem;
+                                        font-weight: bold;"></i>
+                                </a>
+                            @endif
+                        </td>
+                        <td class="text-dark text-bold-700">{{$courier->code}} </td>
                         <td>{{$courier->prestataire}}</td>
-                        <td><span class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</span></td>
                         <td>
                             <div class="d-flex justify-content-left align-items-center">
                                 <div class="d-flex flex-column">
@@ -32,6 +46,10 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
+                        <td><span class="text-truncate align-middle text-nowrap">{{$courier->nbPiece}}</span></td>
+                        <td><span class="badge badge-pill badge-light-info" text-capitalized="">{{$courier->etat}}</span></td>
+                        <td class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</td>
                         <td>
                             <div class="btn-group">
                                 <button class="btn btn-sm hide-arrow" data-toggle="dropdown">
@@ -81,7 +99,7 @@
                         </td>
                     </tr>
                     @empty
-                    {{-- <tr><td colspan="6" class="text-center"><span class="alert">Pas de couriers modifiés à afficher.</span></td></tr> --}}
+                    {{-- <tr id="row-empty"><td colspan="6" class="text-center"><span class="alert">Pas de couriers à l'état initial.</span></td></tr> --}}
                     @endforelse
                 </tbody>
             </table>

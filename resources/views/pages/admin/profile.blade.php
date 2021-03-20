@@ -18,6 +18,16 @@
                         <span class="font-weight-bold">Mot de passe</span>
                     </a>
                 </li>
+                
+                @if (Auth::user()->role == 'Admin')
+                <li class="nav-item">
+                    <a class="nav-link py-1" id="account-pill-courrier_categories" data-toggle="pill" href="#account-vertical-courrier_categories" aria-expanded="false">
+                    <i class="feather icon-archive"></i>&nbsp;&nbsp;&nbsp;
+                        <span class="font-weight-bold">Type de courries</span>
+                    </a>
+                </li>                    
+                @endif
+                
                 <!-- <li class="nav-item">
                     <a class="nav-link py-1" id="account-pill-notifications" data-toggle="pill" href="#account-vertical-notifications" aria-expanded="false">
                     <i class="feather icon-bell"></i>&nbsp;&nbsp;&nbsp;
@@ -35,6 +45,8 @@
                         @include('pages.profile.generale')
 
                         @include('pages.profile.password')
+
+                        @include('pages.profile.courriers-type')
 
                         <!-- @include('pages.profile.notifications') -->
 

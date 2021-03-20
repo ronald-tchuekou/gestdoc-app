@@ -6,9 +6,7 @@ use App\Events\AdminEvent;
 use App\Models\Assigne;
 use App\Models\Courier;
 use App\Models\History;
-use App\Models\User;
 use App\Models\Utils;
-use DateInterval;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +21,7 @@ class AgentController extends Controller
     public function index () {
 
         $user = Auth::user();
-        $title = 'AGENT GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'agent';
         $current_action = explode('/', Route::current()->uri)[1];
 
@@ -54,21 +52,21 @@ class AgentController extends Controller
     }
 
     public function showProfileView () {
-        $title = 'AGENT GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'agent';
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.agent.profile', compact('title', 'current_account', 'current_action'));
     }
 
     public function showParametresView() {
-        $title = 'AGENT GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $current_account =  'agent';
         $current_action = explode('/', Route::current()->uri)[1];
         return view('pages.agent.parametres', compact('title', 'current_account', 'current_action'));
     }
 
     public function showCouriersView() {
-        $title = 'AGENT GEST';
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
         $user = Auth::user();
         $current_account =  'agent';
         $current_action = explode('/', Route::current()->uri)[1];
@@ -102,12 +100,13 @@ class AgentController extends Controller
                 $nextAssign->update();
             }
 
+            $courier->recieved = 0;
             $courier->update();
 
             // HISTORY
             $history = new History();
             $history->title = 'Traitement d\'un courrier';
-            $history->content = 'Le courrier N° ' . $id .' à été Traité.';
+            $history->content = 'Le courrier de code <strong>' . $courier->code .'</strong> à été Traité.';
             $history->action_type = 6;
             $history->user_id = Auth::id();
             $history->save();
@@ -115,7 +114,7 @@ class AgentController extends Controller
             // Send the notification to the administrator.
             $event = new AdminEvent([
                 'title' => 'Traitement d\'un courrier', // Title of the notification.
-                'content' => 'Le courrier N° ' . $id .' à été Traité.', // Contne to the notification.
+                'content' => 'Le courrier de code <strong>' . $courier->code .'</strong> à été Traité.', // Contne to the notification.
                 'receiver_id' => $id,// Id of the receiver.
                 'receiver_role' => 'admin/root',// Id of the receiver.
                 'user_id' => Auth::id(),

@@ -39,7 +39,20 @@
                             </div>
                             <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="localisation">Localisation</label>
-                                <input value="{{$courier->personne->localisation}}" type="localisation" name="localisation" id="localisation" class="form-control">
+                                <select class="select2 form-control @if($errors->has('localisation')) is-invalid @endif" id="localisation" name="localisation">
+                                    <option
+                                        value=""
+                                        @if($courier->personne->localisation == '') selected @endif>
+                                            ....
+                                    </option>
+                                    @foreach($locations as $location)
+                                        <option
+                                            value="{{$location->intitule}}"
+                                            @if($courier->personne->localisation == $location->intitule) selected @endif>
+                                                {{ $location->intitule }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row px-1" style="padding-top: 4px; padding-bottom: 4px;">
@@ -111,6 +124,10 @@
                         <legend class="scheduler-border text-small" style="font-size: 1rem;">Information du dossier</legend>
                         <div class="row px-1">
                             <div class="col-md-6 col-12 form-group mb-0">
+                                <label for="code">Code *</label>
+                                <input value="{{$courier->code}}" type="text" name="code" id="code" class="form-control @if($errors->has('code')) is-invalid @endif">
+                            </div>
+                            <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="nom">Categorie *</label>
                                 <select class="select2 form-control @if($errors->has('categorie_id')) is-invalid @endif" id="categorie" name="categorie_id">
                                     <option
@@ -144,16 +161,14 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-group mx-1 mb-0">
-                            <label for="objet">Objet *</label>
-                            <textarea rows="2" name="objet" id="objet" class="form-control @if($errors->has('objet')) is-invalid @endif">{{$courier->objet}}</textarea>
-                        </div>
-                        <div class="row px-1">
                             <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="nbPiece">Nombre de pièce *</label>
                                 <input value="{{$courier->nbPiece}}" type="number" name="nbPiece" id="nbPiece" class="form-control @if($errors->has('nbPiece')) is-invalid @endif">
                             </div>
+                        </div>
+                        <div class="form-group mx-1 mb-0">
+                            <label for="objet">Objet *</label>
+                            <textarea rows="2" name="objet" id="objet" class="form-control @if($errors->has('objet')) is-invalid @endif">{{$courier->objet}}</textarea>
                         </div>
                         <div class="form-group mx-1 mb-0">
                             <label for="observation">Observation *</label>

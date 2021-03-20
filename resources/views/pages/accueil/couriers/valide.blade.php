@@ -7,22 +7,33 @@
             <table class="table table-striped table-bordered table-responsive" style="width:100%" id="valide_courier_table_accueil" >
                 <thead class="thead-light">
                     <tr role="row">
-                        <th>N° Courrier</th>
-                        <th>Objet</th>
-                        <th>Validé le</th>
+                        <th style="width: 30px;"></th>
+                        <th style="width: auto;">Code</th>
                         <th>Prestataire</th>
                         <th>Dépositaire</th>
+                        <th>Objet</th>
+                        <th>Observation</th>
+                        <th>Validé le</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="accueil-valide">
                     @forelse($valide_couriers as $courier)
                     <tr role="row" class="odd hover" id="row-{{$loop->index}}">
-                        <td>
-                            {{$courier->id}}
+                        <td class="p-1">
+                            @if ($courier->recieved == 1)
+                                <a href="/{{strtolower(Auth::user()->role)}}/courriers/marck-as-not-recieved/{{$courier->id}}" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Marquer comme non reçut" class="cursor-pointer" data-id="{{$courier->id}}" >
+                                    <i class="feather icon-compass text-success" style="font-size: 2rem;
+                                        font-weight: bold;"></i>
+                                </a>
+                            @else
+                                <a href="/{{strtolower(Auth::user()->role)}}/courriers/marck-as-recieved/{{$courier->id}}" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Marquer comme reçut" class="cursor-pointer" data-id="{{$courier->id}}" >
+                                    <i class="feather icon-aperture text-warning" style="font-size: 2rem;
+                                        font-weight: bold;"></i>
+                                </a>
+                            @endif
                         </td>
-                        <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
-                        <td class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</td>
+                        <td class="text-dark text-bold-700">{{$courier->code}} </td>
                         <td>{{$courier->prestataire}}</td>
                         <td>
                             <div class="d-flex justify-content-left align-items-center">
@@ -34,12 +45,36 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="sorting_1 ellipsize" style="max-width: 250px;">{{$courier->objet}}</td>
+                        <td class="sorting_1 ellipsize" style="max-width: 200px">{{$courier->observation}}</td>
+                        <td class="text-truncate align-middle text-nowrap">{{App\Models\Utils::full_date_format($courier->updated_at)}}</td>
                         <td>
-                            <a href="/{{strtolower(Auth::user()->role)}}/courier-details/{{$courier->id}}" class="btn btn-info btn-sm">
-                                <!-- <i class="feather icon-file-text" style="font-size: 1rem;"></i>&nbsp;&nbsp;&nbsp; -->
-                                Details
-                            </a>
-                </td>
+
+                            <div class="btn-group">
+                                <button class="btn btn-sm hide-arrow" data-toggle="dropdown">
+                                    <i class="feather icon-more-vertical font-medium-3 text-muted cursor-pointer"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- <a href="/{{strtolower(Auth::user()->role)}}/couriers/{{$courier->id}}" id="type-success" class="dropdown-item" style="padding: 7px 9px;"> -->
+                                    <a href="/{{strtolower(Auth::user()->role)}}/courier-details/{{$courier->id}}" class="dropdown-item" style="padding: 7px 9px;">
+                                        <i class="feather icon-file-text" style="font-size: 1.5rem;"></i>
+                                        &nbsp;&nbsp;&nbsp;Details
+                                    </a>
+                                    <a href="javascript:void()" class="dropdown-item observation_btn" style="padding: 7px 9px;"
+                                        tabindex="0"
+                                        aria-controls="courier_table_admin"
+                                        type="button"
+                                        data-courier="{{$courier->id}}/{{Auth::id()}}/{{strtolower(Auth::user()->role)}}"
+                                        data-toggle="modal"
+                                        data-target="#observation-modal">
+
+                                        <i class="feather icon-edit-2" style="font-size: 1.5rem;"></i>
+                                        &nbsp;&nbsp;&nbsp;Observation
+                                    </a>
+                                </div>
+                            </div>
+
+                        </td>
                     </tr>
                     @empty
                     {{-- <tr id="row-empty"><td colspan="6" class="text-center"><span class="alert">Pas de courriers validés.</span></td></tr> --}}

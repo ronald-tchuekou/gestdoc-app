@@ -28,6 +28,9 @@
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/services-manager.js') }}"></script>
+<script src="{{ asset('js/categories-manager.js') }}"></script>
+<script src="{{ asset('js/locations-manager.js') }}"></script>
 <script src="{{ asset('js/notifyEventListener.js') }}"></script>
 
 <script>

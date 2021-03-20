@@ -29,11 +29,12 @@
         <table class="table table-striped table-bordered table-responsive" style="width:100%" id="init_courier_table_accueil" >
             <thead class="thead-light">
                 <tr role="row">
-                    <th>N° Courrier</th>
+                    <th>Code</th>
                     <th>Dépositaire</th>
                     <th style="width: 250px;">Objet</th>
                     <th class="text-nowrap">Nb Pièce</th>
                     <th>Prestataire</th>
+                    <th>Etat</th>
                     <th>Status</th>
                     <th style="width: 40px;">Actions</th>
                 </tr>
@@ -41,7 +42,7 @@
             <tbody id="accueil-init-courrier">
                 @forelse($couriers as $courier)
                 <tr role="row" class="odd hover" data-row="{{$courier->id}}">
-                    <td>{{$courier->id}}</td>
+                    <td class="text-dark text-bold-700">{{$courier->code}}</td>
                     <td>
                         <div class="d-flex justify-content-left align-items-center">
                             <div class="d-flex flex-column">
@@ -56,6 +57,13 @@
                     <td><span class="text-truncate align-middle text-nowrap">{{$courier->nbPiece}}</span></td>
                     <td>{{$courier->prestataire}}</td>
                     <td><span class="badge badge-pill badge-light-info" text-capitalized="">{{$courier->etat}}</span></td>
+                    <td>
+                        @if ($courier->recieved == 1)
+                        <span class="badge badge-pill badge-light-success" text-capitalized="">Reçut</span>
+                        @else
+                        <span class="badge badge-pill badge-light-danger" text-capitalized="">No reçut</span>
+                        @endif
+                    </td>
                     <td>
                         <div class="btn-group">
                             <a class="btn btn-sm hide-arrow" data-toggle="dropdown">

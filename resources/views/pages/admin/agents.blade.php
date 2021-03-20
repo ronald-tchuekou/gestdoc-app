@@ -110,7 +110,7 @@
                                     <i class="feather icon-file-text" style="font-size: 1.5rem;"></i>
                                     &nbsp;&nbsp;&nbsp;Details
                                 </a>
-                                <a href="/{{strtolower(Auth::user()->role)}}/agents/edition/{{$agent->id}}" class="dropdown-item" style="padding: 7px 9px;">
+                                <a href="/{{strtolower(Auth::user()->role)}}/agents/{{$agent->id}}/edit" class="dropdown-item" style="padding: 7px 9px;">
                                     <i class="feather icon-edit-2" style="font-size: 1.5rem;"></i>
                                     &nbsp;&nbsp;&nbsp;Edit
                                 </a>

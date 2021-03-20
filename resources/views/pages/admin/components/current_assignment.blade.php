@@ -9,7 +9,7 @@
                     <table class="table table-hover-animation mb-0">
                         <thead>
                             <tr>
-                                <th>N° COURRIER</th>
+                                <th>Code</th>
                                 <th>ETAT</th>
                                 <th>CATEGORIE</th>
                                 <th>OBJET</th>
@@ -22,7 +22,7 @@
                         <tbody>
                         @foreach($c_t as $courrier)
                             <tr>
-                                <td>{{$courrier->id}}</td>
+                                <td class="text-bold-700 text-dark">{{$courrier->code}}</td>
                                 <td>
                                     <i class="fa fa-circle font-small-3 text-warning mr-50"></i>{{$courrier->etat}}
                                 </td>
@@ -41,7 +41,7 @@
                                 <td>
                                     <span>{{$a_p[$loop->index]}}</span>%
                                     <div class="progress progress-bar-primary mt-1 mb-0">
-                                        <div class="progress-bar" role="progressbar" style="{{'width: ' . $a_p[$loop->index] . '%;'}}" aria-valuenow="{{$a_p[$loop->index]}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar" role="progressbar" style="<?='width: ' . $a_p[$loop->index] . '%;'?>" aria-valuenow="{{$a_p[$loop->index]}}" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </td>
                                 <td>{{App\Models\Utils::full_date_format($a_c_t[$loop->index]->created_at)}}</td>

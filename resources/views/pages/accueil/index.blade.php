@@ -49,6 +49,7 @@
 
 </div>
 
+@include('partials.observation-modal')
 
 <!-- list section end -->
 

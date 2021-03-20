@@ -1,16 +1,17 @@
 <div class="card">
     <div class="card-header">
-        <div class="d-flex mb-3">
+        <div class="d-flex mb-0">
         <a href="/{{strtolower(Auth::user()->role)}}/adjoints" class="ml-1 text-secondary" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Formulaire d'ajout d'un nouveau adjoint.</h4>
         </div>
     </div>
-    <div class="card-content">
+    <div class="card-body">
         @include('errors.errors')
         <form action="/{{strtolower(Auth::user()->role)}}/adjoints/store" class="form pb-1" method="post">
-        @csrf
+            @csrf
             <div class="row justify-content-around w-100 px-0 m-0">
-                <div class="col-md-8 col-12 mx-0 px-0">
+
+                <div class="col-md-6 col-12 mx-0 px-0">
                     <fieldset class="form-group border mx-1 pb-1">
                         <legend class="scheduler-border text-small" style="font-size: 1rem;">Information personnels</legend>
                         <div class="row px-1">
@@ -36,7 +37,20 @@
                             </div>
                             <div class="col-md-6 col-12 form-group mb-0">
                                 <label for="localisation">Localisation</label>
-                                <input value="{{old('localisation')}}" type="localisation" name="localisation" id="localisation" class="form-control">
+                                <select class="select2 form-control @if($errors->has('localisation')) is-invalid @endif" id="localisation" name="localisation">
+                                    <option
+                                        value=""
+                                        @if(old('localisation') == '') selected @endif>
+                                            ....
+                                    </option>
+                                    @foreach($locations as $location)
+                                        <option
+                                            value="{{$location->intitule}}"
+                                            @if(old('localisation') == $location->intitule) selected @endif>
+                                                {{ $location->intitule }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row px-1" style="padding-top: 4px; padding-bottom: 4px;">
@@ -103,6 +117,36 @@
                         </div>
                     </fieldset>
                 </div>
+
+                <div class="col-md-6 col-12 mx-0 px-0">
+                    <fieldset class="form-group border mx-1 pb-1">
+                        <legend class="scheduler-border text-small" style="font-size: 1rem;">Categories de courriers à gérer</legend>
+                        <div class="row px-1">
+                            
+                            @foreach ($categories as $category)
+                            <div class="form-group col-4">
+                                <div class="text-left">
+                                    <fieldset class="checkbox">
+                                        <div class="vs-checkbox-con vs-checkbox-primary">
+                                            <input type="checkbox" @if(in_array($category->id, old('categories', [])))
+                                                checked
+                                            @endif name="categories[]" value="{{$category->id}}">
+                                            <span class="vs-checkbox">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                            <span class="">{{$category->intitule}}</span>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            @endforeach
+                            
+                        </div>
+                    </fieldset>
+                </div>
+
             </div>
             <div class="container d-flex justify-content-end">
                 <button class="btn btn-primary mx-1" type="submit">Valider</button>

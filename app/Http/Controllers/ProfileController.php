@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use League\Flysystem\Adapter\Ftp as Adapter;
 
 class ProfileController extends Controller
 {
