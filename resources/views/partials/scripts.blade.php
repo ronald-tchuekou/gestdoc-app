@@ -1,4 +1,6 @@
 
+<div id="app-config" data-role="{{strtolower(Auth::user()->role)}}" data-user_id="{{Auth::id()}}"></div>
+
 <!-- BEGIN: Vendor JS-->
 <script src="{{asset('vendors/js/vendors.min.js')}}"></script>
 <!-- BEGIN Vendor JS-->
@@ -34,7 +36,7 @@
 <script src="{{ asset('js/notifyEventListener.js') }}"></script>
 
 <script>
-    var pusher = new Pusher('{{env('PUSHER_APP_KEY', 'b46572e408aed6297050')}}', {
+    var pusher = new Pusher("{{env('PUSHER_APP_KEY', 'b46572e408aed6297050')}}", {
         cluster: 'eu'
     });
 
@@ -43,18 +45,17 @@
     channel.bind('gestdoc-notify', function(data) {
 
         // Update the correspondant component.
-        var role = data.receiver.role, action = data.courrier.action;
-        var tache = data.courrier.tache;
+        var action = data.courrier.action;
 
         axios.get(HOST_BACKEND + '/courrier/info/all/' + data.courrier.id)
         .then(response => {
             let status = response.status;
             if(status == 200){
-                let response_data = response.data.record;
-                if(role == "Accueil"){
-                    accuiel_listener(action, response_data);
-                }else if(role == 'Agent'){
-                    agent_listener(response_data, tache);
+                let courrier = response.data;
+                if(default_user_role == "Accueil"){
+                    accuiel_listener(action, courrier);
+                }else if(default_user_role == 'Agent'){
+                    agent_listener(courrier);
                 }
             }
         })
@@ -68,13 +69,13 @@
     channel.bind('gestdoc-notify-admin', function(data) {
 
         // Update the correspondant component.
-        var role = data.receiver.role, action = data.courrier.action;
+        var action = data.courrier.action;
         axios.get(HOST_BACKEND + '/courrier/info/all/' + data.courrier.id)
         .then(response => {
             let status = response.status;
             if(status == 200){
-                let response_data = response.data.record;
-                admin_listener(response_data, action, role.toLowerCase());
+                let courrier = response.data;
+                admin_listener(courrier, action);
             }
         })
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,14 @@ class CourierValide extends Model
 
     public function courier() {
         return $this->belongsTo(Courier::class);
+    }
+    
+    /**
+     * Pour la sérialisation des dates.
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('d M Y H:i');
     }
     
 }

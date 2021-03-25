@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,4 +24,12 @@ class ToModify extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    /**
+     * Pour la sérialisation des dates.
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('d M Y H:i');
+    }
+    
 }

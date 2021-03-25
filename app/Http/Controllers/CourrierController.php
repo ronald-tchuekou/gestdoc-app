@@ -340,6 +340,7 @@ class CourrierController extends Controller
     public function add_to_modify($id, $reason) {
         try{
             $courier = Courier::find($id);
+            $old_state = $courier->etat;
 
             if($courier->etat != 'Initial' && $courier->etat != 'Modifié'){
                 return response('Le dossier n\'est plus modifiable.', 201);
@@ -348,7 +349,6 @@ class CourrierController extends Controller
             $toModify->courier_id = $id;
             $toModify->reason = $reason;
             $toModify->user_id = Auth::id();
-            $toModify->save();
 
             // HISTORY.
             $history = new History;
@@ -356,7 +356,6 @@ class CourrierController extends Controller
             $history->content = 'Le courrier de code <strong>' . $courier->code .'</strong> à été renvoyé pour une modification au service d\'accueil.';
             $history->action_type = 3;
             $history->user_id = Auth::id();
-            $history->save();
 
             $user = Auth::user();
 
@@ -377,9 +376,13 @@ class CourrierController extends Controller
 
             $courier->etat = 8; // set to  modify state.
             $courier->recieved = 0;
-            $courier->update();
+            
+            if($toModify->save() && $history->save() && $courier->update()) {
+                return response(['etat' => $old_state], 200);
+            }else {
+                return response('Une erreur s\'est produite, veuillez réessayer de nouveau.', 201);
+            }
 
-            return response('', 200);
         }catch(Exception $th){
             return response($th->getMessage(), 201);
         }
@@ -571,6 +574,59 @@ class CourrierController extends Controller
             
         }catch(Exception $e) {
             return response($e->getMessage(), 201);
+        }
+    }
+    
+    /**
+     * Fonction renvoie les information d'un courrier.
+     */
+    public function getCourrierIfon(int $id){
+        try {
+            $courrier = Courier::find($id);
+
+            $courrier->assignes->toJson();
+
+            if($courrier->reject != null):
+                $courrier->reject->toJson();
+            endif;
+
+            if($courrier->service != null):
+                $courrier->service->toJson();
+            endif;
+
+            if($courrier->categorie != null):
+                $courrier->categorie->toJson();
+            endif;
+            
+            if($courrier->to_modify != null):
+                $courrier->to_modify->toJson();
+            endif;
+
+            if($courrier->valide != null):
+                $courrier->valide->toJson();
+            endif;
+
+            $courrier->personne->toJson();
+
+            return response ($courrier->toJson(), 200);
+
+        } catch (Exception $th) {
+            return response($th->getMessage(), 201);
+        }
+    }
+
+    /**
+     * Fonction qui permet de récupérer les motif d'un courrier.
+     */
+    private function getMotif($courrier) {
+        if($courrier->etat == 'Reprendre') {
+            return $courrier->to_modify->reason;
+        }
+        elseif($courrier->etat == 'Rejeté') {
+            return $courrier->reject->reason ;
+        }
+        elseif($courrier->etat == 'Validé') {
+            return '' ;
         }
     }
 }

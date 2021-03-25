@@ -8,7 +8,7 @@
             <a class="nav-link btn-sm active py-1" id="courier-pill-initial" data-toggle="pill" href="#courier-tab-initial" aria-expanded="true">
                 <span class="font-weight-bold">
                     Couriers initials 
-                   @if(count($couriers_initial) != 0)
+                    @if(count($couriers_initial) != 0)
                     &nbsp;&nbsp;&nbsp;<span class="badge badge-light-danger badge-pill" id="badge-initial">
                         {{count($couriers_initial)}}
                     </span>

@@ -19,7 +19,7 @@
                 </thead>
                 <tbody id="agent-finish">
                     @forelse($finish_couriers as $courier)
-                    <tr role="row" class="odd hover" id="row-{{$loop->index}}">
+                    <tr role="row" class="odd hover" id="row-{{$courier->id}}">
                         <td class="p-1">
                             @if ($courier->recieved == 1)
                                 <a href="/{{strtolower(Auth::user()->role)}}/courriers/marck-as-not-recieved/{{$courier->id}}" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Marquer comme non reçut" class="cursor-pointer" data-id="{{$courier->id}}" >

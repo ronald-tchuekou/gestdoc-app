@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -69,4 +70,13 @@ class User extends Authenticatable
     public function couriers_assignes () {
         return $this->belongsToMany(Courier::class, 'assignes');
     }
+    
+    /**
+     * Pour la sérialisation des dates.
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('d M Y H:i');
+    }
+    
 }

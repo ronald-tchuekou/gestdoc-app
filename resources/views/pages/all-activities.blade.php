@@ -59,7 +59,7 @@
                                         par : <small class="text-primary text-bold-700">{{$history->user->personne->nom}} {{$history->user->personne->prenom}}</small>
                                     </span>
                                 </div>
-                                <span class="font-small-3">{{$history->content}}</span>
+                                <span class="font-small-3">{{!!$history->content!!}}</span>
                             </div>
                             <small class="text-muted">{{App\Models\Utils::get_time_ago(strtotime($history->created_at))}}</small>
                         </li>

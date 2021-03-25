@@ -21,7 +21,7 @@
 {{-- Footer --}}
 @slot('footer')
 @component('mail::footer')
-© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+© {{ date('Y') }} {{ config('app.name') }}. @lang('Tous droits réservés - faite par BMC (Ronald Tchuekou).')
 @endcomponent
 @endslot
 @endcomponent

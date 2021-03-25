@@ -18,8 +18,12 @@ var $info_light = '#1edec5';
 var $strok_color = '#b9c3cd';
 var $label_color = '#e7eef7';
 var $white = '#fff';
+// APP CONFIG
 
-const notify_timeOut = 3e4;
+var default_user_role = $('#app-config').data('role')
+var default_user_id = $('#app-config').data('user_id')
+
+const notify_timeOut = 4e3;
 
 // Initialisation of service workers.
 // function initializeService() {
@@ -234,7 +238,6 @@ function dismiss_block(elt) {
   elt.block({ message: '', timeout: 1 });
 }
 
-
 /**************************
  * Manage de filter of the admin agent table.
  */
@@ -265,14 +268,280 @@ function admin_agent_filter() {
 
 }
 
+/**
+ * Fonction qui permet de gérer l'assigement des éléments.
+ */
+function assignement_btn() {
+  
+  $('.assigner_btn').each((i, elt) => {
+    $(elt).on('click', function () {
+
+      // Init all..
+      $('#agent_id').val('');
+      $('#tache').val('');
+
+      let courier = $(this).attr('data-courier').split('/'),
+        courier_id = courier[0],
+        categorie = courier[1],
+        nbPiece = courier[2];
+      
+      $('#courier_id').val(courier_id);
+      $('#courier_nb').val(nbPiece);
+      $('#courier_cat').val(categorie);
+    });
+  });
+
+}
+
+/**
+ * Fonction qui permet de gérer le formulaire d'assignement des formulaires.
+ */
+function assignement_form() {
+    // Assign the docs.
+    $('#assign-form').submit(function (e) {
+    e.preventDefault();
+
+    let action = e.target.getAttribute('action'),
+      courier_id = $('#courier_id').val(),
+      agent_id = $('#agent_id').val(),
+      tache = $('#tache').val();
+
+    if (agent_id == '') { // Check the agent.
+      toastr.warning('Veuillez selectionner un agent chez qui assigner le dossier.', 'Avertissement',
+        { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+    } else if (tache == '') { // Check the task.
+      toastr.warning('Veuillez renseigner la tâche à faire sur le dossier.', 'Avertissement',
+        { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+    } else { // Submit the data and get the response.
+      var data = {
+        'courier_id': parseInt(courier_id),
+        'agent_id': parseInt(agent_id),
+        'tache': tache,
+      };
+
+      let d = set_progress_block('#assign-modal-content');
+
+      axios.post(HOST_BACKEND + action, data, config).then(response => {
+
+        if (response.status != 200) {
+          toastr.warning(response.data, 'Averitssement',
+            { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+        } else {
+          $('#row-' + data.courier_id).remove();
+          $("#init_courier_table_admin").DataTable();
+          toastr.success('Dossier assigné avec succès.', 'Succès',
+            { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+        }
+        dismiss_block(d);
+      }).catch(reason => {
+        toastr.error('Error : ' + reason, 'Error');
+        dismiss_block(d);
+      });
+    }
+  });
+
+}
+
+/**
+ * Fonction qui permet de gérer le bouton pour la gestion des observations de courriers.
+ */
+function observation_btn() {
+  // Observation about courier.
+  $('.observation_btn').each((i, elt) => {
+    $(elt).on('click', function () {
+      $('#observation').val('')
+      let courier_data = $(this).data('courier').split('/'),
+        courier_id = courier_data[0],
+        user_id = courier_data[1],
+        user_role = courier_data[2]
+      $('#btn-observation-doc').on('click', function () {
+        let observation = $('#observation').val();
+        if (observation == '') {
+          $('#observation').addClass('is-invalid');
+          return;
+        } else {
+          $('#observation').removeClass('is-invalid');
+
+          let modal = set_progress_block('#observation-modal-content');
+
+          axios.post(`${HOST_BACKEND}/${user_role}/courriers/add-observation`, {
+            user_id: user_id,
+            courier_id: courier_id,
+            observation: observation,
+          })
+            .then(response => {
+              if (response.status != 200) {
+                toastr.warning(response.data, 'Erreur',
+                  { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+              } else {
+                toastr.success('Observation ajouté sur le dossier.', 'Succès',
+                  { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+              }
+              dismiss_block(modal);
+              $('#observation-modal').modal('hide');
+            }).catch(reason => {
+              toastr.error(reason, 'Error');
+              dismiss_block(modal);
+            });
+        }
+      })
+    })
+  })
+
+}
+
+/**
+ * Fonction qui permet de gérer les bouton de rejet.
+ */
+function reject_btn() {
+  // Reject form.
+  $('.reject_btn').each((i, elt) => {
+    $(elt).on('click', function () {
+      $('#reason').val('');
+      let courier = $(this).attr('data-courier').split('/'),
+        courier_id = courier[0],
+        reject_mode = courier[1];
+
+      let title = $('#title-reject-modal'),
+        label = $('#label-reject-modal'),
+        input_reason = $('#reason'),
+        btn_submit = $('#btn-reject-doc');
+
+      if (reject_mode === 'modify') {
+        title.text('Retour pour modification.');
+        label.text('Indiquer la raison pour la qelle vous retournez le dossier pour modification.')
+      } else {
+        title.text('Rejet du dossier.');
+        label.text('Indiquer la raison pour la qelle vous rejetez le dossier.')
+      }
+
+      // Listen the soumition.
+      btn_submit.on('click', function (e) {
+        let reason = input_reason.val();
+        if (reason == '') {
+          input_reason.addClass('is-invalid');
+          return;
+        } else {
+          input_reason.removeClass('is-invalid');
+
+          let modal = set_progress_block('#confirm-reject-modal-content');
+
+          axios.get(HOST_BACKEND + '/' + default_user_role + '/couriers/' + courier_id + '/' + reason + '/' + reject_mode)
+            .then(response => {
+              console.log(response);
+              if (response.status != 200) {
+                toastr.warning(response.data, 'Erreur',
+                  { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+              } else {
+                let etat = response.data.etat
+                if (etat == "Modifié") {
+                  update_badge_count("#badge-modify", -1);
+                } else {
+                  update_badge_count("#badge-reject", -1);
+                }
+                $('#row-' + courier_id).parent().parent().parent().parent().remove();
+                $("#init_courier_table_admin").DataTable();
+                if (reject_mode === 'modify') {
+                  toastr.info('Dossier rejeté pour une modification.', 'Succès',
+                    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+                } else {
+                  toastr.info('Dossier rejeté, pas de retour possible.', 'Succès',
+                    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut })
+                }
+                $('#confirm-reject-modal').modal('hide')
+              }
+              dismiss_block(modal);
+            }).catch(reason => {
+              toastr.error(reason, 'Error');
+              dismiss_block(modal);
+            });
+        }
+      });
+    });
+  });
+
+}
+
+/**
+ * Fonction qui permet de gérer la validation des courriers.
+ */
+function validate_courrier() {
+  // Validate a courier.
+  $('.validate-courier').each((i, elt) => {
+    $(elt).on('click', function () {
+      let courier_id = $(this).attr('data-courier');
+
+      let loader = set_progress_block($(elt).parent().parent().parent());
+
+      axios.get(HOST_BACKEND + '/' + default_user_role + '/couriers/validate/' + courier_id)
+        .then(response => {
+          if (response.status == 200) {
+            $('#row-' + courier_id).remove();
+            $("#finish_courier_table_admin").DataTable();
+            update_badge_count("#badge-finish", -1);
+            toastr.success('Dossier validé avec succès.', 'Message de succès',
+              { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+          } else {
+            toastr.warning('Une erreur s\'est produite. ' + response.data, 'Message d\'erreur',
+              { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+          }
+          dismiss_block(loader);
+        }).catch(reason => {
+          toastr.error('Error : ' + reason, 'Error');
+          dismiss_block(loader);
+        });
+    });
+  });
+}
+
+/**
+ * Fonction qui permet de gérer la fin de traitement de courriers.
+ */
+function traitement_courrier() {
+  // Finish a courier.
+  $('.btn-traitement-finish').each((i, elt) => {
+    $(elt).on('click', function (e) {
+
+      let courier_id = $(this).attr('data-courier')
+      let bo = set_progress_block(elt);
+
+      axios.get(HOST_BACKEND + '/agent/couriers/' + courier_id + '/finish')
+        .then(response => {
+          if (response.status == 200) {
+            $('#row-' + courier_id).remove();
+            $("#finish_courier_table_agent").DataTable();
+            toastr.success('Dossier Traité avec succès.', 'Message de succès',
+              { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+          } else {
+            toastr.error('Une erreur s\'est produite. ' + response.data, 'Message d\'erreur',
+              { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
+          }
+          dismiss_block(bo);
+        }).catch(reason => {
+          toastr.error(reason, 'Error');
+          dismiss_block(bo);
+        });
+
+    });
+  });
+}
+
+/**
+ * Container de fonctions.
+ */
+function courier_manager() {
+  assignement_btn();
+  assignement_form();
+  observation_btn();
+  reject_btn();
+  validate_courrier();
+  traitement_courrier();
+}
+
+$('.badge-pill.noti').hide();
+
 (function (window, document, $) {
   $(document).ready(() => {
-
-    // init the service.
-    //initializeService();
-
-    $('.badge-pill.noti').hide();
-
     // Set the listener.
     admin_agent_filter();
 
@@ -283,236 +552,13 @@ function admin_agent_filter() {
       });
     });
 
-    $('#alertSuccessDialog').modal('show'); // Show the success modal.
-
-    var row;
-
-    $('.assigner_btn').each((i, elt) => {
-      $(elt).on('click', function () {
-
-        // Init all..
-        $('#agent_id').val('');
-        $('#tache').val('');
-
-        let courier = $(this).attr('data-courier').split('/'),
-          courier_id = courier[0],
-          categorie = courier[1],
-          nbPiece = courier[2];
-        row = elt;
-        $('#courier_id').val(courier_id);
-        $('#courier_nb').val(nbPiece);
-        $('#courier_cat').val(categorie);
-      });
-    });
-
-    // Assign the docs.
-    $('#assign-form').submit(function (e) {
-      e.preventDefault();
-
-      let action = e.target.getAttribute('action'),
-        courier_id = $('#courier_id').val(),
-        agent_id = $('#agent_id').val(),
-        tache = $('#tache').val();
-
-      if (agent_id == '') { // Check the agent.
-        toastr.warning('Veuillez selectionner un agent chez qui assigner le dossier.', 'Avertissement',
-          { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-      } else if (tache == '') { // Check the task.
-        toastr.warning('Veuillez renseigner la tâche à faire sur le dossier.', 'Avertissement',
-          { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-      } else { // Submit the data and get the response.
-        data = {
-          'courier_id': parseInt(courier_id),
-          'agent_id': parseInt(agent_id),
-          'tache': tache,
-        };
-
-        let d = set_progress_block('#assign-modal-content');
-
-        axios.post(HOST_BACKEND + action, data, config).then(response => {
-
-          if (response.status != 200) {
-            toastr.warning(response.data, 'Averitssement',
-              { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-          } else {
-            $(row).parent().parent().parent().parent().remove();
-            $("#init_courier_table_admin").DataTable();
-            toastr.success('Dossier assigné avec succès.', 'Succès',
-              { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-          }
-          dismiss_block(d);
-        }).catch(reason => {
-          toastr.error('Error : ' + reason, 'Error');
-          dismiss_block(d);
-        });
-      }
-    });
-
-    // Observation about courier.
-    $('.observation_btn').each((i, elt) => {
-      $(elt).on('click', function () {
-        $('#observation').val('')
-        let courier_data = $(this).data('courier').split('/'),
-          courier_id = courier_data[0],
-          user_id = courier_data[1],
-          user_role = courier_data[2]
-        $('#btn-observation-doc').on('click', function () {
-          let observation = $('#observation').val();
-          if (observation == '') {
-            $('#observation').addClass('is-invalid');
-            return;
-          } else {
-            $('#observation').removeClass('is-invalid');
-
-            let modal = set_progress_block('#observation-modal-content');
-
-            axios.post(`${HOST_BACKEND}/${user_role}/courriers/add-observation`, {
-              user_id: user_id,
-              courier_id: courier_id,
-              observation: observation,
-            })
-              .then(response => {
-                if (response.status != 200) {
-                  toastr.warning(response.data, 'Erreur',
-                    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-                } else {
-                  toastr.success('Observation ajouté sur le dossier.', 'Succès',
-                    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-                }
-                dismiss_block(modal);
-                $('#observation-modal').modal('hide');
-              }).catch(reason => {
-                toastr.error(reason, 'Error');
-                dismiss_block(modal);
-              });
-          }
-        })
-      })
-    })
-
-    // Reject form.
-    $('.reject_btn').each((i, elt) => {
-      $(elt).on('click', function () {
-        $('#reason').val('');
-        let courier = $(this).attr('data-courier').split('/'),
-          courier_id = courier[0],
-          reject_mode = courier[1];
-        row = elt;
-
-        let title = $('#title-reject-modal'),
-          label = $('#label-reject-modal'),
-          input_reason = $('#reason'),
-          btn_submit = $('#btn-reject-doc');
-
-        if (reject_mode === 'modify') {
-          title.text('Retour pour modification.');
-          label.text('Indiquer la raison pour la qelle vous retournez le dossier pour modification.')
-        } else {
-          title.text('Rejet du dossier.');
-          label.text('Indiquer la raison pour la qelle vous rejetez le dossier.')
-        }
-
-        // Listen the soumition.
-        btn_submit.on('click', function (e) {
-          let reason = input_reason.val();
-          if (reason == '') {
-            input_reason.addClass('is-invalid');
-            return;
-          } else {
-            input_reason.removeClass('is-invalid');
-
-            let modal = set_progress_block('#confirm-reject-modal-content');
-
-            axios.get(HOST_BACKEND + '/admin/couriers/' + courier_id + '/' + reason + '/' + reject_mode)
-              .then(response => {
-                if (response.status != 200) {
-                  toastr.warning(response.data, 'Erreur',
-                    { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-                } else {
-                  $(row).parent().parent().parent().parent().remove();
-                  $("#init_courier_table_admin").DataTable();
-                  if (reject_mode === 'modify') {
-                    toastr.info('Dossier rejeté pour une modification.', 'Succès',
-                      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-                  } else {
-                    toastr.info('Dossier rejeté, pas de retour possible.', 'Succès',
-                      { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut })
-                  }
-                }
-                dismiss_block(modal);
-              }).catch(reason => {
-                toastr.error(reason, 'Error');
-                dismiss_block(modal);
-              });
-          }
-
-
-        });
-
-      });
-    });
-
-    // Validate a courier.
-    $('.validate-courier').each((i, elt) => {
-      $(elt).on('click', function () {
-        let courier_id = $(this).attr('data-courier');
-        row = elt;
-
-        let loader = set_progress_block($(elt));
-
-        axios.get(HOST_BACKEND + '/admin/couriers/validate/' + courier_id)
-          .then(response => {
-            if (response.status == 200) {
-              $(row).parent().parent().parent().parent().remove();
-              $("#finish_courier_table_admin").DataTable();
-              update_badge_count("#badge-finish", -1);
-              toastr.success('Dossier validé avec succès.', 'Message de succès',
-                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-            } else {
-              toastr.warning('Une erreur s\'est produite. ' + response.data, 'Message d\'erreur',
-                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-            }
-            dismiss_block(loader);
-          }).catch(reason => {
-            toastr.error('Error : ' + reason, 'Error');
-            dismiss_block(loader);
-          });
-      });
-    });
-
-    // Finish a courier.
-    $('.btn-traitement-finish').each((i, elt) => {
-      $(elt).on('click', function (e) {
-
-        row = elt;
-        let courier_id = $(this).attr('data-courier')
-        let bo = set_progress_block(elt);
-
-        axios.get(HOST_BACKEND + '/agent/couriers/' + courier_id + '/finish')
-          .then(response => {
-            if (response.status == 200) {
-              $(row).parent().parent().remove();
-              $("#finish_courier_table_agent").DataTable();
-              toastr.success('Dossier Traité avec succès.', 'Message de succès',
-                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-            } else {
-              toastr.error('Une erreur s\'est produite. ' + response.data, 'Message d\'erreur',
-                { showMethod: "slideDown", hideMethod: "slideUp", timeOut: notify_timeOut });
-            }
-            dismiss_block(bo);
-          }).catch(reason => {
-            toastr.error(reason, 'Error');
-            dismiss_block(bo);
-          });
-
-      });
-    });
-
-
+    // Show the success modal.
+    $('#alertSuccessDialog').modal('show'); 
+    
+    courier_manager();
 
     // courrier Order Chart starts
     // -----------------------------
-
     renderAnalystCourrierChart("none");
 
     $('.courrier-date_intervalle').each(function (i, elt) {
@@ -535,21 +581,14 @@ function admin_agent_filter() {
         renderAnalystCourrierChart(from);
       });
     });
-
-    // courrier Order Chart ends //
-
-
     // users Order Chart starts
     // -----------------------------
 
     renderAnalystUserChart();
-
     // users Order Chart ends //
-
 
   });
 })(window, document, jQuery);
-
 
 $(document).ready(function () {
   
@@ -582,6 +621,11 @@ $(document).ready(function () {
  */
 function update_badge_count(target_id, value) {
   let target = $(target_id),
-    count = parseInt(target.html());
-  target.html(count + (value));
+        count = parseInt(target.html());
+    let new_val = count + (value);
+
+    if (new_val <= 0)
+        target.html("");
+    else
+        target.html(new_val);
 }

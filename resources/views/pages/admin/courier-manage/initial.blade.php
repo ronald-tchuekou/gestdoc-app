@@ -21,7 +21,7 @@
                 </thead>
                 <tbody id="admin-initial-courriers">
                     @forelse($couriers_initial as $courier)
-                    <tr role="row" class="odd hover" id="row-{{$loop->index}}">
+                    <tr role="row" class="odd hover" id="row-{{$courier->id}}">
                         <td class="p-1">
                             @if ($courier->recieved == 1)
                                 <a href="/{{strtolower(Auth::user()->role)}}/courriers/marck-as-not-recieved/{{$courier->id}}" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Marquer comme non reçut" class="cursor-pointer" data-id="{{$courier->id}}" >
@@ -66,7 +66,7 @@
                                         tabindex="0"
                                         aria-controls="courier_table_admin"
                                         type="button"
-                                        data-courier="{{$courier->id}}/{{$courier->categorie->intitule}}/{{$courier->nbPiece}}/{{$loop->index}}"
+                                        data-courier="{{$courier->id}}/{{$courier->categorie->intitule}}/{{$courier->nbPiece}}/{{$courier->id}}"
                                         data-toggle="modal"
                                         data-target="#assign-doc-modal">
 
@@ -77,7 +77,7 @@
                                         tabindex="0"
                                         aria-controls="courier_table_admin"
                                         type="button"
-                                        data-courier="{{$courier->id}}/reject/{{$loop->index}}"
+                                        data-courier="{{$courier->id}}/reject/{{$courier->id}}"
                                         data-toggle="modal"
                                         data-target="#confirm-reject-modal">
 
@@ -88,7 +88,7 @@
                                         tabindex="0"
                                         aria-controls="courier_table_admin"
                                         type="button"
-                                        data-courier="{{$courier->id}}/modify/{{$loop->index}}"
+                                        data-courier="{{$courier->id}}/modify/{{$courier->id}}"
                                         data-toggle="modal"
                                         data-target="#confirm-reject-modal">
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -75,4 +76,21 @@ class Courier extends Model
     public function valide() {
         return $this->hasOne(CourierValide::class);
     }
+
+    public function getDateEnregistrementAttribute ($value) {
+        return Utils::full_date_format($value);
+    }
+
+    protected $casts = [
+        'dateEnregistrement' => 'datetime:d M Y H:i',
+    ];
+    
+    /**
+     * Pour la sérialisation des dates.
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('d M Y H:i');
+    }
+    
 }

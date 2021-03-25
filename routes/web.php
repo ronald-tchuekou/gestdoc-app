@@ -14,6 +14,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\RootController;
 use App\Http\Controllers\ServiceController;
+use App\Models\Courier;
 use Illuminate\Support\Facades\Route;
 
 // Auth manager routes.
@@ -31,6 +32,36 @@ Route::get('/forgot-password', [PassForgotController::class, 'index']);
 Route::post('/forgot-password/send', [PassForgotController::class, 'sendMail']);
 Route::get('/reset-password/{token}', [ResetPasswordController::class, 'index']);
 Route::post('/reset-password/reset/{id}', [ResetPasswordController::class, 'reset']);
+
+Route::get('/get-courrier-info-{id}', function ($id) {
+    $courrier = Courier::find($id);
+
+    $courrier->assignes->toJson();
+
+    if($courrier->reject != null):
+        $courrier->reject->toJson();
+    endif;
+
+    if($courrier->service != null):
+        $courrier->service->toJson();
+    endif;
+
+    if($courrier->categorie != null):
+        $courrier->categorie->toJson();
+    endif;
+    
+    if($courrier->to_modify != null):
+        $courrier->to_modify->toJson();
+    endif;
+
+    if($courrier->valide != null):
+        $courrier->valide->toJson();
+    endif;
+
+    $courrier->personne->toJson();
+
+    return response ($courrier->toJson(), 200);
+});
 
 Route::get('/all-activities', [AdminController::class, 'showAllActivities'])->middleware('auth');
 
@@ -147,7 +178,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/appadmin/accueil-account/{id}/details', [RootController::class, 'showAdjointView']);
     Route::get('/appadmin/root-account/{id}/delete', [PlatformAdminController::class, 'deleteUser']);
     Route::get('/appadmin/profile', [AgentController::class, 'showProfileView']);
-    Route::get('/courrier/info/all/{id}', [AgentController::class, 'getCourrierIfon']);
+    Route::get('/courrier/info/all/{id}', [CourrierController::class, 'getCourrierIfon']);
     Route::post('/profile/update-password', [ProfileController::class, 'update_pass']);
     Route::post('/profile/upload-profile', [ProfileController::class, 'upload_profile']);
 
