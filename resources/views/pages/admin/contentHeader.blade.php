@@ -6,7 +6,7 @@
             @endif
             <div class="breadcrumb-wrapper">
                 <ol class="breadcrumb breadcrumb-dots">
-                    <li class="breadcrumb-item"> <a href="/{{strtolower(Auth::user()->role)}}/dashboard">Dashboard</a> </li>
+                    <li class="breadcrumb-item"> <a href="/{{strtolower(Auth::user()->role)}}/dashboard">Tableu de bord</a> </li>
                     @if($current_action != 'dashboard')
                     <li class="breadcrumb-item">{{ $current_action }}</li>
                     @endif

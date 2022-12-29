@@ -6,7 +6,7 @@
     <div class="card-header">
         <div class="d-flex mb-3">
             <a class="ml-1 text-secondary backPerss" style="font-size: 2rem;"><i class="feather icon-arrow-left"></i></a>&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Détails sur un adjoint</h4>
+            &nbsp;&nbsp;&nbsp;<h4 class="font-weight-bolder">Détails du compte</h4>
         </div>
     </div>
     <div class="card-content">
@@ -63,20 +63,22 @@
 
         </div>
 
-        <div class="row w-100 px-0 m-0 pb-4">
-            <div class="col-12">
-                <h3 class="text-dark">Les categories de courriers dont cette adjoint aura la gestion</h3>
+        @if ($adjoint->role == 'Agent')
+            <div class="row w-100 px-0 m-0 pb-4">
+                <div class="col-12">
+                    <h3 class="text-dark">Les categories de courriers dont cette adjoint aura la gestion</h3>
+                </div>
+                <div class="col-12">
+                    @foreach ($categories as $category)
+                        <div class="badge badge-info text-bold-700" style="padding: 6px 9px; font-size: 1rem;">
+                            <span class="text-truncate">
+                                {{$category->id}} <i class="feather icon-minus"></i> {{$category->intitule}}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
             </div>
-            <div class="col-12">
-                @foreach ($categories as $category)
-                    <div class="badge badge-info text-bold-700" style="padding: 6px 9px; font-size: 1rem;">
-                        <span class="text-truncate">
-                            {{$category->id}} <i class="feather icon-minus"></i> {{$category->intitule}}
-                        </span>
-                    </div>
-                @endforeach
-            </div>
-        </div>
+        @endif
 
     </div>
 </div>

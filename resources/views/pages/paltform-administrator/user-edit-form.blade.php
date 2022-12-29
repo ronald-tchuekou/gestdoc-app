@@ -1,5 +1,6 @@
 <form action="{{ $action_form }}" class="form pb-1" method="post">
     @csrf
+    <input type="hidden" name="personne_id" value="{{$personne->id}}">
     <div class="row w-100 px-0 m-0">
         <div class="col-md-12 col-12 mx-0 px-0">
             <div class="row px-1">

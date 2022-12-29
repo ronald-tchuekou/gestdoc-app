@@ -20,25 +20,27 @@
 
             <li class="nav-item  @if($current_action == 'dashboard') active @endif">
                 <a href="/"><i class="feather icon-home"></i><span class="menu-title"
-                        data-i18n="Dashboard">Dashboard</span></a>
+                        data-i18n="Dashboard">Tableu de bord</span></a>
             </li>
 
-            <li class="nav-item @if($current_action == 'profile') active @endif">
-                <a href="/{{strtolower(Auth::user()->role)}}/profile"><i class="feather icon-user"></i><span class="menu-title"
-                        data-i18n="Profile">Profile</span></a>
+            @if(Auth::user()->role == 'Root')
+            <li class="nav-item @if($current_action == 'accueil-personnel') active @endif">
+                <a href="/{{strtolower(Auth::user()->role)}}/accueil-personnel"><i class="feather icon-users"></i><span class="menu-title"
+                        data-i18n="Agents">Personnels d'accueil</span></a>
             </li>
+            @endif
 
             @if(Auth::user()->role == 'Admin' || Auth::user()->role == 'Root' && Auth::user()->role != 'AppAdmin')
             <li class="nav-item @if($current_action == 'agents') active @endif">
                 <a href="/{{strtolower(Auth::user()->role)}}/agents"><i class="feather icon-users"></i><span class="menu-title"
-                        data-i18n="Agents">Agents</span></a>
+                        data-i18n="Agents">Gestion des Agents</span></a>
             </li>
             @endif
 
             @if(Auth::user()->role == 'Root' && Auth::user()->role != 'AppAdmin')
             <li class="nav-item @if($current_action == 'adjoints') active @endif">
                 <a href="/{{strtolower(Auth::user()->role)}}/adjoints"><i class="feather icon-user-check"></i><span class="menu-title"
-                        data-i18n="Adjoints">Adjoints (Admin)</span></a>
+                        data-i18n="Adjoints">Gestion des Adjoints</span></a>
             </li>
             @endif
 
@@ -69,7 +71,7 @@
                 <a href="/{{strtolower(Auth::user()->role)}}/localisations">
                     <i class="feather icon-map-pin"></i>
                     <span class="menu-title" data-i18n="Gestion localisation">
-                        Gestion localisation
+                        Gestion des localisations
                     </span>
                 </a>
             </li>
@@ -80,7 +82,7 @@
                 <a href="/{{strtolower(Auth::user()->role)}}/services">
                     <i class="feather icon-briefcase"></i>
                     <span class="menu-title" data-i18n="Gestion services">
-                        Gestion services
+                        Gestion des services
                     </span>
                 </a>
             </li>
@@ -90,6 +92,11 @@
                 <a href="/{{strtolower(Auth::user()->role)}}/parametres"><i class="feather icon-settings"></i><span class="menu-title"
                         data-i18n="Parametres">Parametres</span></a>
             </li> -->
+
+            <li class="nav-item @if($current_action == 'profile') active @endif">
+                <a href="/{{strtolower(Auth::user()->role)}}/profile"><i class="feather icon-user"></i><span class="menu-title"
+                        data-i18n="Profile">Profile</span></a>
+            </li>
 
             <li class="nav-item"><a href="/loginOut"><i class="feather icon-log-out"></i><span class="menu-title"
                         data-i18n="Logout">Déconnexion</span></a>

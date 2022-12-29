@@ -39,9 +39,6 @@
 
 @include('pages.paltform-administrator.root-manager.root-table')
 
-
-@include('pages.paltform-administrator.accueil-manager.accueil-table')
-
 </div>
 
 

@@ -19,7 +19,7 @@ class PlatformAdminController extends Controller
     public function index () 
     {
         $current_action = 'Gestionnaire d\'utilisateurs';
-        $title = "Administrator";
+        $title = strtoupper(Auth::user()->role)  .  ' GEST';
         $root_users = User::where('role', 3)->where('deleted', 0)->get();
         $accueil_users = User::where('role', 4)->where('deleted', 0)->get();
         return view('pages.paltform-administrator.index', compact('root_users', 'accueil_users', 'current_action', 'title'));
@@ -27,25 +27,24 @@ class PlatformAdminController extends Controller
 
     public function showAddRootView () {
         $current_action = 'Ajout d\'un nouveau super user';
-        $title = "Ajout de compte root";
-        $action_form = "/appadmin/root-manager/store";
+        $title = strtoupper(Auth::user()->role)  .  ' GEST';
+        $action_form = "/" . strtolower(Auth::user()->role) . "/root-manager/store";
         $locations = Location::all();
         return view('pages.paltform-administrator.root-manager.add-root-user', compact('locations', 'action_form', 'current_action', 'title'));
     }
 
     public function showAddAccueilView () {
         $current_action = 'Ajout d\'un nouveau service d\'accueil';
-        $title = "Ajout de compte accueil";
-        $action_form = "/appadmin/accueil-manager/store";
+        $title = strtoupper(Auth::user()->role)  .  ' GEST';
+        $action_form = "/" . strtolower(Auth::user()->role) . "/accueil-manager/store";
         $locations = Location::all();
-        return view('pages.paltform-administrator.accueil-manager.add-accueil-user', compact('locations', 'action_form', 'current_action', 'title'));
+        return view('pages.root.accueil-manager.add-accueil-user', compact('locations', 'action_form', 'current_action', 'title'));
     }
 
-    
     public function showEditRootView (int $id) {
         $current_action = 'Modification d\'un super user';
-        $title = "Ajout de compte root";
-        $action_form = "/appadmin/root-manager/" . $id . "/update";
+        $title = strtoupper(Auth::user()->role)  .  ' GEST';
+        $action_form = "/" . strtolower(Auth::user()->role) . "/root-manager/" . $id . "/update";
         $personne = Personne::find($id);
         $locations = Location::all();
         return view('pages.paltform-administrator.root-manager.edit-root-user', compact('personne', 'locations', 'action_form', 'current_action', 'title'));
@@ -53,11 +52,12 @@ class PlatformAdminController extends Controller
 
     public function showEditAccueilView (int $id) {
         $current_action = 'Modification d\'un service d\'accueil';
-        $title = "Ajout de compte accueil";
-        $action_form = "/appadmin/accueil-manager/" . $id . "/update";
-        $personne = Personne::find($id);
+        $title = strtoupper(Auth::user()->role)  .  ' GEST';
+        $action_form = "/" . strtolower(Auth::user()->role) . "/accueil-manager/" . $id . "/update";
+        $user = User::find($id);
+        $personne = Personne::find($user->personne_id);
         $locations = Location::all();
-        return view('pages.paltform-administrator.accueil-manager.edit-accueil-user', compact('personne', 'locations', 'action_form', 'current_action', 'title'));
+        return view('pages.root.accueil-manager.edit-accueil-user', compact('personne', 'locations', 'action_form', 'current_action', 'title'));
     }
 
     /**
@@ -134,7 +134,7 @@ class PlatformAdminController extends Controller
      * Fonction to update root account.
      */
     public function updateAccount (Request $request, int $id){
-        $personne = Personne::find($id);
+        $personne = Personne::find($request->personne_id);
 
         $personne->nom = $request->nom;
         $personne->prenom = $request->prenom;
@@ -146,8 +146,10 @@ class PlatformAdminController extends Controller
         $personne->status = $request->status;
         $personne->update();
 
-        $user = User::where('personne_id', $personne->id)->first();
-        $user->couriers_access_categories = "all";
+        $user = User::find($id);
+        if($user->role == 'Agent'){
+            $user->couriers_access_categories = "all";
+        }
         $user->update();
 
         return redirect('platfrom-administrator')
@@ -167,7 +169,7 @@ class PlatformAdminController extends Controller
             $user->deleted = 1;
             $user->update();
         }
-        return redirect('platfrom-administrator')
+        return back()
         ->with('success', 'Utilisateur supprimé avec succèss');
     }
     

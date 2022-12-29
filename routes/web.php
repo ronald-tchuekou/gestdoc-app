@@ -124,6 +124,14 @@ Route::middleware(['auth', 'authRoot'])->prefix('root')->group(function(){
     Route::get('/adjoints/{id}/details', [RootController::class, 'showAdjointView']);
     Route::post('/adjoints/{id}/update', [RootController::class, 'update_adjoint']);
 
+    Route::get('/accueil-personnel', [RootController::class, 'showAccueilView']);
+    Route::get('/accueil-personnel/add', [PlatformAdminController::class, 'showAddAccueilView']);
+    Route::get('/accueil-personnel/{id}', [PlatformAdminController::class, 'showEditAccueilView']);
+    Route::post('/accueil-manager/store', [PlatformAdminController::class, 'storeAccueilAccount']);
+    Route::post('/accueil-manager/{id}/update', [PlatformAdminController::class, 'updateAccount']);
+    Route::get('/accueil-personnel/{id}/details', [RootController::class, 'showAdjointView']);
+
+
 });
 
 // Accueil routes managers
@@ -167,16 +175,12 @@ Route::middleware(['auth', 'authAgent'])->prefix('agent')->group(function(){
 
 Route::middleware(['auth'])->group(function(){
     Route::get('/appadmin/root-account/add', [PlatformAdminController::class, 'showAddRootView']);
-    Route::get('/appadmin/accueil-account/add', [PlatformAdminController::class, 'showAddAccueilView']);
     Route::get('/appadmin/root-account/{id}', [PlatformAdminController::class, 'showEditRootView']);
-    Route::get('/appadmin/accueil-account/{id}', [PlatformAdminController::class, 'showEditAccueilView']);
     Route::post('/appadmin/root-manager/store', [PlatformAdminController::class, 'storeRootAccount']);
-    Route::post('/appadmin/accueil-manager/store', [PlatformAdminController::class, 'storeAccueilAccount']);
     Route::post('/appadmin/root-manager/{id}/update', [PlatformAdminController::class, 'updateAccount']);
-    Route::post('/appadmin/accueil-manager/{id}/update', [PlatformAdminController::class, 'updateAccount']);
     Route::get('/appadmin/root-accueil/{id}/details', [RootController::class, 'showAdjointView']);
-    Route::get('/appadmin/accueil-account/{id}/details', [RootController::class, 'showAdjointView']);
     Route::get('/appadmin/root-account/{id}/delete', [PlatformAdminController::class, 'deleteUser']);
+
     Route::get('/appadmin/profile', [AgentController::class, 'showProfileView']);
     Route::get('/courrier/info/all/{id}', [CourrierController::class, 'getCourrierIfon']);
     Route::post('/profile/update-password', [ProfileController::class, 'update_pass']);

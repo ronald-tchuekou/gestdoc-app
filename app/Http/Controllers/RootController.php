@@ -25,6 +25,12 @@ class RootController extends Controller
         return view('pages.root.adjoints', compact('adjoints', 'title', 'current_action'));
     }
 
+    public function showAccueilView () {
+        $title = strtoupper(Auth::user()->role)  .  'GEST';
+        $accueil_peronals = User::where('role', 4)->where('deleted', 0)->get();
+        $current_action = explode('/', Route::current()->uri)[1];
+        return view('pages.root.accueil', compact('accueil_peronals', 'title', 'current_action'));
+    }
 
     public function showAddAdjointView() {
         $title = strtoupper(Auth::user()->role)  .  'GEST';
